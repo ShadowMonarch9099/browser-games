@@ -12,7 +12,11 @@
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
-    <canvas id="game" width="960" height="540" aria-label="Shadow Clone Escape game"></canvas>
+    <div id="stage">
+      <canvas id="bg" aria-hidden="true"></canvas>
+      <div id="shade"></div>
+      <canvas id="game" width="960" height="540" aria-label="Shadow Clone Escape game"></canvas>
+    </div>
     <div id="rotate" hidden>
       <svg width="56" height="56" viewBox="0 0 56 56" aria-hidden="true">
         <rect x="16" y="6" width="24" height="44" rx="4" fill="none" stroke="currentColor" stroke-width="2.5" />

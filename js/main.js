@@ -4,6 +4,10 @@
   const C = SCE.CFG;
   const canvas = document.getElementById('game');
   const ctx = canvas.getContext('2d');
+  const stage = document.getElementById('stage');
+  const bg = document.getElementById('bg');
+  const bgCtx = bg.getContext('2d', { alpha: false });
+  SCE.Render.setLayers(bgCtx, document.getElementById('shade'));
   const rotate = document.getElementById('rotate');
   const doc = document.documentElement;
 
@@ -35,16 +39,21 @@
   const portrait = () => window.matchMedia('(pointer: coarse)').matches && window.innerHeight > window.innerWidth;
 
   function resize() {
-    const dpr = Math.min(window.devicePixelRatio || 1, 3);
     const vw = window.innerWidth;
     const vh = window.innerHeight;
     const w = Math.min(vw, (vh * C.W) / C.H);
     const h = (w * C.H) / C.W;
-    canvas.style.width = `${w}px`;
-    canvas.style.height = `${h}px`;
-    canvas.width = Math.round(w * dpr);
-    canvas.height = Math.round(h * dpr);
-    ctx.setTransform(canvas.width / C.W, 0, 0, canvas.height / C.H, 0, 0);
+    // Backing store: sharp on high-DPI screens, but capped — fill cost grows
+    // with pixel count and 2560 wide is already 2.7x the logical resolution.
+    const dpr = Math.min(window.devicePixelRatio || 1, 2, 2560 / w);
+    stage.style.width = `${w}px`;
+    stage.style.height = `${h}px`;
+    for (const [cv, c] of [[canvas, ctx], [bg, bgCtx]]) {
+      cv.width = Math.round(w * dpr);
+      cv.height = Math.round(h * dpr);
+      c.setTransform(cv.width / C.W, 0, 0, cv.height / C.H, 0, 0);
+    }
+    SCE.Render.bgLevel = null; // repaint the map at the new size
     const p = portrait();
     rotate.hidden = !p;
     if (p) game.pause();

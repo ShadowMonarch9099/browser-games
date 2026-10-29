@@ -147,17 +147,65 @@
     }
   }
 
+  // Soft halo from two translucent discs: a cheap stand-in for shadowBlur,
+  // which re-blurs every shape it touches.
+  function glow(ctx, x, y, r, rgb, a = 0.3) {
+    ctx.fillStyle = `rgba(${rgb},${a * 0.45})`;
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = `rgba(${rgb},${a})`;
+    ctx.beginPath();
+    ctx.arc(x, y, r * 0.6, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  const rgbOf = (hex) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16)).join(',');
+
   const R = {
+    // Layers (set up by main.js): a background canvas holding the static map,
+    // a CSS shade for menus, and the main canvas on top, which is cleared to
+    // transparent and only draws what moves. The static map is repainted
+    // only when the level or the canvas size changes.
+    bgCtx: null,
+    shadeEl: null,
+    bgLevel: null,
+
+    setLayers(bgCtx, shade) {
+      this.bgCtx = bgCtx;
+      this.shadeEl = shade;
+      this.bgLevel = null;
+    },
+
+    syncBackground(L, shake) {
+      const c = this.bgCtx;
+      if (!c) return;
+      if (this.bgLevel !== L) {
+        c.fillStyle = COL.bg;
+        c.fillRect(0, 0, C.W, C.H);
+        this.drawStatic(c, L);
+        this.bgLevel = L;
+      }
+      const st = c.canvas.style;
+      const tf = shake ? `translate(${(shake.x / C.W) * 100}%,${(shake.y / C.H) * 100}%)` : '';
+      if (st.transform !== tf) st.transform = tf;
+    },
+
     draw(ctx, g) {
       const UI = SCE.UI;
       g.buttons = [];
-      ctx.fillStyle = COL.bg;
-      ctx.fillRect(0, 0, C.W, C.H);
+      ctx.clearRect(0, 0, C.W, C.H);
       const s = g.state;
       const fromTitle = (s === 'settings' || s === 'controls') && g.back && g.back.state === 'title';
-      if (s === 'title' || s === 'select' || fromTitle) {
-        this.world(ctx, this.demoView(g));
-        UI.menuBackdrop(ctx, g);
+      const menu = s === 'title' || s === 'select' || fromTitle;
+      const view = menu ? this.demoView(g) : g;
+      this.shakeOff = view.shake > 0 ? { x: (Math.random() - 0.5) * view.shake * 18, y: (Math.random() - 0.5) * view.shake * 18 } : null;
+      this.syncBackground(view.level, this.shakeOff);
+      const el = this.shadeEl;
+      if (el && el.classList.contains('on') !== menu) el.classList.toggle('on', menu);
+      if (menu) {
+        this.world(ctx, view);
+        UI.dim(ctx, 0.45);
         UI[s](ctx, g);
       } else {
         this.world(ctx, g);
@@ -190,8 +238,7 @@
       const L = g.level;
       const t = g.time;
       ctx.save();
-      if (g.shake > 0) ctx.translate((Math.random() - 0.5) * g.shake * 18, (Math.random() - 0.5) * g.shake * 18);
-      this.background(ctx, L);
+      if (this.shakeOff) ctx.translate(this.shakeOff.x, this.shakeOff.y);
       this.torchGlow(ctx, L, t);
       this.links(ctx, L);
       this.plates(ctx, L, t);
@@ -208,26 +255,10 @@
         this.ninja(ctx, g.player, false, t, g);
       }
       this.fx(ctx, g);
-      this.vignette(ctx);
       ctx.restore();
     },
 
-    // ---------- static layer (floors, walls, props), cached per level ----------
-
-    background(ctx, L) {
-      const scale = ctx.getTransform ? ctx.getTransform().a : 1;
-      if (!L.bg || L.bgScale !== scale) {
-        const cv = document.createElement('canvas');
-        cv.width = Math.ceil(C.W * scale);
-        cv.height = Math.ceil(C.H * scale);
-        const c = cv.getContext('2d');
-        c.scale(scale, scale);
-        this.drawStatic(c, L);
-        L.bg = cv;
-        L.bgScale = scale;
-      }
-      ctx.drawImage(L.bg, 0, 0, C.W, C.H);
-    },
+    // ---------- static layer (floors, walls, props, vignette) ----------
 
     drawStatic(c, L) {
       const th = THEMES[L.act || 0];
@@ -256,6 +287,9 @@
           else if (b === 'O') this.pillar(c, cc * T, r * T, th);
         }
       }
+      // The vignette is baked in here: a full-screen gradient redrawn every
+      // frame was the single most expensive thing on screen.
+      this.vignette(c);
       // torches sit on wall faces that look onto floor
       L.torchList = [];
       for (let r = 0; r < C.ROWS - 1; r++) {
@@ -575,10 +609,7 @@
           ctx.save();
           ctx.translate(cx, y + 7);
           ctx.rotate(swing);
-          if (p.active) {
-            ctx.shadowColor = color;
-            ctx.shadowBlur = 14;
-          }
+          if (p.active) glow(ctx, 0, 9, 16, rgbOf(color), 0.3);
           ctx.fillStyle = color;
           ctx.beginPath();
           ctx.moveTo(-7, 15);
@@ -586,7 +617,6 @@
           ctx.quadraticCurveTo(7, 2, 7, 15);
           ctx.closePath();
           ctx.fill();
-          ctx.shadowBlur = 0;
           ctx.fillStyle = 'rgba(255,255,255,0.35)';
           ctx.fillRect(-4, 5, 2, 8);
           ctx.fillStyle = '#6b4e1f';
@@ -601,16 +631,12 @@
         roundRect(ctx, x + 3, y + 3, T - 6, T - 6, 3);
         ctx.fillStyle = '#2a2f36';
         ctx.fill();
-        if (p.active) {
-          ctx.shadowColor = color;
-          ctx.shadowBlur = 12;
-        }
+        if (p.active) glow(ctx, cx, cy, 18, rgbOf(color), 0.22);
         roundRect(ctx, x + 5, y + 5, T - 10, T - 10, 2);
         ctx.fillStyle = p.active ? color : '#1a1e24';
         ctx.globalAlpha = p.active ? 0.8 : 1;
         ctx.fill();
         ctx.globalAlpha = 1;
-        ctx.shadowBlur = 0;
         ctx.strokeStyle = color;
         ctx.lineWidth = 1.5;
         ctx.stroke();
@@ -743,12 +769,10 @@
         ellipse(ctx, it.x, it.y + 9, 5, 2, 'rgba(0,0,0,0.35)');
         ctx.save();
         if (it.type === 'key') {
-          ctx.shadowColor = COL.gold;
-          ctx.shadowBlur = 10;
+          glow(ctx, x, y, 14, '242,193,78', 0.16);
           keyIcon(ctx, x - 1, y, 8, COL.gold);
         } else {
-          ctx.shadowColor = COL.shard;
-          ctx.shadowBlur = 12;
+          glow(ctx, x, y, 14, '111,195,255', 0.2);
           ctx.fillStyle = COL.shard;
           ctx.beginPath();
           ctx.moveTo(x, y - 8);
@@ -757,7 +781,6 @@
           ctx.lineTo(x - 6, y);
           ctx.closePath();
           ctx.fill();
-          ctx.shadowBlur = 0;
           ctx.fillStyle = '#e6f6ff';
           ctx.globalAlpha = 0.8;
           ctx.beginPath();
@@ -864,8 +887,7 @@
         let a = 0.72 + 0.08 * Math.sin(t * 8);
         if (e.life < 1 && Math.sin(t * 40) < 0) a *= 0.35;
         ctx.globalAlpha = a;
-        ctx.shadowColor = COL.shadow;
-        ctx.shadowBlur = 10;
+        glow(ctx, 0, 0, 17, '79,209,197', 0.16);
       }
       ctx.rotate(ang);
       // feet
@@ -1017,12 +1039,9 @@
       ellipse(ctx, 0, 10.5, 4.6, 4.2, P.helm, P.dark, 1.2);
       ellipse(ctx, 5 - swing * 2, 11, 2.3, 2.3, '#c9a98a');
       // lantern in the left hand
-      ctx.save();
-      ctx.shadowColor = '#ffcf70';
-      ctx.shadowBlur = 12;
+      glow(ctx, 9.5, -12.5, 9, '255,207,112', 0.25);
       ctx.fillStyle = '#ffd27a';
       ctx.fillRect(7, -15, 5, 5);
-      ctx.restore();
       ctx.strokeStyle = '#2a2622';
       ctx.lineWidth = 1;
       ctx.strokeRect(7, -15, 5, 5);
@@ -1078,13 +1097,10 @@
         ctx.fill();
       }
       if (awake) {
-        ctx.save();
-        ctx.shadowColor = '#ff4d4d';
-        ctx.shadowBlur = 6;
+        glow(ctx, 15.5, 0, 6, '255,77,77', 0.2);
         ctx.fillStyle = '#ff5a4d';
         ctx.fillRect(14.5, -3, 1.8, 1.6);
         ctx.fillRect(14.5, 1.4, 1.8, 1.6);
-        ctx.restore();
       } else {
         ctx.fillStyle = '#24170c';
         ctx.fillRect(14, -2.6, 2.2, 0.8);

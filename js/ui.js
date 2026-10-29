@@ -82,13 +82,16 @@
   }
 
   function panel(ctx, x, y, w, h) {
-    ctx.save();
-    ctx.shadowColor = 'rgba(0,0,0,0.6)';
-    ctx.shadowBlur = 28;
+    // layered offset shadow (cheap; a blurred shadow this size costs a frame)
+    roundRect(ctx, x - 6, y + 2, w + 12, h + 14, 14);
+    ctx.fillStyle = 'rgba(0,0,0,0.18)';
+    ctx.fill();
+    roundRect(ctx, x - 2, y + 2, w + 4, h + 6, 10);
+    ctx.fillStyle = 'rgba(0,0,0,0.3)';
+    ctx.fill();
     roundRect(ctx, x, y, w, h, 8);
     ctx.fillStyle = COL.panel;
     ctx.fill();
-    ctx.restore();
     roundRect(ctx, x + 0.5, y + 0.5, w - 1, h - 1, 8);
     ctx.strokeStyle = COL.line;
     ctx.lineWidth = 1;
@@ -189,15 +192,6 @@
   const UI = {
     dim(ctx, a) {
       ctx.fillStyle = `rgba(6,7,9,${a})`;
-      ctx.fillRect(0, 0, C.W, C.H);
-    },
-
-    menuBackdrop(ctx) {
-      this.dim(ctx, 0.45);
-      const grad = ctx.createLinearGradient(0, 0, 600, 0);
-      grad.addColorStop(0, 'rgba(11,13,16,0.96)');
-      grad.addColorStop(1, 'rgba(11,13,16,0.2)');
-      ctx.fillStyle = grad;
       ctx.fillRect(0, 0, C.W, C.H);
     },
 
