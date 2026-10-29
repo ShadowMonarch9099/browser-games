@@ -6,7 +6,7 @@
 SCE.LEVELS = [
   {
     name: 'First Steps',
-    hint: 'Move with WASD or the arrow keys. Grab the ◆ shards and reach the glowing exit.',
+    hint: 'Grab the shards and reach the exit. Stay out of the lantern light — guards see you, not your shadow.',
     map: [
       '.........#|..........|..........',
       '.........#|..........|..........',
@@ -25,10 +25,11 @@ SCE.LEVELS = [
       '..........|.........#|..........',
       '..........|.........#|..........',
     ],
+    guards: [{ type: 'sentry', at: [18, 9], dir: 180, sweep: 50, period: 5 }],
   },
   {
     name: 'Shadow Self',
-    hint: 'Tap SPACE to cast your clone. HOLD SPACE + move to steer it onto the plate, then walk through.',
+    hint: 'Cast your shadow onto the plate, then swap back to yourself and slip through before it fades.',
     map: [
       '..........|....#.....|..........',
       '...*......|....#.....|..........',
@@ -48,6 +49,7 @@ SCE.LEVELS = [
       '..........|....#.....|..........',
     ],
     plates: { a: { type: 'hold', door: 1 } },
+    guards: [{ type: 'patrol', path: [[20, 2], [20, 14]] }],
   },
   {
     name: 'The Tether',
@@ -71,6 +73,7 @@ SCE.LEVELS = [
       '..........|..........|#.........',
     ],
     plates: { a: { type: 'hold', door: 1 } },
+    guards: [{ type: 'patrol', path: [[21, 8], [29, 8]] }],
   },
   {
     name: 'Empty Hands',
@@ -94,6 +97,7 @@ SCE.LEVELS = [
       '..........|..........|..#.......',
     ],
     plates: { a: { type: 'hold', door: 1 } },
+    guards: [{ type: 'patrol', path: [[1, 12], [8, 12]] }],
   },
   {
     name: 'Two as One',

@@ -35,19 +35,26 @@ const hold = (...codes) => {
 const press = (code) => I.pressed.add(code);
 const tileCenter = (i, r) => ({ x: (i + 1.5) * T, y: (r + 0.5) * T }); // interior coords
 
-// Walk the player (or steer the clone while holding Space) to an interior tile.
+// Walk the player (or steer the clone) to an interior tile, tapping the clone
+// key to swap control first if needed.
 function walkTo(game, i, r, steer = false, maxTicks = 900) {
   const target = tileCenter(i, r);
   for (let k = 0; k < maxTicks && game.state === 'play'; k++) {
+    if (steer && !game.clone) return false;
+    if (game.clone && game.steering !== steer) {
+      hold();
+      press('Space');
+      tick(game);
+      continue;
+    }
     const e = steer ? game.clone : game.player;
-    if (!e) return false;
     const dx = target.x - e.x;
     const dy = target.y - e.y;
     if (Math.abs(dx) < 2 && Math.abs(dy) < 2) {
       hold();
       return true;
     }
-    const keys = steer ? ['Space'] : [];
+    const keys = [];
     if (dx > 1.5) keys.push('ArrowRight');
     if (dx < -1.5) keys.push('ArrowLeft');
     if (dy > 1.5) keys.push('ArrowDown');
@@ -62,6 +69,7 @@ function fresh(levelIndex) {
   const g = new Game();
   I.reset();
   g.startLevel(levelIndex);
+  g.started = true; // skip the "move to start" intro
   return g;
 }
 
@@ -100,7 +108,7 @@ function fresh(levelIndex) {
   let maxD = 0;
   const track = (gm) => gm.clone && (maxD = Math.max(maxD, Math.hypot(gm.clone.x - gm.clone.sx, gm.clone.y - gm.clone.sy)));
   for (const dir of [['ArrowRight'], ['ArrowDown', 'ArrowRight'], ['ArrowUp'], ['ArrowLeft', 'ArrowUp']]) {
-    hold('Space', ...dir);
+    hold(...dir);
     tick(g, 70, track);
   }
   check('clone never strays beyond 100px', maxD <= C.CLONE_LEASH + 1e-6, `max ${maxD.toFixed(2)}px`);
@@ -146,7 +154,41 @@ function fresh(levelIndex) {
   g.player.x = gd.x + Math.cos(gd.angle) * 60;
   g.player.y = gd.y + Math.sin(gd.angle) * 60;
   tick(g, 2);
+  check('detection builds up instead of failing on the first frame', g.state === 'play' && gd.sus > 0);
+  tick(g, 60);
   check('guards catch the player in their view', g.state === 'failed' && g.result.reason === 'spotted');
+}
+
+// ---- clone key casts, then swaps control between player and clone ----
+{
+  const g = fresh(0);
+  press('Space');
+  tick(g);
+  check('casting hands control to the clone', g.steering);
+  hold('ArrowRight');
+  tick(g, 20);
+  const moved = Math.hypot(g.clone.x - g.clone.sx, g.clone.y - g.clone.sy);
+  check('movement keys steer the clone after casting', moved > 20 && Math.abs(g.player.x - g.level.start.x) < 0.01);
+  hold();
+  press('Space');
+  tick(g);
+  const cx = g.clone.x;
+  hold('ArrowDown');
+  tick(g, 20);
+  check('clone key swaps back; the clone stays put', !g.steering && g.clone.x === cx && g.player.y > g.level.start.y + 20);
+}
+
+// ---- the 60s clock waits for the first move ----
+{
+  const g = new Game();
+  I.reset();
+  g.startLevel(0);
+  hold();
+  tick(g, 120);
+  const waited = g.timeLeft === C.LEVEL_TIME;
+  hold('ArrowRight');
+  tick(g, 30);
+  check('timer starts on the first move, not on load', waited && g.timeLeft < C.LEVEL_TIME);
 }
 
 // ---- twin lock needs player + clone simultaneously, then stays open ----
@@ -171,31 +213,6 @@ function fresh(levelIndex) {
   hold();
   tick(g, 60 * 60 + 5);
   check('level fails when 60 seconds run out', g.state === 'failed' && g.result.reason === 'time');
-}
-
-// ---- end-to-end: Level 2 solved with the clone holding the door ----
-{
-  const g = fresh(1);
-  walkTo(g, 9, 8);
-  press('Space');
-  tick(g);
-  hold();
-  tick(g);
-  const ok = walkTo(g, 26, 8) || g.state === 'won';
-  check('Level 2 is solvable using the clone', g.state === 'won', ok ? '' : 'did not reach exit');
-}
-
-// ---- end-to-end: Level 3 through the grate ----
-{
-  const g = fresh(2);
-  walkTo(g, 9, 10);
-  press('Space');
-  tick(g);
-  walkTo(g, 9, 7, true);
-  hold();
-  walkTo(g, 9, 13);
-  walkTo(g, 27, 13);
-  check('Level 3 is solvable through the grate', g.state === 'won');
 }
 
 // ---- scripted playthroughs of the trickier levels ----
@@ -224,6 +241,9 @@ function play(levelIndex, steps) {
 
 const ready = ['until', (g) => !g.clone && g.cloneCooldown <= 0];
 const solutions = {
+  0: [[4, 9], [4, 14], [14, 14], [10, 14], [10, 2], [20, 2], [24, 3], [25, 12]],
+  1: [[9, 8], 'cast', [16, 8], ['until', (g) => g.guards[0].r <= 4 && g.guards[0].next && g.guards[0].next.r < g.guards[0].r], [26, 8]],
+  2: [[9, 10], 'cast', ['steer', 9, 7], [9, 13], [27, 13]],
   3: [[13, 7], 'cast', ['steer', 13, 4], [17, 7], [17, 5], [13, 5], [17, 5], [17, 7], [21, 12], [27, 12]],
   4: [[6, 12], 'cast', ['steer', 9, 12], [6, 8], [16, 8], [17, 4], ready, 'cast', ['steer', 20, 4], [21, 4], [21, 14], [27, 14]],
   5: [[15, 11], 'cast', ['steer', 15, 8], [15, 13], [21, 13], [27, 14]],

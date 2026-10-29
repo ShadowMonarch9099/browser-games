@@ -18,8 +18,9 @@
     }
   }
 
-  // The clone is cast at the player's position. It only moves while the clone
-  // key is held (steering), and can never leave the 100px leash circle.
+  // The clone is cast at the player's position. It only moves while the player
+  // is controlling it (see Game.swapControl), and can never leave the 100px
+  // leash circle.
   class Clone {
     constructor(x, y, face) {
       this.x = x;
@@ -53,6 +54,7 @@
       this.pause = 0;
       this.t = 0;
       this.alert = 0;
+      this.sus = 0; // 0..1 suspicion of the player; 1 = caught
       this.bellGoal = null;
       this.angle = this.baseDir;
       if (this.type === 'patrol' && this.path.length > 1) {

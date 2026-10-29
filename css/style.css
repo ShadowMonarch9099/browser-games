@@ -2,23 +2,52 @@ html,
 body {
   margin: 0;
   height: 100%;
-  background: #05040a;
+  background: #08090d;
   overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: none;
 }
 
 body {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ece9ff;
+  height: 100dvh;
+  color: #ebe9f3;
   font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 canvas {
   display: block;
-  background: #0b0a12;
+  background: #08090d;
   touch-action: none;
-  user-select: none;
-  -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+#rotate {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: #08090d;
+  color: #9d8cff;
+  z-index: 1;
+}
+
+#rotate[hidden] {
+  display: none;
+}
+
+#rotate p {
+  margin: 0;
+  color: #ebe9f3;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
 }

@@ -20,21 +20,28 @@ then visit <http://localhost:8765>.
 
 ## Controls
 
-| Action | Keyboard | Touch |
-| --- | --- | --- |
-| Move | WASD / Arrow keys | Drag on the left half |
-| Cast clone | Tap **Space** (or C) | Tap the right half |
-| Steer clone | Hold **Space** + move | Hold right half + drag left half |
-| Restart level | R | — |
-| Pause | Esc / P | ⏸ button |
-| Mute | M | — |
+| Action | Keyboard | Gamepad | Touch |
+| --- | --- | --- | --- |
+| Move | WASD / Arrow keys | Left stick / D-pad | Drag anywhere (floating stick) |
+| Cast shadow, then swap control | **Space** (or C) | A | **SHADOW** button |
+| Restart level | R | Y | Pause menu |
+| Pause | Esc / P | Start | ❚❚ button |
+| Mute | M | — | Settings |
+
+Casting hands you control of the shadow. Press the clone key again to swap
+back to yourself — the shadow stays exactly where you left it, so it can hold
+a plate while you walk away. Press it again to retake the shadow.
+
+On-screen prompts switch to match whichever device you used last. Phones play
+in landscape (a rotate prompt shows in portrait); Settings has a fullscreen
+toggle.
 
 ## Rules (from the game brief)
 
 | Brief | In the game |
 | --- | --- |
 | One temporary shadow clone | Space casts a clone at your position |
-| Only one clone at a time | While a clone exists, Space steers it instead of casting; 1 s cooldown after it fades |
+| Only one clone at a time | While a clone exists, Space swaps control instead of casting; 1 s cooldown after it fades |
 | Lasts 5 seconds | Countdown ring around the clone; it flickers in its last second |
 | Stays within 100px of creation | Dashed leash circle; the clone can never cross it |
 | Activates switches | Plates, timed plates, levers and bells all respond to the clone |
@@ -53,10 +60,14 @@ then visit <http://localhost:8765>.
 - **Levers** toggle on contact and stay flipped.
 - **Bells** pull nearby guards over to investigate for 3 s.
 - **Locked doors** use up one key.
+- **Detection** builds up over a moment while a guard can see you (faster up close) — break line of sight to shake it off. Bumping into a guard is instant.
 - **Patrol guards** walk a route; **sentries** sweep their vision cone; **hounds** sleep until you get close, then chase you.
 - **Stars:** finish the level, collect all 3 shards, finish with 20 s or more left.
 
-Progress (unlocked levels, stars, best times) is saved in `localStorage`.
+The 60-second clock starts on your first move, not when the level loads.
+
+Progress (unlocked levels, stars, best times) and settings (volumes, screen
+shake, tutorial prompts) are saved in `localStorage`.
 
 ## Project layout
 
@@ -68,10 +79,11 @@ js/levels.js          the 12 level maps
 js/level.js           map parsing, collision, line of sight, pathfinding
 js/entities.js        player, clone, guards
 js/game.js            state machine and simulation
-js/render.js          all drawing (world, HUD, menus)
-js/input.js           keyboard / mouse / touch
-js/audio.js           synthesized WebAudio sound effects
-js/save.js            localStorage progress
+js/render.js          world drawing + shared drawing helpers (SCE.Gfx)
+js/ui.js              HUD, menus, results screens, prompts, touch controls
+js/input.js           keyboard / mouse / touch / gamepad
+js/audio.js           synthesized WebAudio effects + generative music
+js/save.js            localStorage progress and settings
 tools/validate-levels.js   static checks for level data
 tools/test-rules.js        headless checks of every rule + scripted playthroughs
 ```
@@ -84,8 +96,7 @@ node tools/test-rules.js
 ```
 
 `test-rules.js` runs the real game code headlessly. It checks every rule in the
-brief and plays through 11 of the 12 levels with scripted inputs; Level 1 is a
-movement tutorial with no mechanics to test. Run both after editing levels or
+brief and plays through all 12 levels with scripted inputs. Run both after editing levels or
 mechanics.
 
 ### Editing levels

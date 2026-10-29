@@ -33,9 +33,18 @@ SCE.CFG = Object.freeze({
   BELL_REACH: 2, // tiles: guards ignore bells they can't get near
   BELL_WAIT: 3,
   CATCH_DIST: 20,
+  // Detection builds up while a guard can see you instead of failing on the
+  // very first frame: DETECT_FAR seconds at the edge of the cone, DETECT_NEAR
+  // point blank. Suspicion drains over DETECT_DECAY seconds once you're hidden.
+  DETECT_FAR: 0.55,
+  DETECT_NEAR: 0.15,
+  DETECT_DECAY: 1.2,
 
   STAR_TIME_LEFT: 20,
 
-  GROUP_COLORS: ['#38bdf8', '#f472b6', '#34d399', '#fb923c', '#a3e635', '#e879f9'],
-  BELL_COLOR: '#facc15',
+  GROUP_COLORS: ['#4cc3f0', '#f07ab4', '#4fd1a1', '#f39a4a', '#b5d94a', '#c99af5'],
+  BELL_COLOR: '#f2c14e',
+
+  // On-screen touch button for the clone (logical px).
+  TOUCH_CLONE: { x: 870, y: 440, r: 44, hit: 80 },
 });
