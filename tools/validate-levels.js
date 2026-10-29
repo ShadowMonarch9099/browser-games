@@ -13,7 +13,7 @@ for (const f of ['js/config.js', 'js/levels.js', 'js/level.js']) {
 }
 const { CFG: C, LEVELS, Level } = ctx.SCE;
 const T = C.TILE;
-const ALLOWED = new Set('#.=PEk*L123456789abcdefghij'.split(''));
+const ALLOWED = new Set('#.=,XBOPEk*L123456789abcdefghij'.split(''));
 
 let failures = 0;
 const fail = (lvl, msg) => {

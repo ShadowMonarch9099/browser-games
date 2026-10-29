@@ -2,7 +2,7 @@ html,
 body {
   margin: 0;
   height: 100%;
-  background: #08090d;
+  background: #0b0d10;
   overflow: hidden;
   overscroll-behavior: none;
   touch-action: none;
@@ -13,7 +13,7 @@ body {
   align-items: center;
   justify-content: center;
   height: 100dvh;
-  color: #ebe9f3;
+  color: #ece8df;
   font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
   -webkit-user-select: none;
   user-select: none;
@@ -21,7 +21,7 @@ body {
 
 canvas {
   display: block;
-  background: #08090d;
+  background: #0b0d10;
   touch-action: none;
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
@@ -35,8 +35,8 @@ canvas {
   align-items: center;
   justify-content: center;
   gap: 12px;
-  background: #08090d;
-  color: #9d8cff;
+  background: #0b0d10;
+  color: #4fd1c5;
   z-index: 1;
 }
 
@@ -46,7 +46,7 @@ canvas {
 
 #rotate p {
   margin: 0;
-  color: #ebe9f3;
+  color: #ece8df;
   font-size: 15px;
   font-weight: 600;
   letter-spacing: 0.04em;

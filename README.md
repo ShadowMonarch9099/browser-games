@@ -24,6 +24,7 @@ then visit <http://localhost:8765>.
 | --- | --- | --- | --- |
 | Move | WASD / Arrow keys | Left stick / D-pad | Drag anywhere (floating stick) |
 | Cast shadow, then swap control | **Space** (or C) | A | **SHADOW** button |
+| Show the level hint | H | B | HINT button (top bar) |
 | Restart level | R | Y | Pause menu |
 | Pause | Esc / P | Start | ❚❚ button |
 | Mute | M | — | Settings |
@@ -64,7 +65,27 @@ toggle.
 - **Patrol guards** walk a route; **sentries** sweep their vision cone; **hounds** sleep until you get close, then chase you.
 - **Stars:** finish the level, collect all 3 shards, finish with 20 s or more left.
 
-The 60-second clock starts on your first move, not when the level loads.
+The 60-second clock starts on your first WASD/arrow or clone-key press, not
+when the level loads. Each level's tip stays hidden until you ask for it with
+the HINT button.
+
+## Levels
+
+Twelve levels in three acts, each with its own look and music style (every
+level also gets its own melody):
+
+| Act | Levels | Look |
+| --- | --- | --- |
+| I — Outer Walls | Breach, The Tether, Empty Hands, Bell Tower | cold flagstones, mossy ramparts |
+| II — Barracks | Two as One, Mess Hall, Clockwork, Kennels | timber floors, crates and barrels |
+| III — Inner Keep | Double Lock, Watchtower, Gauntlet, Final Escape | polished stone, red carpets |
+
+Guards appear from Level 1. In **Bell Tower**, **Mess Hall** and
+**Watchtower** the exit is watched by sentries that never leave their post —
+the only way through is to have your shadow ring a bell (always behind a
+grate, so only the shadow can reach it) and slip past while they investigate.
+Guards respond to a bell only if it is within 400px and they can walk to
+within 2 tiles of it.
 
 Progress (unlocked levels, stars, best times) and settings (volumes, screen
 shake, tutorial prompts) are saved in `localStorage`.
@@ -82,7 +103,7 @@ js/game.js            state machine and simulation
 js/render.js          world drawing + shared drawing helpers (SCE.Gfx)
 js/ui.js              HUD, menus, results screens, prompts, touch controls
 js/input.js           keyboard / mouse / touch / gamepad
-js/audio.js           synthesized WebAudio effects + generative music
+js/audio.js           synthesized WebAudio effects + per-level generative music
 js/save.js            localStorage progress and settings
 tools/validate-levels.js   static checks for level data
 tools/test-rules.js        headless checks of every rule + scripted playthroughs
@@ -102,5 +123,7 @@ mechanics.
 ### Editing levels
 
 Each map is 16 rows of 30 tiles, written as `"10|10|10"` chunks. The outer wall
-is added automatically. See the legend at the top of `js/level.js`. Guard
+is added automatically. See the legend at the top of `js/level.js` — besides
+walls, grates, doors and plates it has props (`X` crate, `B` barrel, `O`
+pillar: solid, block sight) and `,` carpet. Guard
 coordinates use the same grid: `[column 0-29, row 1-16]`.

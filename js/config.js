@@ -42,8 +42,9 @@ SCE.CFG = Object.freeze({
 
   STAR_TIME_LEFT: 20,
 
-  GROUP_COLORS: ['#4cc3f0', '#f07ab4', '#4fd1a1', '#f39a4a', '#b5d94a', '#c99af5'],
-  BELL_COLOR: '#f2c14e',
+  GROUP_COLORS: ['#4cc3f0', '#f07a5a', '#4fd1a1', '#f3c04a', '#b5d94a', '#5b8def'],
+  BELL_COLOR: '#e9b949',
+  ACTS: ['Outer Walls', 'Barracks', 'Inner Keep'], // every 4 levels share a look and a music style
 
   // On-screen touch button for the clone (logical px).
   TOUCH_CLONE: { x: 870, y: 440, r: 44, hit: 80 },

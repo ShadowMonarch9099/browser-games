@@ -71,6 +71,8 @@
       acc -= C.STEP;
     }
     SCE.Render.draw(ctx, game);
+    const m = SCE.Input.mouse;
+    canvas.style.cursor = m && game.hit(m) ? 'pointer' : 'default';
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);

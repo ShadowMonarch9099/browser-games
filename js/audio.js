@@ -177,37 +177,114 @@ SCE.Audio = {
     }
   },
 
-  // Generative soundtrack: a low drone plus sparse plucks from D minor
-  // pentatonic, scheduled a little ahead of the audio clock. Call every frame.
-  // Tension adds a pulse on every beat and pushes the plucks higher.
+  // ---------- music ----------
+  //
+  // A tiny step sequencer. Each style sets tempo, key, mode and
+  // instrumentation; the seed (the level number) generates that level's own
+  // chord progression, melody and bassline, so every level sounds different
+  // while each act keeps its character. Tension (low time, a suspicious
+  // guard) adds a heartbeat and quick hats.
+  STYLES: {
+    menu: { bpm: 72, root: 146.83, mode: [0, 3, 5, 7, 10], lead: 'sine', leadVol: 0.05, bass: 'sine', drums: 0, density: 0.22, pad: 0.035 },
+    act0: { bpm: 88, root: 146.83, mode: [0, 2, 3, 5, 7, 9, 10], lead: 'triangle', leadVol: 0.05, bass: 'triangle', drums: 1, density: 0.34, pad: 0.025 },
+    act1: { bpm: 98, root: 164.81, mode: [0, 1, 3, 5, 7, 8, 10], lead: 'square', leadVol: 0.022, bass: 'triangle', drums: 2, density: 0.38, pad: 0.015 },
+    act2: { bpm: 110, root: 130.81, mode: [0, 2, 3, 5, 7, 8, 11], lead: 'sawtooth', leadVol: 0.018, bass: 'sawtooth', drums: 3, density: 0.44, pad: 0.012 },
+  },
+  trackKey: null,
+  song: null,
+
+  setTrack(track) {
+    const key = `${track.style}:${track.seed}`;
+    if (key === this.trackKey) return;
+    this.trackKey = key;
+    const st = this.STYLES[track.style];
+    let seed = (track.seed + 1) * 2654435761;
+    const rnd = () => {
+      seed = (seed + 0x6d2b79f5) | 0;
+      let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+    const PROGS = [[0, 5, 3, 4], [0, 3, 4, 0], [0, 6, 5, 4], [0, 2, 5, 4], [0, 4, 5, 3]];
+    const prog = PROGS[Math.floor(rnd() * PROGS.length)];
+    // two-bar motif (16 eighths), varied on repeat
+    const motif = [];
+    for (let i = 0; i < 16; i++) motif.push(rnd() < st.density ? Math.floor(rnd() * 8) : null);
+    const bassAlt = rnd() < 0.5;
+    this.song = { st, prog, motif, bassAlt, rnd };
+    this.mStep = 0;
+  },
+
+  note(st, degree, octave) {
+    const m = st.mode;
+    const d = ((degree % m.length) + m.length) % m.length;
+    const o = octave + Math.floor(degree / m.length);
+    return st.root * Math.pow(2, m[d] / 12 + o);
+  },
+
+  hit(kind, at, vol) {
+    const ctx = this.ctx;
+    const bus = this.musicBus;
+    if (kind === 'kick') this.tone(110, 0.18, { type: 'sine', vol, slide: 40, at, bus });
+    else {
+      if (!this.noiseBuf) {
+        this.noiseBuf = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
+        const d = this.noiseBuf.getChannelData(0);
+        for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+      }
+      const src = ctx.createBufferSource();
+      const f = ctx.createBiquadFilter();
+      const g = ctx.createGain();
+      src.buffer = this.noiseBuf;
+      f.type = kind === 'hat' ? 'highpass' : 'bandpass';
+      f.frequency.value = kind === 'hat' ? 7000 : 1800;
+      const dur = kind === 'hat' ? 0.04 : 0.12;
+      g.gain.setValueAtTime(vol, at);
+      g.gain.exponentialRampToValueAtTime(0.0001, at + dur);
+      src.connect(f);
+      f.connect(g);
+      g.connect(bus);
+      src.start(at, Math.random() * 0.5, dur + 0.02);
+    }
+  },
+
+  // Call every tick; schedules a little ahead of the audio clock.
   updateMusic() {
     const ctx = this.ctx;
-    if (!ctx || this.muted || this.musicVol <= 0) {
+    if (!ctx || !this.song || this.muted || this.musicVol <= 0) {
       if (ctx) this.mNext = ctx.currentTime + 0.1;
       return;
     }
-    const STEP = 0.32;
-    const SCALE = [146.83, 174.61, 196.0, 220.0, 261.63, 293.66, 349.23, 392.0];
+    const { st, prog, motif, bassAlt } = this.song;
     const bus = this.musicBus;
+    const eighth = 30 / st.bpm / (this.tension > 0.5 ? 1.12 : 1);
     if (this.mNext < ctx.currentTime) this.mNext = ctx.currentTime + 0.05;
     while (this.mNext < ctx.currentTime + 0.25) {
       const t = this.mNext;
       const i = this.mStep;
-      if (i % 32 === 0) {
-        this.tone(73.42, STEP * 34, { type: 'sine', vol: 0.12, at: t, bus });
-        this.tone(110.0, STEP * 34, { type: 'triangle', vol: 0.03, at: t, bus });
+      const bar = Math.floor(i / 8) % 4;
+      const pos = i % 8;
+      const chord = prog[bar];
+      if (pos === 0 && st.pad) {
+        for (const d of [0, 2, 4]) this.tone(this.note(st, chord + d, 0), eighth * 8.5, { type: 'sine', vol: st.pad, at: t, bus });
       }
-      // deterministic but irregular pluck pattern
-      const h = (i * 2654435761) >>> 0;
-      if (h % 7 < 2) {
-        const n = SCALE[(h >>> 8) % SCALE.length] * (this.tension > 0.5 && h % 3 === 0 ? 2 : 1);
-        this.tone(n, 1.4, { type: 'triangle', vol: 0.035, at: t, bus });
+      if (pos === 0 || (pos === 4 && st.drums >= 1) || (bassAlt && pos === 6)) {
+        const deg = pos === 6 ? chord + 4 : chord;
+        this.tone(this.note(st, deg, -1), eighth * (pos === 0 ? 3 : 1.6), { type: st.bass, vol: st.bass === 'sawtooth' ? 0.035 : 0.09, at: t, bus });
       }
-      if (this.tension > 0 && i % 2 === 0) {
-        this.tone(55, 0.18, { type: 'sine', vol: 0.12 * this.tension, at: t, bus });
+      const m = motif[i % 16];
+      // the motif answers itself an octave up every fourth bar
+      if (m !== null) this.tone(this.note(st, chord + m, bar === 3 ? 1 : 0), eighth * 1.8, { type: st.lead, vol: st.leadVol, at: t, bus });
+      if (st.drums >= 1 && pos === 0) this.hit('kick', t, 0.12);
+      if (st.drums >= 2 && pos % 2 === 1) this.hit('hat', t, 0.03);
+      if (st.drums >= 3 && pos === 4) this.hit('snare', t, 0.05);
+      if (st.drums >= 3 && pos === 7 && bar === 3) this.hit('kick', t, 0.08);
+      if (this.tension > 0) {
+        if (pos % 4 === 0) this.hit('kick', t, 0.1 * this.tension);
+        this.hit('hat', t, 0.02 * this.tension);
       }
       this.mStep++;
-      this.mNext += this.tension > 0.5 ? STEP * 0.75 : STEP;
+      this.mNext += eighth;
     }
   },
 };

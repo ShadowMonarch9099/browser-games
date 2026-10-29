@@ -47,6 +47,7 @@
     makeDemo() {
       const def = SCE.LEVELS[DEMO_LEVEL];
       const level = new SCE.Level(def);
+      level.act = Math.floor(DEMO_LEVEL / 4);
       this.demo = {
         level,
         player: { x: -1e4, y: -1e4 },
@@ -58,6 +59,7 @@
 
     setState(state, fade = false) {
       this.state = state;
+      this.stateT = 0; // drives menu entrance animations
       this.focus = 0;
       this.confirmReset = false;
       if (fade) this.fade = 1;
@@ -89,13 +91,15 @@
       this.levelIndex = i;
       this.sel = i;
       this.level = new SCE.Level(def);
+      this.level.act = Math.floor(i / 4);
       this.player = new SCE.Player(this.level.start.x, this.level.start.y);
+      this.hintOpen = false;
       this.clone = null;
       this.control = 'player';
       this.cloneCooldown = 0;
       this.timeLeft = C.LEVEL_TIME;
       this.playTime = 0;
-      this.started = false; // the timer starts on the first move
+      this.started = false; // the timer starts on the first WASD/arrow or clone-key press
       this.keys = 0;
       this.shards = 0;
       this.shardTotal = this.level.items.filter((it) => it.type === 'shard').length;
@@ -295,6 +299,7 @@
     }
 
     activate(it) {
+      this.pulse = 0.2;
       if (it.action) {
         A.play('click');
         it.action();
@@ -305,6 +310,8 @@
 
     update(dt) {
       this.time += dt;
+      this.stateT = (this.stateT || 0) + dt;
+      if (this.pulse > 0) this.pulse -= dt;
       if (this.fade > 0) this.fade = Math.max(0, this.fade - dt * 3);
       if (this.toastMsg && (this.toastMsg.life -= dt) <= 0) this.toastMsg = null;
       I.playMode = this.state === 'play';
@@ -354,7 +361,21 @@
           if (MENU_STATES.has(this.state)) this.handleMenu();
       }
       if (this.state !== 'paused') this.updateFx(dt);
+      A.setTrack(this.musicTrack());
       A.updateMusic();
+    }
+
+    // Menus get their own theme; each level plays its act's style with a
+    // melody of its own.
+    musicTrack() {
+      const s = this.state;
+      const menu = s === 'title' || s === 'select' || ((s === 'settings' || s === 'controls') && this.back && this.back.state === 'title');
+      return menu || !this.level ? { style: 'menu', seed: 0 } : { style: `act${this.level.act}`, seed: this.levelIndex + 1 };
+    }
+
+    toggleHint() {
+      this.hintOpen = !this.hintOpen;
+      A.play(this.hintOpen ? 'swap' : 'swapBack');
     }
 
     hit(p) {
@@ -389,17 +410,18 @@
     updatePlay(dt) {
       if (I.wasPressed('Escape', 'KeyP', 'PadStart')) return this.pause();
       if (I.wasPressed('KeyR', 'PadY')) return this.startLevel(this.levelIndex);
+      if (I.wasPressed('KeyH', 'PadB')) this.toggleHint();
 
       const L = this.level;
       const p = this.player;
 
+      // Nothing moves until the first movement or clone-key press; that press
+      // also counts (it moves you, or casts the clone).
       if (!this.started) {
         const ax0 = I.axis();
-        const go = ax0.x || ax0.y || I.clonePressed() || I.wasPressed('Enter');
-        if (!go) return;
+        if (!(ax0.x || ax0.y || I.clonePressed())) return;
         this.started = true;
         A.play('start');
-        if (!(ax0.x || ax0.y)) return; // a key press only starts the clock
       }
 
       this.playTime += dt;
@@ -468,6 +490,8 @@
 
     movePlayer(ax, dt) {
       const p = this.player;
+      p.moving = !!(ax.x || ax.y);
+      if (this.clone) this.clone.moving = false;
       if (ax.x || ax.y) {
         p.face = { x: ax.x, y: ax.y };
         p.walkT += dt;
@@ -498,21 +522,26 @@
       this.clone = new SCE.Clone(p.x, p.y, p.face);
       this.control = 'clone';
       A.play('clone');
-      this.burst(p.x, p.y, '#a78bfa', 18, 80);
+      this.burst(p.x, p.y, '#5eead4', 18, 80);
     }
 
     swapControl() {
       this.control = this.control === 'clone' ? 'player' : 'clone';
       A.play(this.control === 'clone' ? 'swap' : 'swapBack');
       const e = this.control === 'clone' ? this.clone : this.player;
-      this.burst(e.x, e.y, this.control === 'clone' ? '#a78bfa' : '#e5e7eb', 8, 50);
+      this.burst(e.x, e.y, this.control === 'clone' ? '#5eead4' : '#ece8df', 8, 50);
     }
 
     moveClone(ax, dt) {
       const cl = this.clone;
       const px = cl.x;
       const py = cl.y;
-      if (ax.x || ax.y) cl.face = { x: ax.x, y: ax.y };
+      cl.moving = !!(ax.x || ax.y);
+      this.player.moving = false;
+      if (cl.moving) {
+        cl.face = { x: ax.x, y: ax.y };
+        cl.walkT += dt;
+      }
       const sp = C.CLONE_SPEED * dt;
       SCE.moveEntity(this.level, cl, ax.x * sp, ax.y * sp, 'clone');
 
@@ -534,13 +563,13 @@
         cl.strain = 0.25;
       }
       if ((ax.x || ax.y) && Math.random() < 0.5) {
-        this.particles.push({ x: cl.x, y: cl.y, vx: 0, vy: 0, life: 0.4, max: 0.4, size: 5, color: '#7c3aed' });
+        this.particles.push({ x: cl.x, y: cl.y, vx: 0, vy: 0, life: 0.4, max: 0.4, size: 4, color: '#2bb3a3' });
       }
     }
 
     expireClone() {
       const cl = this.clone;
-      this.burst(cl.x, cl.y, '#7c3aed', 14, 60);
+      this.burst(cl.x, cl.y, '#2bb3a3', 14, 60);
       this.clone = null;
       this.control = 'player';
       this.cloneCooldown = C.CLONE_COOLDOWN;
@@ -639,15 +668,15 @@
           } else {
             this.shards++;
             A.play('pickup');
-            this.text(it.x, it.y - 14, `Shard ${this.shards}/${this.shardTotal}`, '#c4b5fd');
-            this.burst(it.x, it.y, '#c084fc', 14, 90);
+            this.text(it.x, it.y - 14, `Shard ${this.shards}/${this.shardTotal}`, '#9bd5ff');
+            this.burst(it.x, it.y, '#6fc3ff', 14, 90);
           }
         } else if (cl && Math.hypot(it.x - cl.x, it.y - cl.y) < 18 && it.wisp <= 0) {
           // Brief: the clone cannot collect items.
           it.wisp = 1.5;
           A.play('wisp');
-          this.text(it.x, it.y - 14, "Shadows can't grab!", '#a1a1c2');
-          this.burst(it.x, it.y, '#64607a', 8, 40);
+          this.text(it.x, it.y - 14, "Shadows can't grab!", '#9fc4c0');
+          this.burst(it.x, it.y, '#4f6a6e', 8, 40);
         }
       }
     }
