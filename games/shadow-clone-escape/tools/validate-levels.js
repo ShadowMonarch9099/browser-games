@@ -13,7 +13,7 @@ for (const f of ['js/config.js', 'js/levels.js', 'js/level.js']) {
 }
 const { CFG: C, LEVELS, Level } = ctx.SCE;
 const T = C.TILE;
-const ALLOWED = new Set('#.=PEk*L123456789abcdefghij'.split(''));
+const ALLOWED = new Set('#.=,XBOPEk*L123456789abcdefghij'.split(''));
 
 let failures = 0;
 const fail = (lvl, msg) => {
@@ -44,6 +44,9 @@ LEVELS.forEach((def, li) => {
     if (!d.tiles.length) fail(tag, `door group ${d.group} has plates but no tiles`);
     if (!d.plates.length) fail(tag, `door group ${d.group} has no plates`);
     if (d.twin && d.plates.length < 2) fail(tag, `twin door ${d.group} needs 2+ plates`);
+    // Brief: twin doors need player AND clone. Only hold plates guarantee two
+    // bodies; a lever or timed plate could be pressed by one in turn.
+    if (d.twin && d.plates.some((p) => p.type !== 'hold')) fail(tag, `twin door ${d.group} must use hold plates only`);
   }
 
   // Open everything, then flood-fill what the player can reach.

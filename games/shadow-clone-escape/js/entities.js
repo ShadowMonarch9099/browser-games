@@ -14,12 +14,14 @@
       this.x = x;
       this.y = y;
       this.face = { x: 1, y: 0 };
-      this.walkT = 0;
+      this.walkT = 0; // drives the walk cycle
+      this.moving = false;
     }
   }
 
-  // The clone is cast at the player's position. It only moves while the clone
-  // key is held (steering), and can never leave the 100px leash circle.
+  // The clone is cast at the player's position. It only moves while the player
+  // is controlling it (see Game.swapControl), and can never leave the 100px
+  // leash circle.
   class Clone {
     constructor(x, y, face) {
       this.x = x;
@@ -28,6 +30,8 @@
       this.sy = y;
       this.face = { ...face };
       this.life = C.CLONE_LIFETIME;
+      this.walkT = 0;
+      this.moving = false;
       this.strain = 0; // flashes the leash when the clone hits its edge
     }
   }
@@ -53,6 +57,9 @@
       this.pause = 0;
       this.t = 0;
       this.alert = 0;
+      this.sus = 0; // 0..1 suspicion of the player; 1 = caught
+      this.walkT = 0;
+      this.moving = false;
       this.bellGoal = null;
       this.angle = this.baseDir;
       if (this.type === 'patrol' && this.path.length > 1) {
@@ -157,7 +164,9 @@
       }
 
       const moved = this.move(dt, L, goal);
-      if (!moved && face !== null) this.turnTo(face, dt);
+      this.moving = moved;
+      if (moved) this.walkT += dt;
+      else if (face !== null) this.turnTo(face, dt);
     }
 
     move(dt, L, goal) {

@@ -5,10 +5,13 @@
 //   P  player start    E  exit            k  key        *  shadow shard
 //   L  locked door (consumes a key)       1-9  door tile belonging to that group
 //   a-j  plate/lever/bell, configured in the level's `plates` table
+//   X  crate    B  barrel    O  pillar   (solid for everyone, block sight)
+//   ,  carpet (plain floor, decorative)
 (function () {
   const C = SCE.CFG;
   const T = C.TILE;
   const PLATE_CHARS = 'abcdefghij';
+  const SOLID = '#XBO'; // base tiles nobody walks or sees through
   const DIRS = [
     [0, -1],
     [1, 0],
@@ -48,8 +51,7 @@
         for (let c = 0; c < C.COLS; c++) {
           const ch = rows[r][c] || '#';
           let b = '.';
-          if (ch === '#') b = '#';
-          else if (ch === '=') b = '=';
+          if (SOLID.includes(ch) || ch === '=' || ch === ',') b = ch;
           else if (ch === 'P') this.start = center(c, r);
           else if (ch === 'E') this.exits.push({ c, r, ...center(c, r) });
           else if (ch === 'k' || ch === '*') {
@@ -118,7 +120,7 @@
     solid(c, r, who) {
       if (!this.inBounds(c, r)) return true;
       const b = this.base[r][c];
-      if (b === '#') return true;
+      if (SOLID.includes(b)) return true;
       if (b === '=' && who !== 'clone') return true;
       const d = this.doorAt[r][c];
       if (d && !d.open) return true;
@@ -129,7 +131,7 @@
 
     blocksSight(c, r) {
       if (!this.inBounds(c, r)) return true;
-      if (this.base[r][c] === '#') return true;
+      if (SOLID.includes(this.base[r][c])) return true;
       const d = this.doorAt[r][c];
       if (d && !d.open) return true;
       const l = this.lockAt[r][c];
