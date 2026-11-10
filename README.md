@@ -1,129 +1,76 @@
-# Shadow Clone Escape
+# Arcade
 
-A top-down stealth-puzzle game that runs entirely in the browser. Cast a
-temporary shadow clone to hold switches, ring bells and slip through grates —
-then escape each level of the fortress before 60 seconds run out.
+One website for all our browser games. Every folder in `games/` shows up on
+the landing page automatically and is playable from it — no one has to edit
+the homepage to add a game.
 
-No build step, no dependencies, no server required.
+```
+index.html              landing page (reads games.json, draws the cards)
+play.html               player page: the game in a frame, with back + fullscreen
+site/                   shared CSS / JS / favicon for those two pages
+games/
+  shadow-clone-escape/  one folder per game
+    game.json           ← the manifest that puts it on the site
+    index.html          ← the game's entry point
+    thumbnail.svg
+    …                   anything else the game needs
+  _template/            copy this to start a new game (ignored by the site)
+scripts/
+  registry.mjs          scans games/*/game.json → games.json
+  dev.mjs               local server (no dependencies)
+.github/workflows/      check on PRs, deploy to GitHub Pages on main
+```
 
-## Play
+## Run it locally
 
-Open `index.html` in any modern browser (Chrome, Firefox, Edge, Safari).
-
-Or serve the folder (handy for phones on the same network):
+Needs Node 18+. No `npm install`.
 
 ```bash
-python -m http.server 8765
+npm run dev
 ```
 
-then visit <http://localhost:8765>.
+Open <http://localhost:8765>. The game list is rebuilt on every refresh, so a
+new folder appears as soon as you reload. If a `game.json` has a problem, a red
+box on the landing page tells you exactly what to fix.
 
-## Controls
+## Add your game
 
-| Action | Keyboard | Gamepad | Touch |
-| --- | --- | --- | --- |
-| Move | WASD / Arrow keys | Left stick / D-pad | Drag anywhere (floating stick) |
-| Cast shadow, then swap control | **Space** (or C) | A | **SHADOW** button |
-| Show the level hint | H | B | HINT button (top bar) |
-| Restart level | R | Y | Pause menu |
-| Pause | Esc / P | Start | ❚❚ button |
-| Mute | M | — | Settings |
+1. Copy `games/_template` to `games/<your-game>` — the folder name becomes the
+   URL, so use `lowercase-with-dashes`.
+2. Put your game in that folder with `index.html` as the entry point.
+   **Use relative paths only** (`js/main.js`, not `/js/main.js`), since the
+   game is served from `/games/<your-game>/`.
+3. Fill in `game.json`:
 
-Casting hands you control of the shadow. Press the clone key again to swap
-back to yourself — the shadow stays exactly where you left it, so it can hold
-a plate while you walk away. Press it again to retake the shadow.
+   | Field | Required | Notes |
+   | --- | --- | --- |
+   | `title` | yes | |
+   | `description` | yes | One or two sentences, shown on the card |
+   | `authors` | | List of names |
+   | `thumbnail` | | Image in your folder, 16:9 (e.g. 640×360). Without one, a cover is generated from your title and `accent` |
+   | `tags` | | e.g. `["puzzle", "action"]` — become filter chips on the homepage |
+   | `controls` | | Any of `keyboard`, `mouse`, `gamepad`, `touch` — shown as icons |
+   | `orientation` | | `any`, `landscape` or `portrait` |
+   | `accent` | | Hex colour for the card's hover glow |
+   | `added` | | `YYYY-MM-DD`; games from the last 3 weeks get a NEW badge, newest first |
 
-On-screen prompts switch to match whichever device you used last. Phones play
-in landscape (a rotate prompt shows in portrait); Settings has a fullscreen
-toggle.
+4. `npm run check` to validate, then open a pull request. CI re-runs the check;
+   once it's merged to `main` the site redeploys with your game on it.
 
-## Rules (from the game brief)
+Games run inside an `<iframe>` on `play.html`, with fullscreen, gamepad and
+audio allowed. Each game is also reachable on its own at `/games/<slug>/`.
+Keep `localStorage` keys prefixed with your game's name — every game shares
+the same origin.
 
-| Brief | In the game |
-| --- | --- |
-| One temporary shadow clone | Space casts a clone at your position |
-| Only one clone at a time | While a clone exists, Space swaps control instead of casting; 1 s cooldown after it fades |
-| Lasts 5 seconds | Countdown ring around the clone; it flickers in its last second |
-| Stays within 100px of creation | Dashed leash circle; the clone can never cross it |
-| Activates switches | Plates, timed plates, levers and bells all respond to the clone |
-| Cannot collect items | Keys and shards pass straight through it ("Shadows can't grab!") |
-| Enemies ignore it | Guards and hounds never see, chase or react to the clone |
-| Distract enemies | Done *indirectly*: the clone rings bells that lure guards, and holds gates that seal hounds in |
-| Doors needing player + clone on two switches | Twin-lock doors (⧉) latch open once both plates are pressed together |
-| Finish each level in 60 seconds | Timer per level; at 0 the level fails |
-| Move + clone key | Exactly that — everything else is menu keys |
+Making your game a self-contained folder (no build step) is easiest. If your
+game *does* need a build (Vite, Phaser bundles, Unity WebGL…), commit the built
+output into your folder, or ask to add a build step to `deploy.yml`.
 
-## Mechanics
+## Deploying
 
-- **Grates** block you and guards, but your shadow slips through. Guards can see through them.
-- **Hold plates** open their door only while pressed. Doors never close on anyone standing in them.
-- **Timed plates** keep their door open for 2 s after release.
-- **Levers** toggle on contact and stay flipped.
-- **Bells** pull nearby guards over to investigate for 3 s.
-- **Locked doors** use up one key.
-- **Detection** builds up over a moment while a guard can see you (faster up close) — break line of sight to shake it off. Bumping into a guard is instant.
-- **Patrol guards** walk a route; **sentries** sweep their vision cone; **hounds** sleep until you get close, then chase you.
-- **Stars:** finish the level, collect all 3 shards, finish with 20 s or more left.
+`.github/workflows/deploy.yml` publishes to GitHub Pages on every push to
+`main`. One-time setup: **Settings → Pages → Source: GitHub Actions**.
 
-The 60-second clock starts on your first WASD/arrow or clone-key press, not
-when the level loads. Each level's tip stays hidden until you ask for it with
-the HINT button.
+## Games
 
-## Levels
-
-Twelve levels in three acts, each with its own look and music style (every
-level also gets its own melody):
-
-| Act | Levels | Look |
-| --- | --- | --- |
-| I — Outer Walls | Breach, The Tether, Empty Hands, Bell Tower | cold flagstones, mossy ramparts |
-| II — Barracks | Two as One, Mess Hall, Clockwork, Kennels | timber floors, crates and barrels |
-| III — Inner Keep | Double Lock, Watchtower, Gauntlet, Final Escape | polished stone, red carpets |
-
-Guards appear from Level 1. In **Bell Tower**, **Mess Hall** and
-**Watchtower** the exit is watched by sentries that never leave their post —
-the only way through is to have your shadow ring a bell (always behind a
-grate, so only the shadow can reach it) and slip past while they investigate.
-Guards respond to a bell only if it is within 400px and they can walk to
-within 2 tiles of it.
-
-Progress (unlocked levels, stars, best times) and settings (volumes, screen
-shake, tutorial prompts) are saved in `localStorage`.
-
-## Project layout
-
-```
-index.html            canvas + script tags (classic scripts, so file:// works)
-css/style.css
-js/config.js          every tuning constant, including the brief's rules
-js/levels.js          the 12 level maps
-js/level.js           map parsing, collision, line of sight, pathfinding
-js/entities.js        player, clone, guards
-js/game.js            state machine and simulation
-js/render.js          world drawing + shared drawing helpers (SCE.Gfx)
-js/ui.js              HUD, menus, results screens, prompts, touch controls
-js/input.js           keyboard / mouse / touch / gamepad
-js/audio.js           synthesized WebAudio effects + per-level generative music
-js/save.js            localStorage progress and settings
-tools/validate-levels.js   static checks for level data
-tools/test-rules.js        headless checks of every rule + scripted playthroughs
-```
-
-## Development
-
-```bash
-node tools/validate-levels.js
-node tools/test-rules.js
-```
-
-`test-rules.js` runs the real game code headlessly. It checks every rule in the
-brief and plays through all 12 levels with scripted inputs. Run both after editing levels or
-mechanics.
-
-### Editing levels
-
-Each map is 16 rows of 30 tiles, written as `"10|10|10"` chunks. The outer wall
-is added automatically. See the legend at the top of `js/level.js` — besides
-walls, grates, doors and plates it has props (`X` crate, `B` barrel, `O`
-pillar: solid, block sight) and `,` carpet. Guard
-coordinates use the same grid: `[column 0-29, row 1-16]`.
+- [Shadow Clone Escape](games/shadow-clone-escape/README.md) — stealth puzzle with a five-second shadow clone.

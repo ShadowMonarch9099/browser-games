@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#0b0d10" />
+    <title>Arcade</title>
+    <link rel="icon" href="site/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="site/site.css" />
+  </head>
+  <body class="player">
+    <div class="bar">
+      <a class="icon-btn" href="./" aria-label="Back to all games">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        <span class="label">All games</span>
+      </a>
+      <span class="title" id="title">Loading…</span>
+      <span class="by" id="by"></span>
+      <span class="spacer"></span>
+      <a class="icon-btn" id="direct" href="#" target="_blank" rel="noopener" aria-label="Open game in its own tab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>
+      </a>
+      <button class="icon-btn" id="fs" aria-label="Fullscreen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+        <span class="label">Fullscreen</span>
+      </button>
+    </div>
+    <a class="float-back" href="./" aria-label="Back to all games">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+    </a>
+    <iframe class="frame" id="frame" title="Game" allow="fullscreen; gamepad; autoplay; clipboard-write; screen-wake-lock" allowfullscreen></iframe>
+
+    <script src="site/site.js"></script>
+    <script>
+      const slug = new URLSearchParams(location.search).get('g');
+      const frame = document.getElementById('frame');
+
+      function fail(msg) {
+        document.getElementById('title').textContent = msg;
+        frame.replaceWith(Object.assign(document.createElement('div'), {
+          className: 'empty', style: 'margin:32px', innerHTML: `${escapeHtml(msg)} <a href="./">Back to all games</a>`,
+        }));
+      }
+
+      loadGames().then(({ games }) => {
+        const g = games.find((x) => x.slug === slug);
+        if (!g) return fail('That game was not found.');
+        document.title = `${g.title} · ${SITE.name}`;
+        document.getElementById('title').textContent = g.title;
+        document.getElementById('by').textContent = g.authors.length ? `by ${g.authors.join(', ')}` : '';
+        document.getElementById('direct').href = g.url;
+        frame.title = g.title;
+        frame.src = g.url;
+        // Give the game keyboard focus straight away so arrow keys don't scroll the page.
+        frame.addEventListener('load', () => frame.focus());
+      }).catch((e) => fail(`Couldn't load the game list (${e.message}).`));
+
+      document.getElementById('fs').addEventListener('click', () => {
+        const el = frame;
+        (el.requestFullscreen || el.webkitRequestFullscreen || (() => {})).call(el);
+        frame.focus();
+      });
+    </script>
+  </body>
+</html>

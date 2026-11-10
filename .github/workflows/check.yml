@@ -1,0 +1,20 @@
+# Runs on every pull request so a broken game.json never reaches the live site.
+name: Check games
+
+on:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate every games/*/game.json
+        run: node scripts/registry.mjs --check
+      - name: Shadow Clone Escape tests
+        run: |
+          node games/shadow-clone-escape/tools/validate-levels.js
+          node games/shadow-clone-escape/tools/test-rules.js

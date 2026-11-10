@@ -1,0 +1,11 @@
+{
+  "title": "Shadow Clone Escape",
+  "description": "A top-down stealth puzzle: cast a five-second shadow clone to hold switches and slip past guards. Escape each level in 60 seconds.",
+  "authors": ["Kush Honkalse"],
+  "thumbnail": "thumbnail.svg",
+  "tags": ["puzzle", "stealth"],
+  "controls": ["keyboard", "gamepad", "touch"],
+  "orientation": "landscape",
+  "accent": "#7c5cff",
+  "added": "2026-10-29"
+}

@@ -2,42 +2,125 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#0b0d10" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="description" content="A top-down stealth puzzle: cast a five-second shadow clone to hold switches and slip past guards. Escape each level in 60 seconds." />
-    <title>Shadow Clone Escape</title>
-    <link rel="stylesheet" href="css/style.css" />
+    <meta name="description" content="Free browser games made by our crew. No installs, no sign-ups — just click and play." />
+    <title>Arcade</title>
+    <link rel="icon" href="site/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="site/site.css" />
   </head>
   <body>
-    <div id="stage">
-      <canvas id="bg" aria-hidden="true"></canvas>
-      <div id="shade"></div>
-      <canvas id="game" width="960" height="540" aria-label="Shadow Clone Escape game"></canvas>
-    </div>
-    <div id="rotate" hidden>
-      <svg width="56" height="56" viewBox="0 0 56 56" aria-hidden="true">
-        <rect x="16" y="6" width="24" height="44" rx="4" fill="none" stroke="currentColor" stroke-width="2.5" />
-        <path d="M44 22a14 14 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
-        <path d="M41 33l3 2 2-3" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
-      </svg>
-      <p>Rotate your device to landscape</p>
-    </div>
-    <noscript>Shadow Clone Escape needs JavaScript enabled.</noscript>
+    <header class="top">
+      <div class="wrap">
+        <a class="logo" href="./">
+          <span class="logo-mark" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+          </span>
+          <span data-site-name>Arcade</span>
+        </a>
+        <div class="spacer"></div>
+        <input class="search" id="search" type="search" placeholder="Search games…" aria-label="Search games" autocomplete="off" />
+      </div>
+    </header>
 
-    <!-- Classic scripts (not ES modules) so the game also runs straight from file:// -->
-    <script src="js/config.js"></script>
-    <script src="js/save.js"></script>
-    <script src="js/audio.js"></script>
-    <script src="js/input.js"></script>
-    <script src="js/levels.js"></script>
-    <script src="js/level.js"></script>
-    <script src="js/entities.js"></script>
-    <script src="js/game.js"></script>
-    <script src="js/render.js"></script>
-    <script src="js/ui.js"></script>
-    <script src="js/main.js"></script>
+    <main class="wrap">
+      <section class="hero">
+        <h1>Games we made.<br /><span>Play them right here.</span></h1>
+        <p>No installs, no sign-ups. Pick a game and you're in — works on desktop, and on phones where the game supports touch.</p>
+      </section>
+
+      <div id="notice"></div>
+      <div class="filters" id="filters" role="toolbar" aria-label="Filter by tag"></div>
+      <div class="grid" id="grid" aria-live="polite">
+        <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="wrap">
+        Made by friends. Want your game here? Add a folder to <code>games/</code> — see the README.
+      </div>
+    </footer>
+
+    <script src="site/site.js"></script>
+    <script>
+      const ICONS = {
+        keyboard: '<path d="M3 7h18v10H3zM7 11h.01M11 11h.01M15 11h.01M8 14h8"/>',
+        mouse: '<rect x="7" y="3" width="10" height="18" rx="5"/><path d="M12 7v3"/>',
+        gamepad: '<path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"/><rect x="2" y="6" width="20" height="12" rx="6"/>',
+        touch: '<rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/>',
+      };
+      const icon = (k) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="${k}" role="img"><title>${k}</title>${ICONS[k]}</svg>`;
+
+      const grid = document.getElementById('grid');
+      const filters = document.getElementById('filters');
+      const search = document.getElementById('search');
+      let games = [];
+      let activeTag = 'all';
+
+      function isNew(g) {
+        if (!g.added) return false;
+        return (Date.now() - new Date(g.added).getTime()) / 864e5 < 21;
+      }
+
+      function card(g) {
+        const cover = g.thumbnail
+          ? `<div class="cover"><img src="${escapeHtml(g.thumbnail)}" alt="" loading="lazy" />`
+          : `<div class="cover generated">${escapeHtml(initials(g.title))}`;
+        return `
+          <a class="card" href="play.html?g=${encodeURIComponent(g.slug)}" style="${g.accent ? `--accent:${g.accent}` : ''}">
+            ${cover}
+              ${isNew(g) ? '<span class="new-badge">NEW</span>' : ''}
+              <span class="play-badge">Play ▶</span>
+            </div>
+            <div class="body">
+              <h2>${escapeHtml(g.title)}</h2>
+              <p>${escapeHtml(g.description)}</p>
+              <div class="meta">
+                <div class="tags">${g.tags.slice(0, 3).map((t) => `<span class="tag">${escapeHtml(t)}</span>`).join('')}</div>
+                <div class="icons">${g.controls.filter((c) => ICONS[c]).map(icon).join('')}</div>
+              </div>
+            </div>
+          </a>`;
+      }
+
+      function render() {
+        const q = search.value.trim().toLowerCase();
+        const shown = games.filter((g) =>
+          (activeTag === 'all' || g.tags.includes(activeTag)) &&
+          (!q || [g.title, g.description, ...g.tags, ...g.authors].join(' ').toLowerCase().includes(q)));
+        grid.innerHTML = shown.length
+          ? shown.map(card).join('')
+          : `<div class="empty">${games.length ? 'No games match that.' : 'No games yet — add a folder to <code>games/</code>.'}</div>`;
+      }
+
+      function renderFilters() {
+        const tags = ['all', ...new Set(games.flatMap((g) => g.tags))].sort((a, b) => (a === 'all' ? -1 : b === 'all' ? 1 : a.localeCompare(b)));
+        filters.hidden = tags.length < 3;
+        filters.innerHTML = tags.map((t) => `<button class="chip" data-tag="${escapeHtml(t)}" aria-pressed="${t === activeTag}">${escapeHtml(t)}</button>`).join('');
+      }
+
+      filters.addEventListener('click', (e) => {
+        const b = e.target.closest('[data-tag]');
+        if (!b) return;
+        activeTag = b.dataset.tag;
+        renderFilters();
+        render();
+      });
+      search.addEventListener('input', render);
+
+      loadGames().then((data) => {
+        games = data.games;
+        // Only the dev server sends errors; on the live site broken games are blocked by CI.
+        if (data.errors && data.errors.length) {
+          document.getElementById('notice').innerHTML =
+            `<div class="notice"><strong>Some games were skipped</strong> (only visible locally):<ul>${data.errors.map((e) => `<li>${escapeHtml(e)}</li>`).join('')}</ul></div>`;
+        }
+        renderFilters();
+        render();
+      }).catch((e) => {
+        grid.innerHTML = `<div class="empty">Couldn't load the game list (${escapeHtml(e.message)}).<br />Run <code>npm run dev</code> to view the site locally.</div>`;
+      });
+    </script>
   </body>
 </html>
