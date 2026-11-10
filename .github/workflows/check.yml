@@ -1,8 +1,11 @@
-# Runs on every pull request so a broken game.json never reaches the live site.
+# Validates every game on pull requests and on pushes to main, so a broken
+# game.json shows up as a red ✗ next to the commit on GitHub.
 name: Check games
 
 on:
   pull_request:
+  push:
+    branches: [main]
 
 jobs:
   check:

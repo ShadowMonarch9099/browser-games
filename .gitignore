@@ -4,4 +4,5 @@ Thumbs.db
 node_modules/
 *.log
 games.json
-_site/
+dist/
+.vercel/

@@ -4,7 +4,7 @@
   "description": "One site, many browser games. Drop a folder into games/ and it appears on the landing page.",
   "scripts": {
     "dev": "node scripts/dev.mjs",
-    "build": "node scripts/registry.mjs",
+    "build": "node scripts/build.mjs",
     "check": "node scripts/registry.mjs --check"
   }
 }

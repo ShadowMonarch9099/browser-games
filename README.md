@@ -1,76 +1,73 @@
-# Arcade
+# Browser Games
 
 One website for all our browser games. Every folder in `games/` shows up on
-the landing page automatically and is playable from it — no one has to edit
-the homepage to add a game.
+the homepage automatically and is playable from it. Nobody needs to edit the
+homepage to add a game.
+
+## ➜ Adding your game
+
+**Read [ADDING_GAMES.md](ADDING_GAMES.md).** It covers everything step by
+step: making your folder, filling in `game.json`, thumbnails, testing
+locally, publishing (with git or by uploading on GitHub), rules every game
+must follow, exporting from engines (Godot, Unity, Vite…), and fixes for
+common problems.
+
+In short: copy `games/_template` to `games/<your-game>/`, put your game in it
+with `index.html` as the start page, fill in `game.json`, and push to `main`.
+
+## Run the site locally
+
+Needs [Node.js](https://nodejs.org) 18+. There is nothing to install.
+
+```bash
+npm run dev      # site at http://localhost:8765; new games appear on refresh
+npm run check    # validate every games/*/game.json
+npm run build    # build the deployable site into dist/ (what Vercel runs)
+```
+
+## How it fits together
 
 ```
-index.html              landing page (reads games.json, draws the cards)
-play.html               player page: the game in a frame, with back + fullscreen
+index.html              homepage: reads games.json and draws the game cards
+play.html               player page: runs a game in a frame, with back + fullscreen
 site/                   shared CSS / JS / favicon for those two pages
 games/
   shadow-clone-escape/  one folder per game
-    game.json           ← the manifest that puts it on the site
-    index.html          ← the game's entry point
-    thumbnail.svg
+    game.json           ← describes the game; this is what puts it on the site
+    index.html          ← the game's start page
     …                   anything else the game needs
-  _template/            copy this to start a new game (ignored by the site)
+  _template/            starting point for new games (ignored by the site)
 scripts/
-  registry.mjs          scans games/*/game.json → games.json
+  registry.mjs          scans games/*/game.json, validates them, lists the games
+  build.mjs             builds dist/ (site + valid games + games.json)
   dev.mjs               local server (no dependencies)
-.github/workflows/      check on PRs, deploy to GitHub Pages on main
+vercel.json             tells Vercel to run the build and serve dist/
+.github/workflows/
+  check.yml             validates games on every push to main and every PR
+ADDING_GAMES.md         the contributor guide
 ```
 
-## Run it locally
+`games.json` is generated, never committed. Locally the dev server
+regenerates it on every request; on Vercel `scripts/build.mjs` writes it at
+build time.
 
-Needs Node 18+. No `npm install`.
+## Deploying on Vercel
 
-```bash
-npm run dev
-```
+One-time setup:
 
-Open <http://localhost:8765>. The game list is rebuilt on every refresh, so a
-new folder appears as soon as you reload. If a `game.json` has a problem, a red
-box on the landing page tells you exactly what to fix.
+1. On [vercel.com](https://vercel.com), click **Add New → Project** and
+   import `ShadowMonarch9099/browser-games` from GitHub.
+2. Leave the settings as detected. `vercel.json` already sets the build
+   command (`node scripts/build.mjs`), the output directory (`dist`) and
+   "no framework". Click **Deploy**.
 
-## Add your game
+After that, every push to `main` deploys to production automatically, and
+pushes to other branches get their own preview URL.
 
-1. Copy `games/_template` to `games/<your-game>` — the folder name becomes the
-   URL, so use `lowercase-with-dashes`.
-2. Put your game in that folder with `index.html` as the entry point.
-   **Use relative paths only** (`js/main.js`, not `/js/main.js`), since the
-   game is served from `/games/<your-game>/`.
-3. Fill in `game.json`:
-
-   | Field | Required | Notes |
-   | --- | --- | --- |
-   | `title` | yes | |
-   | `description` | yes | One or two sentences, shown on the card |
-   | `authors` | | List of names |
-   | `thumbnail` | | Image in your folder, 16:9 (e.g. 640×360). Without one, a cover is generated from your title and `accent` |
-   | `tags` | | e.g. `["puzzle", "action"]` — become filter chips on the homepage |
-   | `controls` | | Any of `keyboard`, `mouse`, `gamepad`, `touch` — shown as icons |
-   | `orientation` | | `any`, `landscape` or `portrait` |
-   | `accent` | | Hex colour for the card's hover glow |
-   | `added` | | `YYYY-MM-DD`; games from the last 3 weeks get a NEW badge, newest first |
-
-4. `npm run check` to validate, then open a pull request. CI re-runs the check;
-   once it's merged to `main` the site redeploys with your game on it.
-
-Games run inside an `<iframe>` on `play.html`, with fullscreen, gamepad and
-audio allowed. Each game is also reachable on its own at `/games/<slug>/`.
-Keep `localStorage` keys prefixed with your game's name — every game shares
-the same origin.
-
-Making your game a self-contained folder (no build step) is easiest. If your
-game *does* need a build (Vite, Phaser bundles, Unity WebGL…), commit the built
-output into your folder, or ask to add a build step to `deploy.yml`.
-
-## Deploying
-
-`.github/workflows/deploy.yml` publishes to GitHub Pages on every push to
-`main`. One-time setup: **Settings → Pages → Source: GitHub Actions**.
+If a `game.json` is invalid, the build fails on purpose and Vercel keeps
+serving the last good version. The failed build's log (and the red ✗ from
+**Check games** on GitHub) says exactly what to fix.
 
 ## Games
 
-- [Shadow Clone Escape](games/shadow-clone-escape/README.md) — stealth puzzle with a five-second shadow clone.
+- [Shadow Clone Escape](games/shadow-clone-escape/README.md): stealth puzzle with a five-second shadow clone.
