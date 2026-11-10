@@ -6,11 +6,14 @@
     <meta name="theme-color" content="#0b0d10" />
     <title>Arcade</title>
     <link rel="icon" href="site/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Chakra+Petch:wght@500;600;700&display=swap" />
     <link rel="stylesheet" href="site/site.css" />
   </head>
   <body class="player">
     <div class="bar">
-      <a class="icon-btn" href="./" aria-label="Back to all games">
+      <a class="icon-btn back" href="./" aria-label="Back to all games">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
         <span class="label">All games</span>
       </a>
@@ -38,7 +41,7 @@
       function fail(msg) {
         document.getElementById('title').textContent = msg;
         frame.replaceWith(Object.assign(document.createElement('div'), {
-          className: 'empty', style: 'margin:32px', innerHTML: `${escapeHtml(msg)} <a href="./">Back to all games</a>`,
+          className: 'empty', innerHTML: `${escapeHtml(msg)} <a href="./">Back to all games</a>`,
         }));
       }
 
