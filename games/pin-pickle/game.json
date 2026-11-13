@@ -1,0 +1,12 @@
+{
+  "title": "Pin Pickle",
+  "description": "Pull the pins in the right order to pour the gold into the cart. Lava melts gold, water cools lava, and one wrong pin ends the dig.",
+  "authors": ["Kush Honkalse"],
+  "thumbnail": "thumbnail.svg",
+  "tags": ["puzzle", "physics"],
+  "controls": ["mouse", "touch", "keyboard"],
+  "orientation": "any",
+  "players": "1",
+  "accent": "#b3261e",
+  "added": "2026-11-14"
+}

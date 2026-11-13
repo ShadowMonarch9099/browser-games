@@ -72,6 +72,8 @@ serving the last good version. The failed build's log (and the red ✗ from
 
 ## Games
 
+- [Lot Jam](games/lot-jam/): parking puzzle with 60 checked levels, an ambulance on a deadline and sleepy drivers.
+- [Pin Pickle](games/pin-pickle/): pull-the-pin puzzle with falling gold, water and lava, and 40 checked levels.
 - [Pour Party](games/pour-party/): colour-sorting puzzle with mystery layers.
 - [Snap Grid](games/snap-grid/): neon block puzzle with gold cells and a daily board.
 - [Puck Scuffle](games/puck-scuffle/): air hockey for two on one screen, or against the computer.

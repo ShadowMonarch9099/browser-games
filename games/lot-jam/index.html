@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#3a3f4a" />
+    <title>Lot Jam</title>
+    <link rel="stylesheet" href="../../site/lib/ui.css" />
+    <style>
+      html, body { margin: 0; height: 100%; overflow: hidden; background: #3a3f4a; }
+      #game { display: block; width: 100vw; height: 100vh; height: 100dvh; }
+    </style>
+  </head>
+  <body>
+    <canvas id="game" aria-label="Lot Jam game"></canvas>
+
+    <!-- The Arcade kit (shared by every game). Keep these paths relative. -->
+    <script src="../../site/lib/loop.js"></script>
+    <script src="../../site/lib/input.js"></script>
+    <script src="../../site/lib/players.js"></script>
+    <script src="../../site/lib/audio.js"></script>
+    <script src="../../site/lib/save.js"></script>
+    <script src="../../site/lib/rng.js"></script>
+    <script src="../../site/lib/ui.js"></script>
+    <!-- Your game -->
+    <script src="game.js"></script>
+  </body>
+</html>

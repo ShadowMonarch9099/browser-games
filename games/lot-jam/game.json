@@ -1,0 +1,12 @@
+{
+  "title": "Lot Jam",
+  "description": "A packed car park where every car drives straight ahead. Work out who has to leave first, get the ambulance out in time, and wake the sleepy drivers.",
+  "authors": ["Kush Honkalse"],
+  "thumbnail": "thumbnail.svg",
+  "tags": ["puzzle", "cars"],
+  "controls": ["mouse", "touch", "keyboard"],
+  "orientation": "any",
+  "players": "1",
+  "accent": "#ffd23f",
+  "added": "2026-11-14"
+}

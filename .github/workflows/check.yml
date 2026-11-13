@@ -21,3 +21,7 @@ jobs:
         run: |
           node games/shadow-clone-escape/tools/validate-levels.js
           node games/shadow-clone-escape/tools/test-rules.js
+      - name: Lot Jam levels can all be cleared
+        run: node games/lot-jam/tools/check-levels.js
+      - name: Pin Pickle levels can all be won
+        run: node games/pin-pickle/tools/verify-levels.js
