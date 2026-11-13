@@ -74,6 +74,7 @@
       const grid = $('grid'), tabs = $('tabs'), search = $('search');
       let games = [];
       let activeTag = 'all';
+      const TOGETHER = '#together'; // a tab that isn't a tag: games for 2 or more players
 
       const isNew = (g) => g.added && (Date.now() - new Date(g.added).getTime()) / 864e5 < 21;
       const playUrl = (g) => `play.html?g=${encodeURIComponent(g.slug)}`;
@@ -81,6 +82,11 @@
       const art = (g) => g.thumbnail
         ? `<img src="${escapeHtml(g.thumbnail)}" alt="" loading="lazy" />`
         : `<div class="cover">${escapeHtml(initials(g.title))}</div>`;
+      // "1-4" -> 4. Games for 2 or more get a badge and the Play together tab.
+      const maxPlayers = (g) => Number(String(g.players || '1').split('-').pop());
+      const together = (g) => maxPlayers(g) > 1;
+      const PEOPLE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.6"/><path d="M16.5 14.2c2.6.3 4.5 2.6 4.5 5.8"/></svg>';
+      const playersLabel = (g) => `${String(g.players).replace('-', '–')} players`;
       const names = (list) => list.length < 3 ? list.join(' & ') : `${list.slice(0, -1).join(', ')} & ${list.at(-1)}`;
 
       function renderFeature() {
@@ -95,7 +101,7 @@
               <p class="eyebrow">${isNew(g) ? 'New on the shelf' : 'Latest game'}</p>
               <h1>${escapeHtml(g.title)}</h1>
               <p class="desc">${escapeHtml(g.description)}</p>
-              <ul class="specs">${g.controls.filter((c) => ICONS[c]).map((c) => `<li>${svg(c)}${LABELS[c]}</li>`).join('')}</ul>
+              <ul class="specs">${together(g) ? `<li>${PEOPLE}${playersLabel(g)}</li>` : ''}${g.controls.filter((c) => ICONS[c]).map((c) => `<li>${svg(c)}${LABELS[c]}</li>`).join('')}</ul>
               <div class="actions">
                 <a class="btn-play" href="${playUrl(g)}" data-nav>${PLAY}Play</a>
                 ${g.authors.length ? `<span class="by">by <b>${escapeHtml(names(g.authors))}</b></span>` : ''}
@@ -108,7 +114,7 @@
         return `
           <a class="tile" href="${playUrl(g)}" style="${accent(g)}" data-nav>
             ${isNew(g) ? '<span class="sticker">New</span>' : ''}
-            <div class="art">${art(g)}<div class="go"><span>Play</span></div></div>
+            <div class="art">${art(g)}${together(g) ? `<span class="pcount">${PEOPLE}${playersLabel(g)}</span>` : ''}<div class="go"><span>Play</span></div></div>
             <div class="label">
               <h3>${escapeHtml(g.title)}</h3>
               <div class="sub">
@@ -122,7 +128,7 @@
       function renderGrid() {
         const q = search.value.trim().toLowerCase();
         const shown = games.filter((g) =>
-          (activeTag === 'all' || g.tags.includes(activeTag)) &&
+          (activeTag === 'all' || (activeTag === TOGETHER ? together(g) : g.tags.includes(activeTag))) &&
           (!q || [g.title, g.description, ...g.tags, ...g.authors].join(' ').toLowerCase().includes(q)));
         $('count').textContent = String(shown.length).padStart(2, '0');
         grid.innerHTML = shown.length
@@ -132,9 +138,10 @@
 
       function renderTabs() {
         const tags = [...new Set(games.flatMap((g) => g.tags))].sort();
-        tabs.hidden = tags.length < 2;
-        tabs.innerHTML = ['all', ...tags]
-          .map((t) => `<button class="tab" data-tag="${escapeHtml(t)}" aria-pressed="${t === activeTag}">${escapeHtml(t)}</button>`)
+        const special = games.some(together) ? [TOGETHER] : [];
+        tabs.hidden = tags.length + special.length < 2;
+        tabs.innerHTML = ['all', ...special, ...tags]
+          .map((t) => `<button class="tab" data-tag="${escapeHtml(t)}" aria-pressed="${t === activeTag}">${t === TOGETHER ? 'Play together' : escapeHtml(t)}</button>`)
           .join('');
       }
 

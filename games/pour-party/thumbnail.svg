@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360">
+  <defs><linearGradient id="b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0f5261"/><stop offset="1" stop-color="#0a2f3a"/></linearGradient>
+  <clipPath id="t"><path d="M0 0h60v210a30 30 0 0 1-60 0z"/></clipPath></defs>
+  <rect width="640" height="360" fill="url(#b)"/>
+  <g fill="#fff" fill-opacity=".06"><circle cx="80" cy="80" r="40"/><circle cx="560" cy="250" r="56"/><circle cx="330" cy="40" r="22"/><circle cx="500" cy="70" r="14"/></g>
+  <g transform="translate(110 70)"><g clip-path="url(#t)"><rect y="60" width="60" height="60" fill="#3fa7ff"/><rect y="120" width="60" height="60" fill="#ff5d73"/><rect y="180" width="60" height="60" fill="#ffb400"/></g><path d="M0 0v210a30 30 0 0 0 60 0V0" fill="none" stroke="#fff8ec" stroke-width="5" stroke-linecap="round"/></g>
+  <g transform="translate(230 30)"><g clip-path="url(#t)"><rect y="120" width="60" height="60" fill="#ff5d73"/><rect y="180" width="60" height="60" fill="#3ddc97"/></g><path d="M0 0v210a30 30 0 0 0 60 0V0" fill="none" stroke="#fff8ec" stroke-width="5" stroke-linecap="round"/></g>
+  <g transform="translate(350 70)"><g clip-path="url(#t)"><rect y="0" width="60" height="240" fill="#ffb400"/></g><path d="M0 0v210a30 30 0 0 0 60 0V0" fill="none" stroke="#ffd166" stroke-width="5" stroke-linecap="round"/></g>
+  <g transform="translate(470 70)"><g clip-path="url(#t)"><rect y="120" width="60" height="60" fill="#3ddc97"/><rect y="180" width="60" height="60" fill="#3fa7ff"/></g><path d="M0 0v210a30 30 0 0 0 60 0V0" fill="none" stroke="#fff8ec" stroke-width="5" stroke-linecap="round"/></g>
+</svg>

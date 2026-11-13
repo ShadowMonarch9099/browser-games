@@ -31,12 +31,14 @@ npm run build    # build the deployable site into dist/ (what Vercel runs)
 index.html              homepage: reads games.json and draws the game cards
 play.html               player page: runs a game in a frame, with back + fullscreen
 site/                   shared CSS / JS / favicon for those two pages
+  lib/                  the Arcade kit: shared game loop, input, sound, saving, menus
 games/
   shadow-clone-escape/  one folder per game
     game.json           ← describes the game; this is what puts it on the site
     index.html          ← the game's start page
     …                   anything else the game needs
-  _template/            starting point for new games (ignored by the site)
+  _template/            blank starting point (ignored by the site)
+  _template-canvas/     starting point for canvas games, with the Arcade kit wired up
 scripts/
   registry.mjs          scans games/*/game.json, validates them, lists the games
   build.mjs             builds dist/ (site + valid games + games.json)
@@ -70,4 +72,8 @@ serving the last good version. The failed build's log (and the red ✗ from
 
 ## Games
 
+- [Pour Party](games/pour-party/): colour-sorting puzzle with mystery layers.
+- [Snap Grid](games/snap-grid/): neon block puzzle with gold cells and a daily board.
+- [Puck Scuffle](games/puck-scuffle/): air hockey for two on one screen, or against the computer.
+- [Sky Stack](games/sky-stack/): one-tap tower stacker with changing weather and a daily tower.
 - [Shadow Clone Escape](games/shadow-clone-escape/README.md): stealth puzzle with a five-second shadow clone.

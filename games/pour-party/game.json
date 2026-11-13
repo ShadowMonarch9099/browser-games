@@ -1,0 +1,12 @@
+{
+  "title": "Pour Party",
+  "description": "Pour coloured fizz from tube to tube until every tube holds a single colour. Later levels hide what is underneath.",
+  "authors": ["Kush Honkalse"],
+  "thumbnail": "thumbnail.svg",
+  "tags": ["puzzle", "relaxing"],
+  "controls": ["mouse", "touch", "keyboard"],
+  "orientation": "any",
+  "players": "1",
+  "accent": "#ff6f59",
+  "added": "2026-11-13"
+}

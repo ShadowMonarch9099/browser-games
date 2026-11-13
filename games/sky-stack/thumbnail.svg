@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6cb4ff"/>
+      <stop offset="1" stop-color="#ffd6a0"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="360" fill="url(#sky)"/>
+  <g fill="#fff" fill-opacity=".6">
+    <ellipse cx="120" cy="90" rx="70" ry="18"/><ellipse cx="160" cy="78" rx="44" ry="16"/>
+    <ellipse cx="520" cy="200" rx="80" ry="20"/><ellipse cx="560" cy="186" rx="50" ry="18"/>
+  </g>
+  <!-- tower: each floor = top + left + right faces -->
+  <g>
+    <path d="M320 330l-104-60v90h208v-90z" fill="#2f6fb3"/>
+    <path d="M216 270l104 60v40l-104-10z" fill="#3a82cc"/><path d="M424 270l-104 60v40l104-10z" fill="#28609c"/>
+    <path d="M320 210l104 60-104 60-104-60z" fill="#5aa6f0"/>
+
+    <path d="M225 236l95 55v-28l-95-55z" fill="#3aa58a"/><path d="M415 236l-95 55v-28l95-55z" fill="#2b8069"/>
+    <path d="M320 153l95 55-95 55-95-55z" fill="#5fd9b6"/>
+
+    <path d="M236 180l84 48v-28l-84-48z" fill="#b89a2c"/><path d="M404 180l-84 48v-28l84-48z" fill="#917820"/>
+    <path d="M320 104l84 48-84 48-84-48z" fill="#f0cf52"/>
+
+    <path d="M250 127l70 40v-28l-70-40z" fill="#c26a3a"/><path d="M390 127l-70 40v-28l70-40z" fill="#99512a"/>
+    <path d="M320 59l70 40-70 40-70-40z" fill="#f5925c"/>
+  </g>
+  <!-- the sliding block, off to one side -->
+  <g>
+    <path d="M318 62l70 40v-28l-70-40z" fill="#b8437a"/><path d="M458 62l-70 40v-28l70-40z" fill="#8f315e"/>
+    <path d="M388 -6l70 40-70 40-70-40z" fill="#f06aa6"/>
+  </g>
+</svg>

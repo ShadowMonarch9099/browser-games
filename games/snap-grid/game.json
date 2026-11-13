@@ -1,0 +1,12 @@
+{
+  "title": "Snap Grid",
+  "description": "Drop neon shapes onto the board and clear full lines. Gold cells double a line, and a daily board gives everyone the same shapes.",
+  "authors": ["Kush Honkalse"],
+  "thumbnail": "thumbnail.svg",
+  "tags": ["puzzle", "arcade"],
+  "controls": ["mouse", "touch", "keyboard"],
+  "orientation": "any",
+  "players": "1",
+  "accent": "#2de2e6",
+  "added": "2026-11-13"
+}

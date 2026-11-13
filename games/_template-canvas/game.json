@@ -1,0 +1,12 @@
+{
+  "title": "My Game",
+  "description": "One or two sentences that make people want to click.",
+  "authors": ["Your Name"],
+  "thumbnail": "thumbnail.svg",
+  "tags": ["arcade"],
+  "controls": ["keyboard", "touch", "gamepad"],
+  "orientation": "any",
+  "players": "1",
+  "accent": "#ffc531",
+  "added": "2026-11-13"
+}

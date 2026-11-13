@@ -14,6 +14,7 @@ Vercel rebuilds the site and your game appears on the homepage, playable.
 - [6. Test it locally](#6-test-it-locally)
 - [7. Publish it](#7-publish-it)
 - [Updating or removing your game](#updating-or-removing-your-game)
+- [The Arcade kit](#the-arcade-kit)
 - [Rules every game must follow](#rules-every-game-must-follow)
 - [Games made with an engine or bundler](#games-made-with-an-engine-or-bundler)
 - [Troubleshooting](#troubleshooting)
@@ -163,6 +164,7 @@ publishing. They're short.
 | `tags` | No | Small labels on the card. Every tag used by any game becomes a filter button on the homepage. Keep them short and reuse existing tags where they fit. | A list: `["puzzle", "multiplayer"]` |
 | `controls` | No | Shown as icons on the card so players know what they need. | Any of `"keyboard"`, `"mouse"`, `"gamepad"`, `"touch"` |
 | `orientation` | No | How the game is meant to be held on a phone. | `"any"` (default), `"landscape"`, `"portrait"` |
+| `players` | No | How many people can play on one device. Games for 2 or more get a badge and appear under the **Play together** tab. | `"1"` (default), `"2"`, `"1-4"`, `"2-4"` … |
 | `accent` | No | Your card's glow colour on hover, and the colour of the generated cover. | A 6-digit hex colour: `"#ff8a3d"` |
 | `added` | No | The date you added the game. Games are listed newest first, and games added in the last 3 weeks get a **NEW** badge. | `"YYYY-MM-DD"` |
 
@@ -294,6 +296,74 @@ successfully.
 - **Remove:** delete your folder (`git rm -r games/my-game`), commit and push.
 - **Only change your own folder.** Ask before editing someone else's game or
   the shared site files (`index.html`, `play.html`, `site/`, `scripts/`).
+
+---
+
+## The Arcade kit
+
+The kit is a set of small shared scripts in `site/lib/`. It gives every game
+the same plumbing, so you can spend your time on the game itself. Using it is
+optional (engine exports don't need it), but canvas games written by hand
+should start from **`games/_template-canvas/`**, which has it wired up.
+
+```bash
+cp -r games/_template-canvas games/my-game
+```
+
+| File | What you get |
+| --- | --- |
+| `loop.js` | `Arcade.loop({ update, render })`: a steady 60-steps-a-second game loop that pauses when the tab is hidden. `Arcade.fitCanvas(canvas, onResize)`: a sharp, auto-resizing canvas. |
+| `input.js` | `Arcade.input.create()`: one API for keyboard, gamepads and touch. Ask `input.solo.pressed('a')` instead of checking key codes. Actions are `up`, `down`, `left`, `right`, `a`, `b`, `start`. |
+| `players.js` | `Arcade.players.lobby({ input, min, max })`: "press a button to join" slots for same-device multiplayer, with a colour per player. |
+| `audio.js` | `Arcade.audio.sfx('coin')` and `Arcade.audio.beep({...})`: sound effects made in the browser, plus one mute setting shared by every game. |
+| `save.js` | `Arcade.save()`: `get` / `set` that prefix keys with your folder name automatically (this covers rule 3 below). |
+| `rng.js` | `Arcade.rng(seed)`: repeatable random numbers. `Arcade.rng.daily('my-game')` gives everyone the same sequence each day. |
+| `ui.js` + `ui.css` | `Arcade.ui.create({ title, tagline, how, theme })`: title, pause and results screens, a mute button, and pop-up messages. The kit handles layout and behaviour; **your `theme` sets the fonts, colours and shapes**, so every game looks like itself. |
+
+Each file starts with a comment showing how to use it. The pattern every kit
+game follows:
+
+```js
+const input = Arcade.input.create({ target: canvas });
+const ui = Arcade.ui.create({ title: 'My Game', how: [['Space / Tap', 'Jump']] });
+
+function update(dt) {
+  input.poll();                         // always first
+  if (state !== 'playing') return;
+  if (input.solo.pressed('a')) jump();
+}
+function render() { /* draw */ }
+
+ui.title({ buttons: [{ label: 'Play', onClick: start }] });
+Arcade.loop({ update, render }).start();
+```
+
+Things to know:
+
+- **Give your game its own look.** Games should not look like the site or like
+  each other. Pass a `theme` to `Arcade.ui.create()` with your own fonts
+  (any Google Fonts), colours, corner radius, borders and shadows; the full
+  list of keys is at the top of `site/lib/ui.js`. Draw your HUD (score, timer,
+  lives) yourself, in your game's style: on the canvas or as your own HTML.
+  Compare [Sky Stack](games/sky-stack/game.js) (soft and bright),
+  [Pour Party](games/pour-party/game.js) (teal and cream, HTML HUD),
+  [Snap Grid](games/snap-grid/game.js) (neon) and
+  [Puck Scuffle](games/puck-scuffle/game.js) (ice rink scoreboard).
+
+- **Call `input.poll()` once at the start of every `update`**, and
+  `input.flush()` when play starts or resumes, so the key that pressed "Play"
+  doesn't also count as a move in the game.
+- **Keyboard layouts for several players** are built in: `kb1` is WASD + F/G,
+  `kb2` is the arrow keys + Enter/Right Shift, `kb3` is IJKL + O/P, `kb4` is
+  the number pad. Gamepads are `pad0` to `pad3`.
+- **The kit lives outside your folder**, so load it with
+  `../../site/lib/loop.js` (the one allowed use of `../`), and test with
+  `npm run dev`.
+- **Don't edit files in `site/lib/` for one game.** Every game shares them. If
+  the kit is missing something, add it in a way that keeps other games working.
+
+[Sky Stack](games/sky-stack/game.js) is a complete small game built on the kit
+and a good one to read.
 
 ---
 

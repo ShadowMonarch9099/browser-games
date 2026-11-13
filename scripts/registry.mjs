@@ -44,12 +44,14 @@ function validate(slug, dir) {
   str('thumbnail');
   str('accent');
   str('added');
+  str('players');
   list('authors');
   list('tags');
   list('controls', CONTROLS);
   if (m.orientation !== undefined && !ORIENTATIONS.includes(m.orientation)) err(`"orientation" must be one of ${ORIENTATIONS.join(', ')}`);
   if (m.accent && !/^#[0-9a-f]{6}$/i.test(m.accent)) err('"accent" must be a hex colour like #7c5cff');
   if (m.added && !/^\d{4}-\d{2}-\d{2}$/.test(m.added)) err('"added" must be a date like 2026-11-10');
+  if (typeof m.players === 'string' && !/^[1-8](-[1-8])?$/.test(m.players)) err('"players" must look like "1", "2" or "1-4"');
   if (typeof m.thumbnail === 'string' && !fs.existsSync(path.join(dir, m.thumbnail))) err(`thumbnail "${m.thumbnail}" not found`);
 
   const game = {
@@ -60,6 +62,7 @@ function validate(slug, dir) {
     tags: (m.tags || []).map((t) => t.toLowerCase()),
     controls: m.controls || [],
     orientation: m.orientation || 'any',
+    players: m.players || '1',
     accent: m.accent || null,
     added: m.added || null,
     url: `games/${slug}/`,

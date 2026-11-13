@@ -1,0 +1,12 @@
+{
+  "title": "Sky Stack",
+  "description": "Drop sliding blocks to build a tower into the sky. Anything hanging over gets sliced off, and the weather turns on you every 25 floors.",
+  "authors": ["Kush Honkalse"],
+  "thumbnail": "thumbnail.svg",
+  "tags": ["arcade", "one-button"],
+  "controls": ["keyboard", "touch", "gamepad"],
+  "orientation": "any",
+  "players": "1",
+  "accent": "#4ea8ff",
+  "added": "2026-11-13"
+}

@@ -1,0 +1,12 @@
+{
+  "title": "Puck Scuffle",
+  "description": "Air hockey for two on one screen, or against the computer. Tokens on the ice split the puck, grow it, or shrink a goal.",
+  "authors": ["Kush Honkalse"],
+  "thumbnail": "thumbnail.svg",
+  "tags": ["sports", "action"],
+  "controls": ["touch", "keyboard", "mouse", "gamepad"],
+  "orientation": "any",
+  "players": "1-2",
+  "accent": "#e63946",
+  "added": "2026-11-13"
+}
