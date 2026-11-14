@@ -72,10 +72,27 @@ serving the last good version. The failed build's log (and the red ✗ from
 
 ## Games
 
-- [Lot Jam](games/lot-jam/): parking puzzle with 60 checked levels, an ambulance on a deadline and sleepy drivers.
-- [Pin Pickle](games/pin-pickle/): pull-the-pin puzzle with falling gold, water and lava, and 40 checked levels.
-- [Pour Party](games/pour-party/): colour-sorting puzzle with mystery layers.
-- [Snap Grid](games/snap-grid/): neon block puzzle with gold cells and a daily board.
-- [Puck Scuffle](games/puck-scuffle/): air hockey for two on one screen, or against the computer.
-- [Sky Stack](games/sky-stack/): one-tap tower stacker with changing weather and a daily tower.
-- [Shadow Clone Escape](games/shadow-clone-escape/README.md): stealth puzzle with a five-second shadow clone.
+| Game | Kind | Players |
+| --- | --- | --- |
+| [Shadow Clone Escape](games/shadow-clone-escape/README.md) | Stealth puzzle with a five-second shadow clone | 1 |
+| [Sky Stack](games/sky-stack/) | One-tap tower stacker, weather stages, daily tower | 1 |
+| [Pour Party](games/pour-party/) | Colour sort with mystery layers | 1 |
+| [Snap Grid](games/snap-grid/) | Neon block puzzle, gold cells, daily board | 1 |
+| [Puck Scuffle](games/puck-scuffle/) | Air hockey with power-up tokens | 1–2 |
+| [Lot Jam](games/lot-jam/) | Parking puzzle, 60 checked levels | 1 |
+| [Pin Pickle](games/pin-pickle/) | Pull-the-pin with falling gold, water and lava, 40 checked levels | 1 |
+| [Jungle Getaway](games/jungle-getaway/) | Side-scrolling runner chased by a boulder, missions and hats | 1 |
+| [Gate Stampede](games/gate-stampede/) | Crowd runner through math gates, 30 levels | 1 |
+| [Courier Sprint](games/courier-sprint/) | Three-lane city runner with power-ups | 1 |
+| [Bounce Tanks](games/bounce-tanks/) | Ricochet tank duel in random mazes, computer tanks | 1–4 |
+| [Bonk Brawl](games/bonk-brawl/) | Platform fighter, four fighters, computer opponents | 1–4 |
+| [Misfit Squad](games/misfit-squad/) | Co-op wave survival with upgrades and revives | 1–4 |
+| [Tick Talk](games/tick-talk/) | Bomb defusal: one sees the bomb, the others read the [manual](games/tick-talk/manual.html) | 2–4 |
+| [Paper Trail](games/paper-trail/) | One-line puzzle where you fold the page, 50 checked levels | 1 |
+| [Beat Sprint](games/beat-sprint/) | Rhythm runner with generated music, daily track | 1 |
+| [Borrowed Boots](games/borrowed-boots/) | Platformer: borrow creatures' abilities, 12 levels | 1 |
+| [Bullet Garden](games/bullet-garden/) | Shooter where missed seeds grow into defences, 10 nights | 1 |
+| [Last Lantern](games/last-lantern/) | Action RPG where lamp oil is light, health and money | 1 |
+| [Pocket Realm](games/pocket-realm/) | Tile-laying RPG, three heroes, daily realm | 1 |
+| [Knot Alone](games/knot-alone/) | Two climbers on one rope, 10 climbs | 2 |
+| [Kitbash Rally](games/kitbash-rally/) | Build-your-kart racer, two cups | 1–2 |

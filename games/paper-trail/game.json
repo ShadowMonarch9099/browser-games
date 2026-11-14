@@ -1,0 +1,21 @@
+{
+  "title": "Paper Trail",
+  "description": "Draw one line through every square. When the grid won't allow it, fold the paper so its far edges meet.",
+  "authors": [
+    "Kush Honkalse"
+  ],
+  "thumbnail": "thumbnail.svg",
+  "tags": [
+    "puzzle",
+    "relaxing"
+  ],
+  "controls": [
+    "mouse",
+    "touch",
+    "keyboard"
+  ],
+  "orientation": "any",
+  "players": "1",
+  "accent": "#d1495b",
+  "added": "2026-11-14"
+}

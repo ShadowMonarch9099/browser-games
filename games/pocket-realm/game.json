@@ -1,0 +1,21 @@
+{
+  "title": "Pocket Realm",
+  "description": "An RPG where you build the map as you go. Draw a land tile, choose where it goes, and deal with whatever lives there. Reach the dragon's keep in one short run.",
+  "authors": [
+    "Kush Honkalse"
+  ],
+  "thumbnail": "thumbnail.svg",
+  "tags": [
+    "rpg",
+    "strategy"
+  ],
+  "controls": [
+    "mouse",
+    "touch",
+    "keyboard"
+  ],
+  "orientation": "any",
+  "players": "1",
+  "accent": "#7b2cbf",
+  "added": "2026-11-14"
+}

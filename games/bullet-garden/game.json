@@ -1,0 +1,21 @@
+{
+  "title": "Bullet Garden",
+  "description": "Your blaster fires seeds. Hit a bug and it hurts; miss, and the seed grows into a plant that fights for you. Keep the greenhouse safe for ten nights.",
+  "authors": [
+    "Kush Honkalse"
+  ],
+  "thumbnail": "thumbnail.svg",
+  "tags": [
+    "action",
+    "strategy"
+  ],
+  "controls": [
+    "keyboard",
+    "mouse",
+    "touch"
+  ],
+  "orientation": "any",
+  "players": "1",
+  "accent": "#80b918",
+  "added": "2026-11-14"
+}

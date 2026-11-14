@@ -1,0 +1,21 @@
+{
+  "title": "Last Lantern",
+  "description": "Night has fallen for good and you carry the last lantern. Its oil is your light, your health and your money. Relight the four beacons to bring back the dawn.",
+  "authors": [
+    "Kush Honkalse"
+  ],
+  "thumbnail": "thumbnail.svg",
+  "tags": [
+    "adventure",
+    "rpg"
+  ],
+  "controls": [
+    "keyboard",
+    "touch",
+    "gamepad"
+  ],
+  "orientation": "any",
+  "players": "1",
+  "accent": "#ffb347",
+  "added": "2026-11-14"
+}

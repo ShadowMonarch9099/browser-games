@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tick Talk · Defusal Manual</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=VT323&family=Chivo+Mono:wght@400;700&display=swap" />
+    <!-- The rules here must match game.js. Change both together. -->
+    <style>
+      body { margin: 0; background: #e9e2c8; color: #23261a; font: 16px/1.5 "Chivo Mono", Consolas, monospace; }
+      main { max-width: 680px; margin: 0 auto; padding: 20px 16px 60px; }
+      h1 { font: 3rem/1 "VT323", Consolas, monospace; margin: 8px 0 4px; }
+      h2 { font: 2rem/1 "VT323", Consolas, monospace; margin: 0 0 8px; }
+      .stamp { display: inline-block; border: 3px solid #b3261e; color: #b3261e; font-weight: 700; padding: 2px 10px; transform: rotate(-3deg); letter-spacing: .1em; }
+      section { background: #f6f1dc; border: 2px solid #23261a; padding: 14px 16px; margin: 18px 0; }
+      nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0; }
+      nav a { color: #23261a; border: 2px solid #23261a; padding: 4px 10px; text-decoration: none; font-weight: 700; background: #ffcf66; }
+      table { border-collapse: collapse; width: 100%; margin: 8px 0; }
+      th, td { border: 1px solid #23261a; padding: 6px 8px; text-align: left; }
+      th { background: #23261a; color: #ffcf66; }
+      .big { font-size: 1.5rem; letter-spacing: .25em; }
+      ol, ul { padding-left: 22px; margin: 6px 0; }
+      .ask { background: #23261a; color: #ffcf66; padding: 6px 10px; margin: 0 0 10px; }
+      .warn { font-weight: 700; color: #b3261e; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <span class="stamp">MANUAL READERS ONLY</span>
+      <h1>Tick Talk Defusal Manual</h1>
+      <p>You have the rules. Your friend has the bomb. <span class="warn">Do not look at their screen, and do not let them look at this.</span> Ask them what they see, work out the answer here, and tell them what to do.</p>
+      <p class="ask">First, ask for the SERIAL. It looks like <b>KE-472</b>: two letters, then three digits. Most rules use it.</p>
+      <nav>
+        <a href="#fuses">Fuse rack</a><a href="#glyphs">Glyph pad</a><a href="#dial">Compass dial</a>
+        <a href="#switches">Switchboard</a><a href="#code">Code lock</a><a href="#lamp">Signal lamp</a>
+      </nav>
+
+      <section id="fuses">
+        <h2>Fuse rack</h2>
+        <p class="ask">Ask: the colours of the five fuses, left to right.</p>
+        <ol>
+          <li>Look at the colour of the <b>first</b> fuse (far left).</li>
+          <li>Count how many of the five fuses are that colour, including the first one. Call it <b>K</b>.</li>
+          <li>If the serial's letters include <b>A, E or U</b>: pull fuse number <b>K</b>, counting from the left.</li>
+          <li>Otherwise: pull fuse number <b>6 − K</b>.</li>
+        </ol>
+        <p>Example: red, blue, red, white, green → K = 2. Serial KE-472 has an E, so pull fuse 2.</p>
+      </section>
+
+      <section id="glyphs">
+        <h2>Glyph pad</h2>
+        <p class="ask">Ask: which four symbols are on the buttons.</p>
+        <p>This is the Great Order:</p>
+        <p class="big">◆ ☾ ▲ ♥ ✚ ★ ■ ♪ ● ☂ ⚑ ✿</p>
+        <ul>
+          <li>Press the four symbols in the order they appear in the Great Order, left to right.</li>
+          <li>If the <b>last digit</b> of the serial is <b>even</b> (0, 2, 4, 6, 8): use the opposite order, right to left.</li>
+        </ul>
+        <p>Names to say out loud: diamond, moon, triangle, heart, cross, star, square, note, circle, umbrella, flag, flower.</p>
+      </section>
+
+      <section id="dial">
+        <h2>Compass dial</h2>
+        <p class="ask">Ask: which of the three lamps are lit, left to right.</p>
+        <ol>
+          <li>A lit lamp is worth: left <b>4</b>, middle <b>2</b>, right <b>1</b>. Add up the lit ones.</li>
+          <li>Add the <b>last digit</b> of the serial.</li>
+          <li>If the total is 8 or more, subtract 8. Repeat until it is below 8.</li>
+          <li>Turn the dial to that direction and press <b>Lock</b>.</li>
+        </ol>
+        <table>
+          <tr><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th></tr>
+          <tr><td>N</td><td>NE</td><td>E</td><td>SE</td><td>S</td><td>SW</td><td>W</td><td>NW</td></tr>
+        </table>
+      </section>
+
+      <section id="switches">
+        <h2>Switchboard</h2>
+        <p class="ask">Ask: the word on the display.</p>
+        <table>
+          <tr><th>Word</th><th>Switches, left to right</th></tr>
+          <tr><td>ECHO</td><td class="big">▲▼▲▼</td></tr>
+          <tr><td>NOVA</td><td class="big">▼▼▲▲</td></tr>
+          <tr><td>ZINC</td><td class="big">▲▲▼▲</td></tr>
+          <tr><td>FERN</td><td class="big">▼▲▲▼</td></tr>
+          <tr><td>MOSS</td><td class="big">▲▼▼▼</td></tr>
+          <tr><td>OPAL</td><td class="big">▼▲▼▲</td></tr>
+        </table>
+        <p>If the serial's letters include <b>A, E or U</b>: flip every switch to the opposite of the table. Then press <b>Set</b>.</p>
+      </section>
+
+      <section id="code">
+        <h2>Code lock</h2>
+        <p class="ask">Ask: the three-digit number on the display.</p>
+        <ol>
+          <li>Add the serial's three digits, as one number, to the number on the display.</li>
+          <li>The code is the <b>last three digits</b> of the total. Press <b>OK</b>.</li>
+        </ol>
+        <p>Example: display 615, serial KE-472 → 615 + 472 = 1087 → code <b>087</b>.</p>
+      </section>
+
+      <section id="lamp">
+        <h2>Signal lamp</h2>
+        <p class="ask">Ask: the three colours the lamp flashes, in order. There is a pause before it repeats.</p>
+        <p>Translate each colour, then press the translated colours in the same order.</p>
+        <table>
+          <tr><th>Lamp shows</th><th>First serial letter A–M: press</th><th>First serial letter N–Z: press</th></tr>
+          <tr><td>Red</td><td>Blue</td><td>Green</td></tr>
+          <tr><td>Blue</td><td>Yellow</td><td>Red</td></tr>
+          <tr><td>Yellow</td><td>Green</td><td>Blue</td></tr>
+          <tr><td>Green</td><td>Red</td><td>Yellow</td></tr>
+        </table>
+      </section>
+
+      <p>A wrong answer is a mistake. Three mistakes and the bomb goes off. The clock is five minutes.</p>
+    </main>
+  </body>
+</html>

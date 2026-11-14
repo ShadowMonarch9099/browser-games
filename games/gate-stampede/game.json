@@ -1,0 +1,21 @@
+{
+  "title": "Gate Stampede",
+  "description": "Lead a crowd down the track. Pick the gates that grow it, dodge the saws, and arrive with enough runners to take the castle.",
+  "authors": [
+    "Kush Honkalse"
+  ],
+  "thumbnail": "thumbnail.svg",
+  "tags": [
+    "runner",
+    "math"
+  ],
+  "controls": [
+    "mouse",
+    "touch",
+    "keyboard"
+  ],
+  "orientation": "any",
+  "players": "1",
+  "accent": "#3a86ff",
+  "added": "2026-11-14"
+}

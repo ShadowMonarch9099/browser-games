@@ -1,0 +1,20 @@
+{
+  "title": "Knot Alone",
+  "description": "Two climbers tied together by one rope. Neither can reach the summit alone, and either one can pull the other off a ledge.",
+  "authors": [
+    "Kush Honkalse"
+  ],
+  "thumbnail": "thumbnail.svg",
+  "tags": [
+    "co-op",
+    "platformer"
+  ],
+  "controls": [
+    "keyboard",
+    "gamepad"
+  ],
+  "orientation": "any",
+  "players": "2",
+  "accent": "#e76f51",
+  "added": "2026-11-14"
+}

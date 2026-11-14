@@ -25,3 +25,7 @@ jobs:
         run: node games/lot-jam/tools/check-levels.js
       - name: Pin Pickle levels can all be won
         run: node games/pin-pickle/tools/verify-levels.js
+      - name: Paper Trail levels need their folds and can be solved
+        run: node games/paper-trail/tools/check-levels.js
+      - name: Pocket Realm balance (simulated runs)
+        run: node games/pocket-realm/tools/simulate.js 500

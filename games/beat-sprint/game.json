@@ -1,0 +1,22 @@
+{
+  "title": "Beat Sprint",
+  "description": "A runner where the level is the song. Every jump and slide lands on a beat, and every seed makes a new track. Turn the sound on.",
+  "authors": [
+    "Kush Honkalse"
+  ],
+  "thumbnail": "thumbnail.svg",
+  "tags": [
+    "rhythm",
+    "runner",
+    "music"
+  ],
+  "controls": [
+    "keyboard",
+    "touch",
+    "gamepad"
+  ],
+  "orientation": "any",
+  "players": "1",
+  "accent": "#ff2e88",
+  "added": "2026-11-14"
+}

@@ -1,0 +1,20 @@
+{
+  "title": "Bounce Tanks",
+  "description": "Tiny tanks in a fresh maze every round. Shells bounce off the walls, one hit is all it takes, and your own shots can come back for you.",
+  "authors": [
+    "Kush Honkalse"
+  ],
+  "thumbnail": "thumbnail.svg",
+  "tags": [
+    "action",
+    "tanks"
+  ],
+  "controls": [
+    "keyboard",
+    "gamepad"
+  ],
+  "orientation": "any",
+  "players": "1-4",
+  "accent": "#ffb703",
+  "added": "2026-11-14"
+}

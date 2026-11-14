@@ -1,0 +1,20 @@
+{
+  "title": "Bonk Brawl",
+  "description": "Knock your friends off the floating islands. The more hits someone has taken, the further they fly.",
+  "authors": [
+    "Kush Honkalse"
+  ],
+  "thumbnail": "thumbnail.svg",
+  "tags": [
+    "action",
+    "fighting"
+  ],
+  "controls": [
+    "keyboard",
+    "gamepad"
+  ],
+  "orientation": "any",
+  "players": "1-4",
+  "accent": "#ef233c",
+  "added": "2026-11-14"
+}

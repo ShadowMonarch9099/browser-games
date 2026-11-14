@@ -1,0 +1,21 @@
+{
+  "title": "Tick Talk",
+  "description": "One of you sees the bomb. The others have the manual on their phones. Talk fast, because the clock is running and three mistakes is too many.",
+  "authors": [
+    "Kush Honkalse"
+  ],
+  "thumbnail": "thumbnail.svg",
+  "tags": [
+    "co-op",
+    "party",
+    "puzzle"
+  ],
+  "controls": [
+    "mouse",
+    "touch"
+  ],
+  "orientation": "any",
+  "players": "2-4",
+  "accent": "#ffb000",
+  "added": "2026-11-14"
+}

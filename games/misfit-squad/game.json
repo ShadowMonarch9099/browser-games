@@ -1,0 +1,20 @@
+{
+  "title": "Misfit Squad",
+  "description": "A squad of mismatched heroes against waves of clanking robots. Stick together, revive each other, and pick upgrades between waves.",
+  "authors": [
+    "Kush Honkalse"
+  ],
+  "thumbnail": "thumbnail.svg",
+  "tags": [
+    "action",
+    "co-op"
+  ],
+  "controls": [
+    "keyboard",
+    "gamepad"
+  ],
+  "orientation": "any",
+  "players": "1-4",
+  "accent": "#f9a03f",
+  "added": "2026-11-14"
+}

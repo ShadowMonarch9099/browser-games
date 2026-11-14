@@ -1,0 +1,21 @@
+{
+  "title": "Borrowed Boots",
+  "description": "A little hero with no powers of their own. Bounce on a creature to borrow its trick: spring legs, climbing claws, a glider tail or a heavy shell.",
+  "authors": [
+    "Kush Honkalse"
+  ],
+  "thumbnail": "thumbnail.svg",
+  "tags": [
+    "platformer",
+    "adventure"
+  ],
+  "controls": [
+    "keyboard",
+    "touch",
+    "gamepad"
+  ],
+  "orientation": "any",
+  "players": "1",
+  "accent": "#f25f5c",
+  "added": "2026-11-14"
+}

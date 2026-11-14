@@ -1,0 +1,21 @@
+{
+  "title": "Jungle Getaway",
+  "description": "Grab the idol and run. Jump the logs, slide under the branches, and keep ahead of the boulder rolling after you.",
+  "authors": [
+    "Kush Honkalse"
+  ],
+  "thumbnail": "thumbnail.svg",
+  "tags": [
+    "runner",
+    "arcade"
+  ],
+  "controls": [
+    "keyboard",
+    "touch",
+    "gamepad"
+  ],
+  "orientation": "any",
+  "players": "1",
+  "accent": "#ff8c42",
+  "added": "2026-11-14"
+}

@@ -137,7 +137,10 @@
       }
 
       function renderTabs() {
-        const tags = [...new Set(games.flatMap((g) => g.tags))].sort();
+        // Only tags shared by two or more games get a tab; every tag still works in search.
+        const counts = {};
+        games.flatMap((g) => g.tags).forEach((t) => { counts[t] = (counts[t] || 0) + 1; });
+        const tags = Object.keys(counts).filter((t) => counts[t] > 1).sort((a, b) => counts[b] - counts[a] || a.localeCompare(b)).slice(0, 8);
         const special = games.some(together) ? [TOGETHER] : [];
         tabs.hidden = tags.length + special.length < 2;
         tabs.innerHTML = ['all', ...special, ...tags]

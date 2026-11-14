@@ -1,0 +1,21 @@
+{
+  "title": "Courier Sprint",
+  "description": "Sprint through the city with a parcel bag. Switch lanes, hop barriers, roll under signs, and grab power-ups to keep the run alive.",
+  "authors": [
+    "Kush Honkalse"
+  ],
+  "thumbnail": "thumbnail.svg",
+  "tags": [
+    "runner",
+    "arcade"
+  ],
+  "controls": [
+    "keyboard",
+    "touch",
+    "gamepad"
+  ],
+  "orientation": "any",
+  "players": "1",
+  "accent": "#ff7b00",
+  "added": "2026-11-14"
+}

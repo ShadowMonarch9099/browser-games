@@ -1,0 +1,21 @@
+{
+  "title": "Kitbash Rally",
+  "description": "Bolt a kart together in the garage, then race it. What you build decides how it drives and which power-ups you can use.",
+  "authors": [
+    "Kush Honkalse"
+  ],
+  "thumbnail": "thumbnail.svg",
+  "tags": [
+    "racing",
+    "building"
+  ],
+  "controls": [
+    "keyboard",
+    "gamepad",
+    "mouse"
+  ],
+  "orientation": "any",
+  "players": "1-2",
+  "accent": "#ffd166",
+  "added": "2026-11-14"
+}
