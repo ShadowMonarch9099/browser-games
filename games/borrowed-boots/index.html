@@ -3,27 +3,41 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
-    <meta name="theme-color" content="#87c7ff" />
+    <meta name="theme-color" content="#2b1e15" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="description" content="A storybook platformer: Pip has no powers, so land on a creature to borrow its trick. Twelve pages, three chapters, thirty-six star charms." />
     <title>Borrowed Boots</title>
-    <link rel="stylesheet" href="../../site/lib/ui.css" />
-    <style>
-      html, body { margin: 0; height: 100%; overflow: hidden; background: #87c7ff; }
-      #game { display: block; width: 100vw; height: 100vh; height: 100dvh; }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&family=Sniglet:wght@400;800&display=swap" />
+    <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
-    <canvas id="game" aria-label="Borrowed Boots game"></canvas>
+    <div id="stage">
+      <canvas id="game" width="960" height="540" aria-label="Borrowed Boots game"></canvas>
+    </div>
+    <div id="rotate" hidden>
+      <svg width="60" height="60" viewBox="0 0 56 56" aria-hidden="true">
+        <rect x="16" y="6" width="24" height="44" rx="4" fill="none" stroke="currentColor" stroke-width="2.5" />
+        <path d="M44 22a14 14 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+      </svg>
+      <p>Turn your device sideways to read on</p>
+    </div>
+    <noscript>Borrowed Boots needs JavaScript enabled.</noscript>
 
-    <!-- The Arcade kit (shared by every game). Keep these paths relative. -->
-    <script src="../../site/lib/loop.js"></script>
-    <script src="../../site/lib/input.js"></script>
-    <script src="../../site/lib/players.js"></script>
-    <script src="../../site/lib/audio.js"></script>
-    <script src="../../site/lib/save.js"></script>
-    <script src="../../site/lib/rng.js"></script>
-    <script src="../../site/lib/ui.js"></script>
-    <!-- Your game -->
-    <script src="levels.js"></script>
-    <script src="game.js"></script>
+    <!-- Classic scripts (not modules) so the game also runs from file:// -->
+    <script src="js/core.js"></script>
+    <script src="js/levels.js"></script>
+    <script src="js/sim.js"></script>
+    <script src="js/save.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/input.js"></script>
+    <script src="js/actors.js"></script>
+    <script src="js/world.js"></script>
+    <script src="js/render.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
   </body>
 </html>

@@ -1,6 +1,6 @@
 {
   "title": "Bonk Brawl",
-  "description": "Knock your friends off the floating islands. The more hits someone has taken, the further they fly.",
+  "description": "A loud comic-book platform fighter for 2 to 4 on one device. Pick from four cartoon brawlers, bonk your friends across three parallax stages, and remember: the higher their damage, the further they fly.",
   "authors": [
     "Kush Honkalse"
   ],
@@ -11,10 +11,12 @@
   ],
   "controls": [
     "keyboard",
-    "gamepad"
+    "gamepad",
+    "mouse",
+    "touch"
   ],
-  "orientation": "any",
+  "orientation": "landscape",
   "players": "1-4",
-  "accent": "#ef233c",
+  "accent": "#ff3d3d",
   "added": "2026-11-14"
 }

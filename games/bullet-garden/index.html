@@ -3,26 +3,117 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
-    <meta name="theme-color" content="#2d1e12" />
+    <meta name="theme-color" content="#0b1424" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="description" content="A moonlit twin-stick garden defence. Your blaster fires seeds: hit a bug and it hurts, miss and the seed grows into a plant that fights for you. Keep the greenhouse safe for ten nights." />
     <title>Bullet Garden</title>
-    <link rel="stylesheet" href="../../site/lib/ui.css" />
-    <style>
-      html, body { margin: 0; height: 100%; overflow: hidden; background: #2d1e12; }
-      #game { display: block; width: 100vw; height: 100vh; height: 100dvh; }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Quicksand:wght@500;700&display=swap" />
+    <link rel="stylesheet" href="css/style.css" />
   </head>
-  <body>
-    <canvas id="game" aria-label="Bullet Garden game"></canvas>
+  <body data-device="mouse">
+    <canvas id="game" aria-label="Bullet Garden: the garden at night"></canvas>
 
-    <!-- The Arcade kit (shared by every game). Keep these paths relative. -->
-    <script src="../../site/lib/loop.js"></script>
-    <script src="../../site/lib/input.js"></script>
-    <script src="../../site/lib/players.js"></script>
-    <script src="../../site/lib/audio.js"></script>
-    <script src="../../site/lib/save.js"></script>
-    <script src="../../site/lib/rng.js"></script>
-    <script src="../../site/lib/ui.js"></script>
-    <!-- Your game -->
-    <script src="game.js"></script>
+    <div id="hud" class="off">
+      <div class="top">
+        <div class="night"><i class="moon" id="h-moon"></i><span><b id="h-night">Night 1</b><small id="h-left">12 bugs to come</small></span></div>
+        <div class="house"><small>Greenhouse</small><i class="bar"><b id="h-house"></b></i></div>
+        <button class="round" data-act="pause" aria-label="Pause">❚❚</button>
+      </div>
+      <div class="packets" id="packets">
+        <button class="packet" data-act="seed-0"><i style="--c:#9ef01a"></i><b>Spitter</b><small>1</small></button>
+        <button class="packet" data-act="seed-1"><i style="--c:#c08552"></i><b>Thornwall</b><small>2</small></button>
+        <button class="packet" data-act="seed-2"><i style="--c:#c77dff"></i><b>Vine</b><small>3</small></button>
+        <button class="packet" data-act="seed-3"><i style="--c:#ff4d6d"></i><b>Bomb pod</b><small>4</small></button>
+      </div>
+    </div>
+    <div id="sticks" class="off" aria-hidden="true"><i class="stick" id="st-move"><b></b></i><i class="stick aim" id="st-aim"><b></b></i></div>
+
+    <section class="screen" id="s-title">
+      <div class="packet-art">
+        <small>Heirloom variety · Night-blooming</small>
+        <h1>Bullet<br />Garden</h1>
+        <p>Every miss grows into a friend.</p>
+        <div class="sprigs" aria-hidden="true"><i style="--c:#9ef01a"></i><i style="--c:#c08552"></i><i style="--c:#c77dff"></i><i style="--c:#ff4d6d"></i></div>
+      </div>
+      <nav class="menu">
+        <button class="btn glow" data-nav data-act="start"><b>Start planting</b><small id="t-best">Ten nights to dawn</small></button>
+        <button class="btn" data-nav data-act="how"><b>How to grow</b></button>
+        <button class="btn" data-nav data-act="settings"><b>Settings</b></button>
+      </nav>
+    </section>
+
+    <section class="screen dim" id="s-settings">
+      <div class="card">
+        <h2>Settings</h2>
+        <div class="set-list" id="set-list"></div>
+        <button class="btn glow slim" data-nav data-act="back"><b>Done</b></button>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-how">
+      <div class="card wide">
+        <h2>How to grow</h2>
+        <div class="how">
+          <div><i class="ico" style="--c:#9ef01a">●</i><b>Fire seeds</b><p>Hit a bug and it hurts. Miss, and the seed lands and sprouts.</p></div>
+          <div><i class="ico" style="--c:#64c8ff">💧</i><b>Water</b><p>Plants drink when you walk near them. Left alone, they wilt.</p></div>
+          <div><i class="ico" style="--c:#ffd27a">⌂</i><b>The greenhouse</b><p>Bugs want in. Ten nights of them. Keep it standing.</p></div>
+          <div><i class="ico" style="--c:#c77dff">✿</i><b>New seeds</b><p>Each dawn, choose a new seed packet to unlock.</p></div>
+        </div>
+        <table class="keys">
+          <tr><td>WASD / arrows</td><td>Walk</td><td>Mouse</td><td>Aim, hold to fire</td></tr>
+          <tr><td>1 – 4, Q / E</td><td>Choose a seed</td><td>Space</td><td>Fire the way you face</td></tr>
+          <tr><td>Touch</td><td>Left thumb walks, right thumb aims and fires</td><td>Gamepad</td><td>Sticks, RT fires, LB / RB seeds</td></tr>
+        </table>
+        <button class="btn glow slim" data-nav data-act="back"><b>Got it</b></button>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-pause">
+      <div class="card">
+        <h2>Paused</h2>
+        <nav class="stack">
+          <button class="btn glow slim" data-nav data-act="resume"><b>Back to the garden</b></button>
+          <button class="btn slim" data-nav data-act="how"><b>How to grow</b></button>
+          <button class="btn slim" data-nav data-act="settings"><b>Settings</b></button>
+          <button class="btn slim" data-nav data-act="quit"><b>Leave the garden</b></button>
+        </nav>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-dawn">
+      <div class="card wide">
+        <small class="kicker" id="d-kicker">Dawn</small>
+        <h2 id="d-title">The sun comes up</h2>
+        <p class="note" id="d-note"></p>
+        <div class="choices" id="d-choices"></div>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-result">
+      <div class="card">
+        <small class="kicker" id="r-kicker">The end</small>
+        <h2 id="r-title">The garden held!</h2>
+        <div class="stats" id="r-stats"></div>
+        <nav class="stack">
+          <button class="btn glow slim" data-nav data-act="start"><b>Plant again</b></button>
+          <button class="btn slim" data-nav data-act="quit"><b>Back to the gate</b></button>
+        </nav>
+      </div>
+    </section>
+
+    <div id="toast" role="status"></div>
+    <div id="fade"></div>
+    <noscript>Bullet Garden needs JavaScript enabled.</noscript>
+
+    <script src="js/rules.js"></script>
+    <script src="js/save.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/view.js"></script>
+    <script src="js/menus.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
   </body>
 </html>

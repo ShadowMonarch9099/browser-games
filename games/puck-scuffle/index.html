@@ -3,26 +3,101 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
-    <meta name="theme-color" content="#dff1fb" />
+    <meta name="theme-color" content="#2a1a10" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="description" content="Air hockey on a walnut-and-chrome arcade table. Two players on one screen or keyboard, or one against the house machine. Tokens split the puck, grow it or shrink a goal." />
     <title>Puck Scuffle</title>
-    <link rel="stylesheet" href="../../site/lib/ui.css" />
-    <style>
-      html, body { margin: 0; height: 100%; overflow: hidden; background: #dff1fb; }
-      #game { display: block; width: 100vw; height: 100vh; height: 100dvh; }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fugaz+One&family=Barlow+Semi+Condensed:wght@500;600;700&display=swap" />
+    <link rel="stylesheet" href="css/style.css" />
   </head>
-  <body>
-    <canvas id="game" aria-label="Puck Scuffle game"></canvas>
+  <body data-device="mouse">
+    <canvas id="game" aria-label="Puck Scuffle: the table"></canvas>
+    <button id="pause-btn" class="off" data-act="pause" aria-label="Pause">❚❚</button>
 
-    <!-- The Arcade kit (shared by every game). Keep these paths relative. -->
-    <script src="../../site/lib/loop.js"></script>
-    <script src="../../site/lib/input.js"></script>
-    <script src="../../site/lib/players.js"></script>
-    <script src="../../site/lib/audio.js"></script>
-    <script src="../../site/lib/save.js"></script>
-    <script src="../../site/lib/rng.js"></script>
-    <script src="../../site/lib/ui.js"></script>
-    <!-- Your game -->
-    <script src="game.js"></script>
+    <section class="screen" id="s-title">
+      <div class="marquee">
+        <small>Parlour Classic · Est. Tonight</small>
+        <h1>Puck<br />Scuffle</h1>
+        <p>Air hockey. Bring a friend, or take on the house.</p>
+      </div>
+      <nav class="panel">
+        <button class="key red" data-nav data-act="mode-2p"><b>2 players</b><small>Share the table</small></button>
+        <button class="key" data-nav data-act="mode-cpu-0"><b>House: easy</b><small>A gentle warm-up</small></button>
+        <button class="key" data-nav data-act="mode-cpu-1"><b>House: medium</b><small>It fights back</small></button>
+        <button class="key" data-nav data-act="mode-cpu-2"><b>House: hard</b><small>Quick hands</small></button>
+        <div class="row2">
+          <button class="key slim" data-nav data-act="how"><b>How to play</b></button>
+          <button class="key slim" data-nav data-act="settings"><b>Settings</b></button>
+        </div>
+      </nav>
+    </section>
+
+    <section class="screen dim" id="s-settings">
+      <div class="card">
+        <h2>Settings</h2>
+        <div class="set-list" id="set-list"></div>
+        <button class="key red slim" data-nav data-act="back"><b>Done</b></button>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-how">
+      <div class="card wide">
+        <h2>How to play</h2>
+        <div class="how">
+          <div><i class="ico">◉</i><b>Score</b><p>Knock the puck into the other end's slot. First to the target wins.</p></div>
+          <div><i class="ico purple">2</i><b>Split token</b><p>A second puck joins the game.</p></div>
+          <div><i class="ico amber">+</i><b>Giant token</b><p>The puck grows for 8 seconds.</p></div>
+          <div><i class="ico teal">&lt;</i><b>Shrink token</b><p>The last hitter's goal narrows for 10 seconds.</p></div>
+        </div>
+        <table class="keys"><tr><th></th><th>Red (bottom)</th><th>Blue (top)</th></tr>
+          <tr><td>Keyboard</td><td>W A S D</td><td>Arrow keys</td></tr>
+          <tr><td>Touch</td><td>Drag on your half</td><td>Drag on your half</td></tr>
+          <tr><td>Gamepad</td><td>Pad 1 stick</td><td>Pad 2 stick</td></tr>
+          <tr><td>Mouse</td><td colspan="2">Against the house, your mallet follows the mouse</td></tr></table>
+        <p class="note">Lay a phone or tablet flat between two players. On wide screens the table turns sideways: red on the left.</p>
+        <button class="key red slim" data-nav data-act="back"><b>Got it</b></button>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-pause">
+      <div class="card">
+        <h2>Time out</h2>
+        <nav class="stack">
+          <button class="key red slim" data-nav data-act="resume"><b>Resume</b></button>
+          <button class="key slim" data-nav data-act="restart"><b>Restart match</b></button>
+          <button class="key slim" data-nav data-act="settings"><b>Settings</b></button>
+          <button class="key slim" data-nav data-act="quit"><b>Leave the table</b></button>
+        </nav>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-result">
+      <div class="card">
+        <small class="kicker" id="r-kicker">Final</small>
+        <h2 id="r-title">Red wins!</h2>
+        <div class="led" id="r-score">7 : 3</div>
+        <p class="note" id="r-note"></p>
+        <nav class="stack">
+          <button class="key red slim" data-nav data-act="restart"><b>Rematch</b></button>
+          <button class="key slim" data-nav data-act="quit"><b>Change mode</b></button>
+        </nav>
+      </div>
+    </section>
+
+    <div id="toast" role="status"></div>
+    <div id="fade"></div>
+    <noscript>Puck Scuffle needs JavaScript enabled.</noscript>
+
+    <script src="js/rules.js"></script>
+    <script src="js/save.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/input.js"></script>
+    <script src="js/view.js"></script>
+    <script src="js/menus.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
   </body>
 </html>

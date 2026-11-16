@@ -1,0 +1,61 @@
+/* Borrowed Boots: the page around the canvas is a warm book cloth. */
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: none;
+  background: #2b1e15;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100dvh;
+  background: radial-gradient(ellipse at center, #4a3424 0%, #2b1e15 70%);
+  color: #fdf4dc;
+  font-family: 'Sniglet', 'Trebuchet MS', system-ui, sans-serif;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+#stage {
+  position: relative;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+#rotate {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: #2b1e15;
+  color: #f5b82e;
+  z-index: 2;
+}
+
+#rotate[hidden] {
+  display: none;
+}
+
+#rotate p {
+  margin: 0;
+  color: #fdf4dc;
+  font-size: 18px;
+}

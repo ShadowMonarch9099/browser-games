@@ -3,26 +3,143 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
-    <meta name="theme-color" content="#dceefb" />
+    <meta name="theme-color" content="#1d3557" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="description" content="Two climbers tied by one rope, racing the sunrise up a granite cliff. Play with a friend on one keyboard, two gamepads or one touch screen, or climb solo and swap between them." />
     <title>Knot Alone</title>
-    <link rel="stylesheet" href="../../site/lib/ui.css" />
-    <style>
-      html, body { margin: 0; height: 100%; overflow: hidden; background: #dceefb; }
-      #game { display: block; width: 100vw; height: 100vh; height: 100dvh; }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Rubik:wght@500;700;800&display=swap" />
+    <link rel="stylesheet" href="css/style.css" />
   </head>
-  <body>
-    <canvas id="game" aria-label="Knot Alone game"></canvas>
+  <body data-device="keyboard">
+    <canvas id="game" aria-label="Knot Alone: the cliff"></canvas>
 
-    <!-- The Arcade kit (shared by every game). Keep these paths relative. -->
-    <script src="../../site/lib/loop.js"></script>
-    <script src="../../site/lib/input.js"></script>
-    <script src="../../site/lib/players.js"></script>
-    <script src="../../site/lib/audio.js"></script>
-    <script src="../../site/lib/save.js"></script>
-    <script src="../../site/lib/rng.js"></script>
-    <script src="../../site/lib/ui.js"></script>
-    <!-- Your game -->
-    <script src="game.js"></script>
+    <div id="hud" class="off">
+      <div class="hud-card">
+        <small id="h-climb">Climb 1</small>
+        <b id="h-name">First Pitch</b>
+        <div class="hud-row"><span id="h-time">0:00</span><span id="h-falls"></span></div>
+        <div class="rope-gauge" title="Rope length"><i id="h-rope"></i></div>
+      </div>
+      <div class="alt" aria-hidden="true"><i class="flagpin">▲</i><i class="dot red" id="h-a0"></i><i class="dot teal" id="h-a1"></i></div>
+      <div id="h-solo" class="solo-tag">Climbing: <b id="h-who">Red</b> <small>Tab to swap</small></div>
+      <button id="pause-btn" data-act="pause" aria-label="Pause">❚❚</button>
+    </div>
+
+    <div id="touch" class="off" aria-hidden="true">
+      <div class="pad" data-p="0">
+        <div class="moves"><button data-t="left">◀</button><button data-t="right">▶</button></div>
+        <div class="acts"><button data-t="anchor" class="anc">⚓</button><div class="ud"><button data-t="up" class="jump">▲</button><button data-t="down">▼</button></div></div>
+      </div>
+      <div class="pad" data-p="1">
+        <div class="acts"><div class="ud"><button data-t="up" class="jump">▲</button><button data-t="down">▼</button></div><button data-t="anchor" class="anc">⚓</button><button data-t="swap" class="swap">⇄</button></div>
+        <div class="moves"><button data-t="left">◀</button><button data-t="right">▶</button></div>
+      </div>
+    </div>
+
+    <section class="screen" id="s-title">
+      <div class="patch">
+        <svg class="knot" viewBox="0 0 120 60" aria-hidden="true">
+          <path d="M4 40 C 30 40, 34 10, 60 14 C 86 18, 80 50, 58 46 C 40 42, 52 18, 70 24 C 90 30, 96 44, 116 40" fill="none" stroke="#ff7a1a" stroke-width="7" stroke-linecap="round" />
+          <path d="M4 40 C 30 40, 34 10, 60 14 C 86 18, 80 50, 58 46 C 40 42, 52 18, 70 24 C 90 30, 96 44, 116 40" fill="none" stroke="#ffd2a8" stroke-width="2" stroke-dasharray="4 5" stroke-linecap="round" />
+        </svg>
+        <h1>Knot<br />Alone</h1>
+        <p>Two climbers. One rope. No solo summits.</p>
+      </div>
+      <nav class="menu">
+        <button class="btn hot" data-nav data-act="mode-2"><b>Two climbers</b><small id="t-two">Climb 1 · keyboard, pads or touch</small></button>
+        <button class="btn" data-nav data-act="mode-1"><b>Solo climb</b><small>Swap between them with Tab</small></button>
+        <button class="btn" data-nav data-act="levels"><b>Routes</b><small id="t-pins">0 summit pins</small></button>
+        <div class="row2">
+          <button class="btn slim" data-nav data-act="how"><b>How to climb</b></button>
+          <button class="btn slim" data-nav data-act="settings"><b>Settings</b></button>
+        </div>
+      </nav>
+    </section>
+
+    <section class="screen dim" id="s-levels">
+      <div class="card wide">
+        <h2>Routes</h2>
+        <div class="seg" role="group" aria-label="Who is climbing">
+          <button data-nav data-act="set-mode-2" id="seg-2">Two climbers</button>
+          <button data-nav data-act="set-mode-1" id="seg-1">Solo</button>
+        </div>
+        <p class="note" id="lv-total">0 / 30 summit pins</p>
+        <div class="routes" id="lv-grid"></div>
+        <button class="btn slim" data-nav data-act="back"><b>Back</b></button>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-settings">
+      <div class="card">
+        <h2>Settings</h2>
+        <div class="set-list" id="set-list"></div>
+        <button class="btn hot slim" data-nav data-act="back"><b>Done</b></button>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-how">
+      <div class="card wide">
+        <h2>How to climb</h2>
+        <div class="how">
+          <div><i class="ico">⤒</i><b>Jump up through</b><p>Ledges let you jump up from below. A 2 m step is a plain jump.</p></div>
+          <div><i class="ico">⇡</i><b>Boost</b><p>3 m is too high. Stand on your partner's head and jump.</p></div>
+          <div><i class="ico">⚓</i><b>Anchor</b><p>Hold anchor and you can't be pulled. Up reels your partner in, down lets rope out.</p></div>
+          <div><i class="ico">▲</i><b>Summit</b><p>Both of you must stand on the flag ledge.</p></div>
+        </div>
+        <table class="keys">
+          <tr><th></th><th>Red</th><th>Teal</th></tr>
+          <tr><td>Move</td><td>A D</td><td>← →</td></tr>
+          <tr><td>Jump / reel in</td><td>W</td><td>↑</td></tr>
+          <tr><td>Let rope out</td><td>S</td><td>↓</td></tr>
+          <tr><td>Anchor (hold)</td><td>F or Shift</td><td>Enter or /</td></tr>
+          <tr><td>Gamepad</td><td>Pad 1</td><td>Pad 2</td></tr>
+        </table>
+        <p class="note">Gamepad: stick moves, A jumps and reels in, d-pad down lets out, B or RB anchors. Solo: Tab, Q or Y swaps climbers; the other one holds on. On touch screens each player gets a set of buttons in their corner.</p>
+        <button class="btn hot slim" data-nav data-act="back"><b>Got it</b></button>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-pause">
+      <div class="card">
+        <h2>Belay break</h2>
+        <nav class="stack">
+          <button class="btn hot slim" data-nav data-act="resume"><b>Keep climbing</b></button>
+          <button class="btn slim" data-nav data-act="restart"><b>Back to the bottom</b></button>
+          <button class="btn slim" data-nav data-act="levels"><b>Routes</b></button>
+          <button class="btn slim" data-nav data-act="settings"><b>Settings</b></button>
+          <button class="btn slim" data-nav data-act="quit"><b>Base camp</b></button>
+        </nav>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-result">
+      <div class="card">
+        <small class="kicker" id="r-kicker">Climb 1</small>
+        <h2 id="r-title">Summit!</h2>
+        <div class="pins" id="r-pins"><i></i><i></i><i></i></div>
+        <div class="stats" id="r-stats"></div>
+        <nav class="stack">
+          <button class="btn hot slim" data-nav data-act="next" id="r-next"><b>Next climb</b></button>
+          <button class="btn slim" data-nav data-act="restart"><b>Climb it again</b></button>
+          <button class="btn slim" data-nav data-act="levels"><b>Routes</b></button>
+        </nav>
+      </div>
+    </section>
+
+    <div id="toast" role="status"></div>
+    <div id="fade"></div>
+    <noscript>Knot Alone needs JavaScript enabled.</noscript>
+
+    <script src="js/rules.js"></script>
+    <script src="js/save.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/input.js"></script>
+    <script src="js/view.js"></script>
+    <script src="js/menus.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
   </body>
 </html>

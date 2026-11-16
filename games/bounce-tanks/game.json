@@ -1,6 +1,6 @@
 {
   "title": "Bounce Tanks",
-  "description": "Tiny tanks in a fresh maze every round. Shells bounce off the walls, one hit is all it takes, and your own shots can come back for you.",
+  "description": "Toy tanks on a tabletop maze that is rebuilt every round. Shells bounce off the wooden walls, one hit knocks you out, and your own shots can come back for you. 2 to 4 tanks on one keyboard or gamepads, with computer drivers for empty seats.",
   "authors": [
     "Kush Honkalse"
   ],
@@ -11,10 +11,12 @@
   ],
   "controls": [
     "keyboard",
-    "gamepad"
+    "gamepad",
+    "mouse",
+    "touch"
   ],
-  "orientation": "any",
+  "orientation": "landscape",
   "players": "1-4",
-  "accent": "#ffb703",
+  "accent": "#ff9a1f",
   "added": "2026-11-14"
 }

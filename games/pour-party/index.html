@@ -3,26 +3,149 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
-    <meta name="theme-color" content="#0f3b46" />
+    <meta name="theme-color" content="#12343a" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="description" content="A soda-fountain sorting puzzle: pour fizzy drinks from glass to glass until every glass holds one flavour." />
     <title>Pour Party</title>
-    <link rel="stylesheet" href="../../site/lib/ui.css" />
-    <style>
-      html, body { margin: 0; height: 100%; overflow: hidden; background: #0f3b46; }
-      #game { display: block; width: 100vw; height: 100vh; height: 100dvh; }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Pacifico&display=swap" />
+    <link rel="stylesheet" href="css/style.css" />
   </head>
-  <body>
-    <canvas id="game" aria-label="Pour Party game"></canvas>
+  <body data-device="mouse">
+    <div id="app">
+      <canvas id="bg" aria-hidden="true"></canvas>
+      <canvas id="game" aria-label="Pour Party: the soda counter with the glasses"></canvas>
 
-    <!-- The Arcade kit (shared by every game). Keep these paths relative. -->
-    <script src="../../site/lib/loop.js"></script>
-    <script src="../../site/lib/input.js"></script>
-    <script src="../../site/lib/players.js"></script>
-    <script src="../../site/lib/audio.js"></script>
-    <script src="../../site/lib/save.js"></script>
-    <script src="../../site/lib/rng.js"></script>
-    <script src="../../site/lib/ui.js"></script>
-    <!-- Your game -->
-    <script src="game.js"></script>
+      <!-- In-play HUD -->
+      <div id="hud" class="off">
+        <div class="hud-top">
+          <div class="ticket" aria-live="polite">
+            <span class="ticket-no">No.</span><span id="hud-level">1</span>
+          </div>
+          <div class="tally">
+            <div><b id="hud-moves">0</b><small>pours</small></div>
+            <div><b id="hud-par">0</b><small>par</small></div>
+            <div class="tally-stars" id="hud-stars" aria-label="stars on track"><i></i><i></i><i></i></div>
+          </div>
+          <button class="knob knob-sm" data-action="pause" aria-label="Pause"><svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1.5"/><rect x="14" y="5" width="4" height="14" rx="1.5"/></svg><kbd data-glyph="pause"></kbd></button>
+        </div>
+        <div class="hud-bottom">
+          <button class="knob" data-action="undo" aria-label="Undo"><svg viewBox="0 0 24 24"><path d="M9 7 4 12l5 5M4.6 12H14a6 6 0 0 1 0 12h-2" transform="translate(0 -3)"/></svg><span>Undo</span><kbd data-glyph="undo"></kbd></button>
+          <button class="knob knob-hint" data-action="hint" aria-label="Hint"><svg viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0-3.5 10.9V16h7v-2.1A6 6 0 0 0 12 3ZM9.5 19h5M10.5 21.5h3"/></svg><span>Hint</span><kbd data-glyph="hint"></kbd></button>
+          <button class="knob" data-action="restart" aria-label="Restart"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4.5h4.5"/></svg><span>Restart</span><kbd data-glyph="restart"></kbd></button>
+        </div>
+        <div id="hud-help" class="hud-help"></div>
+      </div>
+
+      <!-- Title -->
+      <section class="screen" id="s-title" data-back="none">
+        <div class="neon-wrap">
+          <h1 class="neon" aria-label="Pour Party"><span>Pour</span> <span>Party</span></h1>
+          <p class="neon-sub">a soda-fountain sorting puzzle</p>
+        </div>
+        <nav class="menu-card" aria-label="Main menu">
+          <div class="menu-head">~ Menu ~</div>
+          <button class="menu-row" data-nav data-action="continue" id="btn-continue"><span>Play</span><i></i><em id="continue-sub">Level 1</em></button>
+          <button class="menu-row" data-nav data-action="levels"><span>Pick a level</span><i></i><em id="stars-sub">0 ★</em></button>
+          <button class="menu-row" data-nav data-action="settings"><span>Settings</span><i></i><em>house rules</em></button>
+          <button class="menu-row" data-nav data-action="how"><span>How to play</span><i></i><em>the recipe</em></button>
+        </nav>
+        <p class="foot-prompt"><kbd data-glyph="nav"></kbd> choose <kbd data-glyph="confirm"></kbd> serve</p>
+      </section>
+
+      <!-- Level select -->
+      <section class="screen" id="s-levels" data-back="back">
+        <div class="board">
+          <header class="board-head">
+            <button class="chip" data-nav data-action="back" aria-label="Back">‹ Back</button>
+            <h2>Today's Specials</h2>
+            <span class="board-stars" id="lv-stars">0 ★</span>
+          </header>
+          <div class="pager">
+            <button class="chip" data-nav data-action="page-prev" aria-label="Previous page">‹</button>
+            <span id="lv-page">Levels 1 – 20</span>
+            <button class="chip" data-nav data-action="page-next" aria-label="Next page">›</button>
+          </div>
+          <div class="coasters" id="lv-grid"></div>
+        </div>
+      </section>
+
+      <!-- Settings -->
+      <section class="screen" id="s-settings" data-back="back">
+        <div class="card">
+          <h2>House Rules</h2>
+          <div class="set-list" id="set-list"></div>
+          <button class="pill" data-nav data-action="back">Done</button>
+        </div>
+      </section>
+
+      <!-- How to play -->
+      <section class="screen" id="s-how" data-back="back">
+        <div class="card card-wide">
+          <h2>The Recipe</h2>
+          <ol class="steps">
+            <li><div class="step-art art-pick"></div><b>Pick up a glass</b><span>Tap it, click it, or move with the arrows and press select.</span></li>
+            <li><div class="step-art art-pour"></div><b>Pour on a match</b><span>Drinks pour onto the same flavour or into an empty glass, as much as fits.</span></li>
+            <li><div class="step-art art-done"></div><b>One flavour each</b><span>Fill every glass with a single flavour. Every level can be solved.</span></li>
+          </ol>
+          <p class="how-note">From level 10 the lower layers are a mystery ( <b>?</b> ) until you pour off what sits on top. Match par for three stars; using a hint caps a level at two.</p>
+          <table class="keys" id="how-keys"></table>
+          <button class="pill" data-nav data-action="back">Got it</button>
+        </div>
+      </section>
+
+      <!-- Pause -->
+      <section class="screen" id="s-pause" data-back="resume">
+        <div class="sign">
+          <div class="sign-chain"></div>
+          <div class="sign-board">
+            <small id="pause-level">Level 1</small>
+            <h2>Be right back</h2>
+            <button class="pill" data-nav data-action="resume">Resume</button>
+            <button class="pill pill-light" data-nav data-action="restart-menu">Restart level</button>
+            <button class="pill pill-light" data-nav data-action="levels">Level select</button>
+            <button class="pill pill-light" data-nav data-action="settings">Settings</button>
+            <button class="pill pill-light" data-nav data-action="how">How to play</button>
+            <button class="pill pill-light" data-nav data-action="quit">Main menu</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Results -->
+      <section class="screen" id="s-won" data-back="levels">
+        <div class="receipt">
+          <p class="receipt-head">ORDER UP!</p>
+          <h2 id="won-title">Level 1 sorted</h2>
+          <div class="stamps" id="won-stars"><i></i><i></i><i></i></div>
+          <dl class="receipt-lines">
+            <div><dt>Pours</dt><dd id="won-moves">0</dd></div>
+            <div><dt>Par</dt><dd id="won-par">0</dd></div>
+            <div><dt>Hints</dt><dd id="won-hints">0</dd></div>
+            <div><dt>Best</dt><dd id="won-best">0</dd></div>
+          </dl>
+          <p class="receipt-note" id="won-note"></p>
+          <button class="pill" data-nav data-action="next">Next level</button>
+          <button class="pill pill-light" data-nav data-action="replay">Play it again</button>
+          <button class="pill pill-light" data-nav data-action="levels">Level select</button>
+        </div>
+      </section>
+
+      <div id="toast" role="status"></div>
+      <div id="fade"></div>
+    </div>
+    <noscript>Pour Party needs JavaScript enabled.</noscript>
+
+    <!-- Classic scripts so the game also runs straight from file:// -->
+    <script src="js/rules.js"></script>
+    <script src="js/save.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/input.js"></script>
+    <script src="js/scene.js"></script>
+    <script src="js/board.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
   </body>
 </html>

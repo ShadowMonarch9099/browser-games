@@ -1,1 +1,44 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360"><defs><linearGradient id="b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#14002e"/><stop offset=".55" stop-color="#3d0a5c"/><stop offset="1" stop-color="#14002e"/></linearGradient><linearGradient id="u" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd319"/><stop offset="1" stop-color="#ff2e88"/></linearGradient></defs><rect width="640" height="360" fill="url(#b)"/><path d="M200 200a120 120 0 0 1 240 0z" fill="url(#u)"/><g fill="#3d0a5c"><rect x="190" y="186" width="260" height="4"/><rect x="190" y="170" width="260" height="5"/><rect x="190" y="152" width="260" height="6"/></g><path d="M0 210h640M0 230h640M0 260h640M0 300h640M0 350h640M320 200L320 360M300 200L180 360M340 200L460 360M280 200L40 360M360 200L600 360" stroke="#00f0ff" stroke-opacity=".55" stroke-width="2"/><rect x="110" y="250" width="24" height="48" fill="#fbe9ff"/><circle cx="122" cy="238" r="12" fill="#fbe9ff"/><rect x="300" y="262" width="34" height="40" fill="#ff2e88"/><rect x="440" y="200" width="56" height="18" fill="#00f0ff"/><rect x="520" y="262" width="34" height="40" fill="#ff2e88"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#09021e"/>
+      <stop offset="0.75" stop-color="#2a0846"/>
+      <stop offset="1" stop-color="#ff508c"/>
+    </linearGradient>
+    <radialGradient id="portal" cx="0.5" cy="1" r="0.6">
+      <stop offset="0" stop-color="#ffdc6e" stop-opacity="0.2"/>
+      <stop offset="0.8" stop-color="#ff78c8" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#ff78c8" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="road" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2a0a3a"/>
+      <stop offset="1" stop-color="#07020f"/>
+    </linearGradient>
+  </defs>
+  <rect width="320" height="200" fill="url(#sky)"/>
+  <circle cx="160" cy="92" r="46" fill="url(#portal)"/>
+  <g stroke="#ff9ade" stroke-width="2.4" stroke-linecap="round" opacity="0.85">
+    <path d="M160 40v-10M137 46l-5-9M183 46l5-9M120 62l-9-5M200 62l9-5M113 80h-10M207 80h10"/>
+  </g>
+  <g fill="#080214">
+    <path d="M0 92h14v-24h12v14h10v-30h14v40h12v-18h16v18h18v8H0z"/>
+    <path d="M320 92h-14v-28h-12v16h-12v-36h-14v48h-12v-20h-14v20h-16v8h94z"/>
+  </g>
+  <rect y="92" width="320" height="108" fill="#0a0418"/>
+  <g stroke="#b44bff" stroke-opacity="0.45">
+    <path d="M0 110h320M0 132h320M0 162h320M0 198h320"/>
+  </g>
+  <path d="M146 92h28l116 108H30z" fill="url(#road)"/>
+  <path d="M146 92L30 200M174 92l116 108" stroke="#ff3dc8" stroke-width="3"/>
+  <path d="M150 92L85 200M170 92l65 108" stroke="#c8beff" stroke-width="1.5" stroke-dasharray="9 12" opacity="0.6"/>
+  <path d="M133 102v-18l6-6h42l6 6v18" fill="none" stroke="#ff78c8" stroke-width="2"/>
+  <path d="M116 120v-30l8-8h72l8 8v30" fill="none" stroke="#ff78c8" stroke-width="2.5" opacity="0.8"/>
+  <path d="M154 112h12l2 4h-16z" fill="#ffd23f"/>
+  <path d="M99 138h30l-4 8H93z" fill="#ff3d9a"/>
+  <path d="M193 132h26l4 7h-29z" fill="#3df2ff"/>
+  <path d="M82 166h46l-2 10H76z" fill="none" stroke="#ff3d9a" stroke-width="2"/>
+  <path d="M137 166h46l1 10h-48z" fill="none" stroke="#ffd23f" stroke-width="2"/>
+  <path d="M192 166h46l6 10h-50z" fill="none" stroke="#3df2ff" stroke-width="2"/>
+  <path d="M160 160l26 30h-52z" fill="#1a0b33" stroke="#ffc2f0" stroke-width="2"/>
+  <text x="18" y="34" font-family="Impact, Arial Black, sans-serif" font-size="28" fill="#ffd7ee" letter-spacing="2">BEAT SPRINT</text>
+</svg>

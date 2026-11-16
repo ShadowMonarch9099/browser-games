@@ -1,0 +1,34 @@
+html, body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: #142a12;
+  color: #fff3d6;
+  font-family: "Signika", "Trebuchet MS", sans-serif;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+#game {
+  display: block;
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  touch-action: none;
+  outline: none;
+}
+noscript {
+  display: block;
+  padding: 2em;
+  text-align: center;
+}
+/* keeps the fonts warm so the first canvas frame can use them */
+.font-warm {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  font-family: "Metamorphous", serif;
+}
+.font-warm b { font-family: "Signika", sans-serif; font-weight: 700; }

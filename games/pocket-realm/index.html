@@ -3,27 +3,102 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
-    <meta name="theme-color" content="#f4ecd8" />
+    <meta name="theme-color" content="#2a1d14" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="description" content="A tabletop RPG where you build the map as you go. Draw a land, set it beside your hero, and face whatever lives there. Reach the dragon's keep in one short run." />
     <title>Pocket Realm</title>
-    <link rel="stylesheet" href="../../site/lib/ui.css" />
-    <style>
-      html, body { margin: 0; height: 100%; overflow: hidden; background: #f4ecd8; }
-      #game { display: block; width: 100vw; height: 100vh; height: 100dvh; }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&family=IM+Fell+English:ital@0;1&display=swap" />
+    <link rel="stylesheet" href="css/style.css" />
   </head>
-  <body>
-    <canvas id="game" aria-label="Pocket Realm game"></canvas>
+  <body data-device="mouse">
+    <canvas id="game" aria-label="Pocket Realm: the tabletop"></canvas>
+    <button id="pause-btn" class="off" data-act="pause" aria-label="Pause">❚❚</button>
 
-    <!-- The Arcade kit (shared by every game). Keep these paths relative. -->
-    <script src="../../site/lib/loop.js"></script>
-    <script src="../../site/lib/input.js"></script>
-    <script src="../../site/lib/players.js"></script>
-    <script src="../../site/lib/audio.js"></script>
-    <script src="../../site/lib/save.js"></script>
-    <script src="../../site/lib/rng.js"></script>
-    <script src="../../site/lib/ui.js"></script>
-    <!-- Your game -->
-    <script src="rules.js"></script>
-    <script src="game.js"></script>
+    <section class="screen" id="s-title">
+      <div class="scroll">
+        <small class="kicker">A tabletop tale</small>
+        <h1>Pocket Realm</h1>
+        <p class="lede">Build the map. Survive it. Slay the dragon.</p>
+        <div class="heroes">
+          <button class="hero" data-nav data-act="hero-knight"><i class="crest knight">⛨</i><b>Knight</b><small>30 health · 5 attack · 2 armour</small><em>Tough: every hit does 1 less</em></button>
+          <button class="hero" data-nav data-act="hero-ranger"><i class="crest ranger">➶</i><b>Ranger</b><small>35 health · 7 attack · 1 armour</small><em>Quick: strikes first, flees for free</em></button>
+          <button class="hero" data-nav data-act="hero-mage"><i class="crest mage">✦</i><b>Mage</b><small>28 health · 8 attack · 1 armour</small><em>Mend: heal 14 once per fight</em></button>
+        </div>
+        <div class="row">
+          <button class="seal-btn" data-nav data-act="daily" id="t-daily"><b>Today's realm: off</b></button>
+          <button class="seal-btn" data-nav data-act="how"><b>How to play</b></button>
+          <button class="seal-btn" data-nav data-act="settings"><b>Settings</b></button>
+        </div>
+        <p class="note" id="t-record">No dragons slain yet.</p>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-settings">
+      <div class="scroll small">
+        <h2>Settings</h2>
+        <div class="set-list" id="set-list"></div>
+        <button class="seal-btn red" data-nav data-act="back"><b>Done</b></button>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-how">
+      <div class="scroll">
+        <h2>How to play</h2>
+        <ol class="how">
+          <li><b>Draw a land.</b> Each turn you are offered two. Pick one, then set it on a glowing plot next to your hero, who walks onto it.</li>
+          <li><b>Face what lives there.</b> Forests hide wolves, ruins hold ghosts and gold, villages sell potions, lakes heal.</li>
+          <li><b>Neighbours change lands.</b> A village by a swamp becomes a witch's hut; a mountain by a lake, a waterfall; and more to find.</li>
+          <li><b>Boxed in?</b> Walk back over lands you have placed to reach open ground.</li>
+          <li><b>The keep.</b> After 26 lands the Dragon's Keep appears. Be ready.</li>
+        </ol>
+        <table class="keys">
+          <tr><td>1 / 2</td><td>Choose a land</td><td>Arrows</td><td>Pick a plot</td></tr>
+          <tr><td>Enter</td><td>Place or walk</td><td>1 – 4</td><td>Fight and shop choices</td></tr>
+          <tr><td>Esc</td><td>Pause</td><td>Gamepad</td><td>D-pad, A, X, Y, LB / RB</td></tr>
+        </table>
+        <button class="seal-btn red" data-nav data-act="back"><b>Onward</b></button>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-pause">
+      <div class="scroll small">
+        <h2>The tale pauses</h2>
+        <nav class="stack">
+          <button class="seal-btn red" data-nav data-act="resume"><b>Continue the tale</b></button>
+          <button class="seal-btn" data-nav data-act="how"><b>How to play</b></button>
+          <button class="seal-btn" data-nav data-act="settings"><b>Settings</b></button>
+          <button class="seal-btn" data-nav data-act="quit"><b>Abandon this realm</b></button>
+        </nav>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-result">
+      <div class="scroll small">
+        <small class="kicker" id="r-kicker">The end</small>
+        <h2 id="r-title">The realm is saved</h2>
+        <p class="lede" id="r-line"></p>
+        <div class="stats" id="r-stats"></div>
+        <nav class="stack">
+          <button class="seal-btn red" data-nav data-act="again"><b>A new realm</b></button>
+        </nav>
+      </div>
+    </section>
+
+    <div id="toast" role="status"></div>
+    <div id="fade"></div>
+    <noscript>Pocket Realm needs JavaScript enabled.</noscript>
+
+    <script src="js/rules.js"></script>
+    <script src="js/core.js"></script>
+    <script src="js/board.js"></script>
+    <script src="js/save.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/menus.js"></script>
+    <script src="js/panel.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
   </body>
 </html>

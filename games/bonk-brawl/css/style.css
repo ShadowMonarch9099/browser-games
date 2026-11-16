@@ -1,0 +1,111 @@
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: #151018;
+  overscroll-behavior: none;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+#game {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+}
+#touch {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+#touch[hidden] {
+  display: none;
+}
+#touch .stick {
+  position: absolute;
+  left: max(18px, env(safe-area-inset-left));
+  bottom: 24px;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  border: 4px solid #151018;
+  box-shadow: 5px 5px 0 #151018;
+  pointer-events: auto;
+  touch-action: none;
+}
+#touch .stick i {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 54px;
+  height: 54px;
+  margin: -27px 0 0 -27px;
+  border-radius: 50%;
+  background: #ffd233;
+  border: 4px solid #151018;
+}
+#touch .btn {
+  position: absolute;
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  border: 4px solid #151018;
+  box-shadow: 5px 5px 0 #151018;
+  color: #fff;
+  font: 400 24px 'Bangers', Impact, sans-serif;
+  letter-spacing: 1px;
+  pointer-events: auto;
+  touch-action: none;
+}
+#touch .btn.held {
+  transform: translate(4px, 4px);
+  box-shadow: 1px 1px 0 #151018;
+}
+#touch .bonk {
+  right: max(126px, calc(env(safe-area-inset-right) + 110px));
+  bottom: 26px;
+  background: #33c45a;
+}
+#touch .big {
+  right: max(20px, env(safe-area-inset-right));
+  bottom: 86px;
+  background: #ff3d3d;
+}
+#touch .tpause {
+  position: absolute;
+  left: 50%;
+  top: 10px;
+  margin-left: -22px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 3px solid #151018;
+  background: #ffd233;
+  font: 800 16px 'Fredoka', system-ui, sans-serif;
+  pointer-events: auto;
+}
+#rotate {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: #ffd233;
+  color: #151018;
+  z-index: 2;
+}
+#rotate[hidden] {
+  display: none;
+}
+#rotate p {
+  margin: 0;
+  font: 400 26px 'Bangers', Impact, sans-serif;
+  letter-spacing: 1px;
+}

@@ -2,7 +2,7 @@
 // win rate per class, so balance changes in rules.js can be checked.
 // Usage: node games/pocket-realm/tools/simulate.js [runs per class]
 const path = require('path');
-const R = require(path.join(__dirname, '..', 'rules.js'));
+const R = require(path.join(__dirname, '..', 'js', 'rules.js'));
 const RUNS = Number(process.argv[2]) || 2000;
 
 // The bot: shop when it can, heal in fights when low, prefer safe land when hurt,

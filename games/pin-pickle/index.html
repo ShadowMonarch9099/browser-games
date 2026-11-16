@@ -3,28 +3,116 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
-    <meta name="theme-color" content="#1b1226" />
+    <meta name="theme-color" content="#1a1022" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="description" content="A torchlit cave puzzle. Pull the pins in the right order to pour the gold into the explorer's cart. Lava melts gold, water cools lava, and one wrong pin ends the dig. 40 caves." />
     <title>Pin Pickle</title>
-    <link rel="stylesheet" href="../../site/lib/ui.css" />
-    <style>
-      html, body { margin: 0; height: 100%; overflow: hidden; background: #1b1226; }
-      #game { display: block; width: 100vw; height: 100vh; height: 100dvh; }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pirata+One&family=Alegreya+Sans:ital,wght@0,500;0,700;0,800;1,500&display=swap" />
+    <link rel="stylesheet" href="css/style.css" />
   </head>
-  <body>
-    <canvas id="game" aria-label="Pin Pickle game"></canvas>
+  <body data-device="mouse">
+    <canvas id="game" aria-label="Pin Pickle: the cave"></canvas>
 
-    <!-- The Arcade kit (shared by every game). Keep these paths relative. -->
-    <script src="../../site/lib/loop.js"></script>
-    <script src="../../site/lib/input.js"></script>
-    <script src="../../site/lib/players.js"></script>
-    <script src="../../site/lib/audio.js"></script>
-    <script src="../../site/lib/save.js"></script>
-    <script src="../../site/lib/rng.js"></script>
-    <script src="../../site/lib/ui.js"></script>
-    <!-- Your game -->
-    <script src="levels.js"></script>
-    <script src="sim.js"></script>
-    <script src="game.js"></script>
+    <div id="hud" class="off">
+      <div class="tag"><b id="h-num">1</b><span><em id="h-name">First pull</em><small id="h-tip"></small></span></div>
+      <div class="tools">
+        <button class="tool" data-act="hint" aria-label="Hint (H)" title="Hint (H)">?</button>
+        <button class="tool" data-act="restart" aria-label="Start over (R)" title="Start over (R)">↺</button>
+        <button class="tool" data-act="pause" aria-label="Pause (Esc)" title="Pause (Esc)">❚❚</button>
+      </div>
+      <div class="meter" aria-hidden="true"><span>Gold</span><i class="track"><b id="h-gold"></b><em class="line"></em></i><span id="h-pct">0%</span></div>
+    </div>
+
+    <section class="screen" id="s-title">
+      <div class="map-card">
+        <i class="seal">✕</i>
+        <small>An explorer's journal</small>
+        <h1>Pin<br />Pickle</h1>
+        <p>Gold to the cart. Lava anywhere else.</p>
+      </div>
+      <nav class="menu">
+        <button class="btn ruby" data-nav data-act="continue"><b id="t-go">Start digging</b><small id="t-go-note">Cave 1</small></button>
+        <button class="btn" data-nav data-act="levels"><b>The map</b><small id="t-nuggets">0 nuggets</small></button>
+        <div class="row2">
+          <button class="btn slim" data-nav data-act="how"><b>How to dig</b></button>
+          <button class="btn slim" data-nav data-act="settings"><b>Settings</b></button>
+        </div>
+      </nav>
+    </section>
+
+    <section class="screen dim" id="s-levels">
+      <div class="parch wide">
+        <h2>The map</h2>
+        <p class="note" id="lv-total">0 / 120 nuggets</p>
+        <div class="trail" id="lv-grid"></div>
+        <button class="btn slim" data-nav data-act="back"><b>Back</b></button>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-settings">
+      <div class="parch">
+        <h2>Settings</h2>
+        <div class="set-list" id="set-list"></div>
+        <button class="btn ruby slim" data-nav data-act="back"><b>Done</b></button>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-how">
+      <div class="parch wide">
+        <h2>How to dig</h2>
+        <div class="how">
+          <div><i class="ico pin">⟞</i><b>Pull pins</b><p>Tap a pin, or press its number. Order matters.</p></div>
+          <div><i class="ico gold">◆</i><b>Gold</b><p>Falls like sand. Get most of it, 80%, into the cart.</p></div>
+          <div><i class="ico lava">≈</i><b>Lava</b><p>Melts gold. If it reaches the cart, the dig is over.</p></div>
+          <div><i class="ico water">≈</i><b>Water</b><p>Cools lava into harmless rubble. Gold sinks through it.</p></div>
+        </div>
+        <table class="keys">
+          <tr><td>1 – 9</td><td>Pull a pin</td><td>R</td><td>Start over</td></tr>
+          <tr><td>H</td><td>A hint</td><td>Esc</td><td>Pause</td></tr>
+          <tr><td>Gamepad</td><td colspan="3">D-pad picks a pin, A pulls, X hint, Y start over</td></tr>
+        </table>
+        <button class="btn ruby slim" data-nav data-act="back"><b>Let's dig</b></button>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-pause">
+      <div class="parch">
+        <h2>Lamp down</h2>
+        <nav class="stack">
+          <button class="btn ruby slim" data-nav data-act="resume"><b>Keep digging</b></button>
+          <button class="btn slim" data-nav data-act="restart"><b>Start the cave over</b></button>
+          <button class="btn slim" data-nav data-act="levels"><b>The map</b></button>
+          <button class="btn slim" data-nav data-act="settings"><b>Settings</b></button>
+          <button class="btn slim" data-nav data-act="quit"><b>Back to camp</b></button>
+        </nav>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-result">
+      <div class="parch">
+        <small class="kicker" id="r-kicker">Cave 1</small>
+        <h2 id="r-title">Struck gold!</h2>
+        <div class="nuggets" id="r-nuggets"><i></i><i></i><i></i></div>
+        <p class="note" id="r-note"></p>
+        <nav class="stack" id="r-buttons"></nav>
+      </div>
+    </section>
+
+    <div id="toast" role="status"></div>
+    <div id="fade"></div>
+    <noscript>Pin Pickle needs JavaScript enabled.</noscript>
+
+    <script src="js/sim.js"></script>
+    <script src="js/levels.js"></script>
+    <script src="js/save.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/input.js"></script>
+    <script src="js/cave.js"></script>
+    <script src="js/menus.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
   </body>
 </html>

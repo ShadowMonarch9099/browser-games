@@ -1,10 +1,20 @@
 {
   "title": "Snap Grid",
-  "description": "Drop neon shapes onto the board and clear full lines. Gold cells double a line, and a daily board gives everyone the same shapes.",
-  "authors": ["Kush Honkalse"],
+  "description": "A glowing arcade-cabinet block puzzle: drop bevelled neon shapes on an 8x8 grid, clear lines, chain streaks, use gold cells to double a line, and chase the daily board and your high-score table.",
+  "authors": [
+    "Kush Honkalse"
+  ],
   "thumbnail": "thumbnail.svg",
-  "tags": ["puzzle", "arcade"],
-  "controls": ["mouse", "touch", "keyboard"],
+  "tags": [
+    "puzzle",
+    "arcade"
+  ],
+  "controls": [
+    "mouse",
+    "touch",
+    "keyboard",
+    "gamepad"
+  ],
   "orientation": "any",
   "players": "1",
   "accent": "#2de2e6",

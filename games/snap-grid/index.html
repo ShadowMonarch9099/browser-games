@@ -3,26 +3,131 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
-    <meta name="theme-color" content="#0a0b1e" />
+    <meta name="theme-color" content="#07051a" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="description" content="A glowing arcade-cabinet block puzzle: drop shapes on an 8x8 grid, clear lines, chain streaks and chase the daily board." />
     <title>Snap Grid</title>
-    <link rel="stylesheet" href="../../site/lib/ui.css" />
-    <style>
-      html, body { margin: 0; height: 100%; overflow: hidden; background: #0a0b1e; }
-      #game { display: block; width: 100vw; height: 100vh; height: 100dvh; }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Audiowide&family=Share+Tech+Mono&display=swap" />
+    <link rel="stylesheet" href="css/style.css" />
   </head>
-  <body>
-    <canvas id="game" aria-label="Snap Grid game"></canvas>
+  <body data-device="mouse">
+    <div id="app">
+      <canvas id="bg" aria-hidden="true"></canvas>
+      <canvas id="game" aria-label="Snap Grid: the board and your three shapes"></canvas>
 
-    <!-- The Arcade kit (shared by every game). Keep these paths relative. -->
-    <script src="../../site/lib/loop.js"></script>
-    <script src="../../site/lib/input.js"></script>
-    <script src="../../site/lib/players.js"></script>
-    <script src="../../site/lib/audio.js"></script>
-    <script src="../../site/lib/save.js"></script>
-    <script src="../../site/lib/rng.js"></script>
-    <script src="../../site/lib/ui.js"></script>
-    <!-- Your game -->
-    <script src="game.js"></script>
+      <div id="hud" class="off">
+        <div class="readout" id="hud-left">
+          <span class="lbl" id="hud-mode">SCORE</span>
+          <span class="seg" id="hud-score">0</span>
+        </div>
+        <div class="readout readout-r" id="hud-right">
+          <span class="lbl">HI</span>
+          <span class="seg seg-hi" id="hud-best">0</span>
+        </div>
+        <div class="streak" id="hud-streak"><span>STREAK</span><b>0</b></div>
+        <div class="hud-btns">
+          <button class="arc-btn" data-action="hint" aria-label="Hint"><span class="arc-cap">?</span><em id="hud-hints">3</em><kbd data-glyph="hint"></kbd></button>
+          <button class="arc-btn" data-action="pause" aria-label="Pause"><span class="arc-cap">II</span><kbd data-glyph="pause"></kbd></button>
+        </div>
+        <div class="hud-help" id="hud-help"></div>
+      </div>
+
+      <section class="screen" id="s-title" data-back="none">
+        <div class="marquee">
+          <div class="bulbs" aria-hidden="true"></div>
+          <h1 class="logo" aria-label="Snap Grid"><span>SNAP</span><span>GRID</span></h1>
+          <p class="tag">8 &times; 8 &middot; CLEAR THE LINES</p>
+        </div>
+        <nav class="crt-menu" aria-label="Main menu">
+          <button data-nav data-action="classic"><span>CLASSIC</span><small id="t-best">HI 0</small></button>
+          <button data-nav data-action="daily"><span>DAILY BOARD</span><small id="t-daily">TODAY 0</small></button>
+          <button data-nav data-action="scores"><span>HIGH SCORES</span></button>
+          <button data-nav data-action="settings"><span>SETTINGS</span></button>
+          <button data-nav data-action="how"><span>HOW TO PLAY</span></button>
+        </nav>
+        <p class="insert"><span class="blink" id="press">PRESS START</span></p>
+      </section>
+
+      <section class="screen dim" id="s-scores" data-back="back">
+        <div class="crt-panel">
+          <h2>HIGH SCORES</h2>
+          <ol class="score-table" id="score-table"></ol>
+          <p class="sub-line" id="daily-line">DAILY BOARD TODAY: 0</p>
+          <button class="neon-btn" data-nav data-action="back">BACK</button>
+        </div>
+      </section>
+
+      <section class="screen dim" id="s-settings" data-back="back">
+        <div class="crt-panel">
+          <h2>SETTINGS</h2>
+          <div class="set-list" id="set-list"></div>
+          <button class="neon-btn" data-nav data-action="back">BACK</button>
+        </div>
+      </section>
+
+      <section class="screen dim" id="s-how" data-back="back">
+        <div class="crt-panel wide">
+          <h2>HOW TO PLAY</h2>
+          <div class="how-grid">
+            <div><canvas class="how-art" data-art="drop" width="160" height="110"></canvas><b>DROP</b><p>Drag any of your three shapes onto the board. Shapes never rotate.</p></div>
+            <div><canvas class="how-art" data-art="clear" width="160" height="110"></canvas><b>CLEAR</b><p>Fill a whole row or column and it clears. Clear several at once for big points.</p></div>
+            <div><canvas class="how-art" data-art="gold" width="160" height="110"></canvas><b>GOLD</b><p>A gold cell doubles every line it clears in. Clear on back-to-back drops for a streak bonus.</p></div>
+          </div>
+          <p class="sub-line">The run ends when none of your shapes fit. The daily board deals everyone the same shapes today.</p>
+          <table class="keys" id="how-keys"></table>
+          <button class="neon-btn" data-nav data-action="back">BACK</button>
+        </div>
+      </section>
+
+      <section class="screen dim" id="s-pause" data-back="resume">
+        <div class="crt-panel">
+          <h2 class="flick">PAUSED</h2>
+          <nav class="crt-menu inset">
+            <button data-nav data-action="resume"><span>CONTINUE</span></button>
+            <button data-nav data-action="restart-menu"><span>RESTART RUN</span></button>
+            <button data-nav data-action="settings"><span>SETTINGS</span></button>
+            <button data-nav data-action="how"><span>HOW TO PLAY</span></button>
+            <button data-nav data-action="quit"><span>QUIT TO TITLE</span></button>
+          </nav>
+        </div>
+      </section>
+
+      <section class="screen dim" id="s-over" data-back="quit">
+        <div class="crt-panel">
+          <h2 class="over-title" id="over-title">GAME OVER</h2>
+          <p class="over-mode" id="over-mode">CLASSIC</p>
+          <div class="big-score seg" id="over-score">0</div>
+          <p class="new-hi" id="over-hi">NEW HIGH SCORE</p>
+          <dl class="stats">
+            <div><dt>LINES</dt><dd id="over-lines">0</dd></div>
+            <div><dt>BEST STREAK</dt><dd id="over-streak">0</dd></div>
+            <div><dt>GOLD CLEARS</dt><dd id="over-golds">0</dd></div>
+            <div><dt>HI</dt><dd id="over-best">0</dd></div>
+          </dl>
+          <nav class="crt-menu inset">
+            <button data-nav data-action="again"><span>PLAY AGAIN</span></button>
+            <button data-nav data-action="switch"><span id="over-switch">DAILY BOARD</span></button>
+            <button data-nav data-action="quit"><span>TITLE</span></button>
+          </nav>
+        </div>
+      </section>
+
+      <div id="toast" role="status"></div>
+      <div id="crt" aria-hidden="true"></div>
+      <div id="fade"></div>
+    </div>
+    <noscript>Snap Grid needs JavaScript enabled.</noscript>
+
+    <script src="js/rules.js"></script>
+    <script src="js/save.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/input.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/view.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
   </body>
 </html>

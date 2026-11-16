@@ -1,6 +1,6 @@
 {
   "title": "Kitbash Rally",
-  "description": "Bolt a kart together in the garage, then race it. What you build decides how it drives and which power-ups you can use.",
+  "description": "Bolt a kart together in the workshop, then race it from behind the wheel on six circuits, alone or split screen. Every part is a stat and a power: no rocket pod, no boosts.",
   "authors": [
     "Kush Honkalse"
   ],
@@ -12,9 +12,10 @@
   "controls": [
     "keyboard",
     "gamepad",
-    "mouse"
+    "mouse",
+    "touch"
   ],
-  "orientation": "any",
+  "orientation": "landscape",
   "players": "1-2",
   "accent": "#ffd166",
   "added": "2026-11-14"

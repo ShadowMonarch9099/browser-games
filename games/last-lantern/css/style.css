@@ -1,0 +1,50 @@
+/* Last Lantern: the page around the canvas is the cave's own dark. */
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: none;
+  background: #030308;
+}
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100dvh;
+  color: #f6e7c8;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  -webkit-user-select: none;
+  user-select: none;
+}
+#stage {
+  position: relative;
+}
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+}
+#rotate {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: #030308;
+  color: #ffb347;
+  z-index: 2;
+}
+#rotate[hidden] {
+  display: none;
+}
+#rotate p {
+  margin: 0;
+  font-size: 20px;
+  color: #f6e7c8;
+}

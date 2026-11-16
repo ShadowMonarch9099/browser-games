@@ -12,7 +12,8 @@
   "controls": [
     "keyboard",
     "mouse",
-    "touch"
+    "touch",
+    "gamepad"
   ],
   "orientation": "any",
   "players": "1",

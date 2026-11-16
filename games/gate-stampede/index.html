@@ -3,26 +3,110 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
-    <meta name="theme-color" content="#8fd3ff" />
+    <meta name="theme-color" content="#f7c548" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="description" content="March a toy army down the playroom floor. Pick the gates that grow it, dodge the spinning saws, and arrive with enough soldiers to take the block castle." />
     <title>Gate Stampede</title>
-    <link rel="stylesheet" href="../../site/lib/ui.css" />
-    <style>
-      html, body { margin: 0; height: 100%; overflow: hidden; background: #8fd3ff; }
-      #game { display: block; width: 100vw; height: 100vh; height: 100dvh; }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bowlby+One+SC&family=Mali:wght@500;600;700&display=swap" />
+    <link rel="stylesheet" href="css/style.css" />
   </head>
-  <body>
-    <canvas id="game" aria-label="Gate Stampede game"></canvas>
+  <body data-device="mouse">
+    <canvas id="game" aria-label="Gate Stampede: the march"></canvas>
 
-    <!-- The Arcade kit (shared by every game). Keep these paths relative. -->
-    <script src="../../site/lib/loop.js"></script>
-    <script src="../../site/lib/input.js"></script>
-    <script src="../../site/lib/players.js"></script>
-    <script src="../../site/lib/audio.js"></script>
-    <script src="../../site/lib/save.js"></script>
-    <script src="../../site/lib/rng.js"></script>
-    <script src="../../site/lib/ui.js"></script>
-    <!-- Your game -->
-    <script src="game.js"></script>
+    <div id="hud" class="off">
+      <div class="hud-l"><span class="tag" id="hud-level">Level 1</span></div>
+      <div class="hud-c"><div class="road"><i id="hud-prog"></i><b id="hud-flag">⚑</b></div><span class="castle-n">Castle <em id="hud-castle">0</em></span></div>
+      <button class="pause-btn" data-act="pause" aria-label="Pause">❚❚</button>
+    </div>
+
+    <section class="screen" id="s-title">
+      <div class="crest">
+        <div class="ribbon">The Toy-Box Army</div>
+        <h1><span>Gate</span><span>Stampede</span></h1>
+        <p>Bigger crowd wins. Pick your gates.</p>
+      </div>
+      <nav class="blocks">
+        <button class="block b-red" data-nav data-act="play"><b id="t-play">March!</b><small id="t-level">Level 1</small></button>
+        <button class="block b-blue" data-nav data-act="levels"><b>Battle map</b><small id="t-stars">0 / 90 ★</small></button>
+        <button class="block b-green" data-nav data-act="how"><b>Drill book</b><small>How to play</small></button>
+        <button class="block b-yellow" data-nav data-act="settings"><b>Settings</b><small>Sound and more</small></button>
+      </nav>
+    </section>
+
+    <section class="screen dim" id="s-levels">
+      <div class="board">
+        <header><button class="chip" data-nav data-act="back">← Back</button><h2>Battle map</h2><span class="chip-info" id="lv-total">0 ★</span></header>
+        <div class="map" id="lv-grid"></div>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-settings">
+      <div class="board narrow">
+        <h2>Settings</h2>
+        <div class="set-list" id="set-list"></div>
+        <button class="block b-yellow small" data-nav data-act="back"><b>Done</b></button>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-how">
+      <div class="board">
+        <h2>Drill book</h2>
+        <div class="drill">
+          <div><i class="ico gate-g">×2</i><b>Blue gates</b><p>Add to or multiply your army.</p></div>
+          <div><i class="ico gate-b">÷2</i><b>Red gates</b><p>Take soldiers away. Avoid them.</p></div>
+          <div><i class="ico saw">✷</i><b>Saws</b><p>Run into one and lose a third of the crowd.</p></div>
+          <div><i class="ico rival">⚔</i><b>Rival squads</b><p>They fight on the spot. Arrive big.</p></div>
+          <div><i class="ico castle">♜</i><b>The castle</b><p>Reach it with more soldiers than it has guards.</p></div>
+        </div>
+        <table class="keys"><tr><th></th><th>Keyboard</th><th>Touch / mouse</th><th>Gamepad</th></tr>
+          <tr><td>Steer</td><td>← → or A D</td><td>Drag anywhere</td><td>Stick / D-pad</td></tr>
+          <tr><td>Hop a lane</td><td>Tap ← → quickly</td><td>Swipe</td><td>Bumpers</td></tr>
+          <tr><td>Pause</td><td>Esc or P</td><td>❚❚ button</td><td>Start</td></tr></table>
+        <button class="block b-green small" data-nav data-act="back"><b>Got it</b></button>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-pause">
+      <div class="board narrow">
+        <h2>Halt!</h2>
+        <nav class="stack">
+          <button class="block b-red small" data-nav data-act="resume"><b>Resume march</b></button>
+          <button class="block b-blue small" data-nav data-act="restart"><b>Restart level</b></button>
+          <button class="block b-green small" data-nav data-act="levels"><b>Battle map</b></button>
+          <button class="block b-yellow small" data-nav data-act="settings"><b>Settings</b></button>
+          <button class="block b-plain small" data-nav data-act="quit"><b>Toy box (menu)</b></button>
+        </nav>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-result">
+      <div class="board narrow">
+        <div class="ribbon" id="r-kicker">Level 1</div>
+        <h2 id="r-title">Castle taken!</h2>
+        <div class="stars" id="r-stars"><i></i><i></i><i></i></div>
+        <p class="note" id="r-note"></p>
+        <nav class="stack">
+          <button class="block b-red small" data-nav data-act="next" id="r-next"><b>Next level</b></button>
+          <button class="block b-blue small" data-nav data-act="restart"><b>Try again</b></button>
+          <button class="block b-plain small" data-nav data-act="levels"><b>Battle map</b></button>
+        </nav>
+      </div>
+    </section>
+
+    <div id="toast" role="status"></div>
+    <div id="fade"></div>
+    <noscript>Gate Stampede needs JavaScript enabled.</noscript>
+
+    <script src="js/rules.js"></script>
+    <script src="js/save.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/input.js"></script>
+    <script src="js/view.js"></script>
+    <script src="js/menus.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
   </body>
 </html>

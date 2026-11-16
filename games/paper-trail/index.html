@@ -3,26 +3,137 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
-    <meta name="theme-color" content="#efe6d2" />
+    <meta name="theme-color" content="#2b2118" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="description" content="A late-night notebook puzzle. Draw one line through every square; when the page won't allow it, fold the paper so its far edges meet. 50 pages." />
     <title>Paper Trail</title>
-    <link rel="stylesheet" href="../../site/lib/ui.css" />
-    <style>
-      html, body { margin: 0; height: 100%; overflow: hidden; background: #efe6d2; }
-      #game { display: block; width: 100vw; height: 100vh; height: 100dvh; }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gochi+Hand&family=Nunito:wght@600;700;800&display=swap" />
+    <link rel="stylesheet" href="css/style.css" />
   </head>
-  <body>
-    <canvas id="game" aria-label="Paper Trail game"></canvas>
+  <body data-device="mouse">
+    <canvas id="game" aria-label="Paper Trail: the notebook page"></canvas>
 
-    <!-- The Arcade kit (shared by every game). Keep these paths relative. -->
-    <script src="../../site/lib/loop.js"></script>
-    <script src="../../site/lib/input.js"></script>
-    <script src="../../site/lib/players.js"></script>
-    <script src="../../site/lib/audio.js"></script>
-    <script src="../../site/lib/save.js"></script>
-    <script src="../../site/lib/rng.js"></script>
-    <script src="../../site/lib/ui.js"></script>
-    <!-- Your game -->
-    <script src="game.js"></script>
+    <!-- in-game HUD -->
+    <div id="hud" class="off">
+      <div class="hud-top">
+        <div class="tag"><span id="h-page">Page 1</span><small id="h-count">1 / 16 squares</small><i class="bar"><b id="h-bar"></b></i></div>
+        <div class="tools">
+          <button class="tool" data-act="hint" aria-label="Hint (H)" title="Hint (H)">?</button>
+          <button class="tool" data-act="undo" aria-label="Undo (Z)" title="Undo (Z)">↶</button>
+          <button class="tool" data-act="erase" aria-label="Erase the line (R)" title="Erase the line (R)">✕</button>
+          <button class="tool" data-act="pause" aria-label="Pause (Esc)" title="Pause (Esc)">❚❚</button>
+        </div>
+      </div>
+      <div class="hud-bottom">
+        <button class="fold" id="fold-x" data-act="fold-x"><b>⇆ Fold sides</b><small class="hint-key">1</small></button>
+        <button class="fold" id="fold-y" data-act="fold-y"><b>⇅ Fold top &amp; bottom</b><small class="hint-key">2</small></button>
+      </div>
+    </div>
+
+    <section class="screen" id="s-title">
+      <div class="cover">
+        <i class="tape"></i>
+        <svg class="crane" viewBox="0 0 120 80" aria-hidden="true">
+          <polygon points="10,52 52,40 60,62" fill="#f3d9a4" />
+          <polygon points="52,40 60,62 70,38" fill="#e8c27e" />
+          <polygon points="70,38 60,62 112,30" fill="#f6e2b8" />
+          <polygon points="52,40 70,38 58,6" fill="#d9a85c" />
+          <polygon points="70,38 58,6 82,26" fill="#c99247" />
+          <polygon points="10,52 2,30 22,48" fill="#e8c27e" />
+        </svg>
+        <h1>Paper<br />Trail</h1>
+        <p>One line. Every square. Fold if you must.</p>
+      </div>
+      <nav class="menu">
+        <button class="card-btn ink" data-nav data-act="continue"><b id="t-continue">Start writing</b><small id="t-continue-note">Page 1</small></button>
+        <button class="card-btn" data-nav data-act="levels"><b>Pages</b><small id="t-stamps">0 stamps</small></button>
+        <button class="card-btn" data-nav data-act="how"><b>How to play</b></button>
+        <button class="card-btn" data-nav data-act="settings"><b>Settings</b></button>
+      </nav>
+    </section>
+
+    <section class="screen dim" id="s-levels">
+      <div class="sheet wide">
+        <i class="tape"></i>
+        <h2>Pages</h2>
+        <p class="note" id="lv-total">0 / 150 stamps</p>
+        <div class="lv-grid" id="lv-grid"></div>
+        <button class="card-btn slim" data-nav data-act="back"><b>Back</b></button>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-settings">
+      <div class="sheet">
+        <i class="tape"></i>
+        <h2>Settings</h2>
+        <div class="set-list" id="set-list"></div>
+        <button class="card-btn ink slim" data-nav data-act="back"><b>Done</b></button>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-how">
+      <div class="sheet wide">
+        <i class="tape"></i>
+        <h2>How to play</h2>
+        <ol class="how">
+          <li><b>Draw from the dot.</b> Drag, tap the next square, or use the arrow keys. The line must visit every square once.</li>
+          <li><b>Holes are holes.</b> The line can't cross a torn square.</li>
+          <li><b>Stuck? Fold.</b> Folding the sides makes the left and right edges touch, so the line can step from one to the other. Fold top and bottom for the other pair.</li>
+          <li><b>Go back.</b> Drag back over the last square, press undo, or tap any square on the line to erase to it.</li>
+          <li><b>Stamps.</b> Three for a page done without hints, two with one or two hints, one after that.</li>
+        </ol>
+        <table class="keys">
+          <tr><td>Arrows / WASD</td><td>Draw</td><td>1 / 2</td><td>Fold sides / top</td></tr>
+          <tr><td>Z or Backspace</td><td>Undo</td><td>R</td><td>Erase the line</td></tr>
+          <tr><td>H</td><td>Hint</td><td>Esc</td><td>Pause</td></tr>
+          <tr><td>Gamepad</td><td colspan="3">D-pad draws, LB / RB fold, X hint, Y undo</td></tr>
+        </table>
+        <button class="card-btn ink slim" data-nav data-act="back"><b>Got it</b></button>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-pause">
+      <div class="sheet">
+        <i class="tape"></i>
+        <h2>Pencil down</h2>
+        <nav class="stack">
+          <button class="card-btn ink slim" data-nav data-act="resume"><b>Back to the page</b></button>
+          <button class="card-btn slim" data-nav data-act="restart"><b>Start the page over</b></button>
+          <button class="card-btn slim" data-nav data-act="levels"><b>Pages</b></button>
+          <button class="card-btn slim" data-nav data-act="settings"><b>Settings</b></button>
+          <button class="card-btn slim" data-nav data-act="quit"><b>Close the notebook</b></button>
+        </nav>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-result">
+      <div class="sheet">
+        <i class="tape"></i>
+        <small class="kicker" id="r-kicker">Page 1</small>
+        <h2 id="r-title">Every square, one line</h2>
+        <div class="stamps" id="r-stamps"><i></i><i></i><i></i></div>
+        <p class="note" id="r-note"></p>
+        <nav class="stack">
+          <button class="card-btn ink slim" data-nav data-act="next" id="r-next"><b>Turn the page</b></button>
+          <button class="card-btn slim" data-nav data-act="restart"><b>Draw it again</b></button>
+          <button class="card-btn slim" data-nav data-act="levels"><b>Pages</b></button>
+        </nav>
+      </div>
+    </section>
+
+    <div id="toast" role="status"></div>
+    <div id="fade"></div>
+    <noscript>Paper Trail needs JavaScript enabled.</noscript>
+
+    <script src="js/rules.js"></script>
+    <script src="js/save.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/view.js"></script>
+    <script src="js/menus.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
   </body>
 </html>

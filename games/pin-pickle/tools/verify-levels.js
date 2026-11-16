@@ -4,8 +4,8 @@
 // least one order loses, so there is something to work out.
 // Usage: node games/pin-pickle/tools/verify-levels.js
 const path = require('path');
-const Sim = require(path.join(__dirname, '..', 'sim.js'));
-const LEVELS = require(path.join(__dirname, '..', 'levels.js'));
+const Sim = require(path.join(__dirname, '..', 'js', 'sim.js'));
+const LEVELS = require(path.join(__dirname, '..', 'js', 'levels.js'));
 
 const SETTLE = 1200; // steps to wait after each pull
 
