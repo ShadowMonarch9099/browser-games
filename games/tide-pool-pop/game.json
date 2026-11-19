@@ -1,0 +1,12 @@
+{
+  "title": "Tide Pool Pop",
+  "description": "A swap-and-match puzzle in a rock pool. Line up starfish, scallops, urchins, crabs, clams and fish, make waves, bubbles and pearls, wash away sand, crack barnacle stones and clear forty pools along the shore.",
+  "authors": ["Kush Honkalse"],
+  "thumbnail": "thumbnail.svg",
+  "tags": ["puzzle", "casual", "match-3"],
+  "controls": ["mouse", "touch", "keyboard", "gamepad"],
+  "orientation": "any",
+  "players": "1",
+  "accent": "#36acb9",
+  "added": "2026-11-19"
+}

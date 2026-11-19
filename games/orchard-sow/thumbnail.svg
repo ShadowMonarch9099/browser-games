@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <defs>
+    <radialGradient id="wood" cx="0.5" cy="0.4" r="0.7"><stop offset="0" stop-color="#e2b06a"/><stop offset="1" stop-color="#c48a44"/></radialGradient>
+    <radialGradient id="bowl" cx="0.5" cy="0.4" r="0.6"><stop offset="0" stop-color="#7a4a1e"/><stop offset="1" stop-color="#4a2a10"/></radialGradient>
+  </defs>
+  <rect width="400" height="300" fill="#7a9a4a"/>
+  <g fill="#4f7a2e"><circle cx="20" cy="10" r="70"/><circle cx="380" cy="10" r="70"/></g>
+  <g fill="#c0392b"><circle cx="40" cy="50" r="8"/><circle cx="360" cy="40" r="8"/><circle cx="330" cy="60" r="7"/></g>
+  <path d="M30 120 H370 V230 H30z" fill="#f4ede0"/>
+  <g fill="#c43a3a" fill-opacity="0.4"><path d="M30 120h20v110H30zM70 120h20v110H70zM110 120h20v110h-20zM150 120h20v110h-20zM190 120h20v110h-20zM230 120h20v110h-20zM270 120h20v110h-20zM310 120h20v110h-20zM350 120h20v110h-20z"/><path d="M30 130h340v14H30zM30 170h340v14H30zM30 210h340v14H30z"/></g>
+  <rect x="44" y="128" width="312" height="96" rx="48" fill="#8a5a2a"/>
+  <rect x="44" y="122" width="312" height="96" rx="48" fill="url(#wood)"/>
+  <ellipse cx="78" cy="170" rx="20" ry="40" fill="url(#bowl)"/><ellipse cx="322" cy="170" rx="20" ry="40" fill="url(#bowl)"/>
+  <g fill="url(#bowl)"><circle cx="118" cy="146" r="17"/><circle cx="158" cy="146" r="17"/><circle cx="198" cy="146" r="17"/><circle cx="238" cy="146" r="17"/><circle cx="278" cy="146" r="17"/><circle cx="118" cy="194" r="17"/><circle cx="158" cy="194" r="17"/><circle cx="198" cy="194" r="17"/><circle cx="238" cy="194" r="17"/><circle cx="278" cy="194" r="17"/></g>
+  <g><ellipse cx="114" cy="190" rx="6" ry="4.5" fill="#8e2b2b"/><ellipse cx="122" cy="197" rx="6" ry="4.5" fill="#d9a03c"/><ellipse cx="156" cy="146" rx="6" ry="4.5" fill="#6b8e3a"/><ellipse cx="160" cy="140" rx="6" ry="4.5" fill="#c4572a"/><ellipse cx="236" cy="190" rx="6" ry="4.5" fill="#e8dcc0"/><ellipse cx="241" cy="198" rx="6" ry="4.5" fill="#b33a5e"/><ellipse cx="318" cy="160" rx="6" ry="4.5" fill="#8e2b2b"/><ellipse cx="324" cy="172" rx="6" ry="4.5" fill="#d9a03c"/><ellipse cx="318" cy="184" rx="6" ry="4.5" fill="#3f6e5e"/><ellipse cx="74" cy="168" rx="6" ry="4.5" fill="#c4572a"/></g>
+  <text x="200" y="275" text-anchor="middle" font-family="Comic Sans MS, cursive" font-weight="bold" font-size="34" fill="#e8a33c" stroke="#3a2414" stroke-width="6" paint-order="stroke">Orchard Sow</text>
+</svg>

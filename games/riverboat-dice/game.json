@@ -1,0 +1,12 @@
+{
+  "title": "Riverboat Dice",
+  "description": "Four classic dice games in the saloon of a paddle steamer: push your luck in Hot Dice, fill a Yacht scorecard, flip tiles in Shut the Box, and call out liars in Bluff. Play computer opponents or pass the dice around with friends.",
+  "authors": ["Kush Honkalse"],
+  "thumbnail": "thumbnail.svg",
+  "tags": ["dice", "board", "party"],
+  "controls": ["mouse", "touch", "keyboard", "gamepad"],
+  "orientation": "any",
+  "players": "1-4",
+  "accent": "#a3182c",
+  "added": "2026-11-20"
+}

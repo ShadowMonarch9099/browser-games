@@ -1,0 +1,12 @@
+{
+  "title": "Updraft Avenue",
+  "description": "A rooftop race to the clocktower on kite-festival day. Roll and fly your kite over a hundred roofs, ride updrafts up the hill and slide down drainpipes. Three towns, optional house rules, two to four players.",
+  "authors": ["Kush Honkalse"],
+  "thumbnail": "thumbnail.svg",
+  "tags": ["board", "dice", "party"],
+  "controls": ["mouse", "touch", "keyboard", "gamepad"],
+  "orientation": "any",
+  "players": "1-4",
+  "accent": "#e63946",
+  "added": "2026-11-20"
+}

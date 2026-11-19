@@ -1,0 +1,105 @@
+/* Caboose Loop: a 1930s railway poster and a pocketful of punched tickets.
+   Locomotive green, cream card, signal red and brass. */
+:root {
+  --green: #1f4d3a; --green-2: #2c6b51; --cream: #f4ead2; --card: #fbf3df; --red: #c0392b; --brass: #c9a227; --ink: #23201a; --cobalt: #2e6fd8;
+  --display: 'Limelight', 'Georgia', serif;
+  --body: 'Josefin Sans', 'Segoe UI', system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; overflow: hidden; background: #2a180c; overscroll-behavior: none; touch-action: none; }
+body { font: 600 16px/1.4 var(--body); color: var(--ink); -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }
+#game { position: fixed; inset: 0; width: 100vw; height: 100vh; height: 100dvh; display: block; }
+button { font: inherit; color: inherit; border: 0; background: none; padding: 0; cursor: pointer; }
+button:focus { outline: none; }
+
+.screen { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; gap: clamp(16px, 4vw, 56px); flex-wrap: wrap; overflow: auto; z-index: 3;
+  padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom)); visibility: hidden; opacity: 0; pointer-events: none; transition: opacity 0.35s, visibility 0s 0.35s; }
+.screen.on { visibility: visible; opacity: 1; pointer-events: auto; transition: opacity 0.35s; }
+.screen.dim { background: radial-gradient(circle at 50% 35%, rgba(31, 20, 10, 0.4), rgba(20, 12, 6, 0.85)); }
+.screen.on .card, .screen.on .menu { animation: chug 0.5s cubic-bezier(0.2, 1.3, 0.35, 1) both; }
+.screen.on .poster { animation: unroll 0.7s cubic-bezier(0.2, 1.1, 0.3, 1) both; }
+@keyframes chug { from { transform: translateX(-60px); opacity: 0; } }
+@keyframes unroll { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
+
+.poster { position: relative; width: min(340px, 86vw); padding: 26px 24px 46px; text-align: center; color: var(--cream);
+  background: linear-gradient(180deg, #e8833a 0%, #c0392b 38%, var(--green) 38.2%, var(--green) 100%); box-shadow: 0 0 0 6px var(--cream), 0 0 0 9px var(--ink), 0 26px 50px rgba(0, 0, 0, 0.55); overflow: hidden; }
+.poster small { letter-spacing: 0.16em; text-transform: uppercase; font-size: 11px; color: #fff1c9; }
+.poster h1 { margin: 10px 0 8px; font: 400 clamp(44px, 11vw, 64px)/0.9 var(--display); color: var(--cream); text-shadow: 4px 4px 0 var(--ink); }
+.poster p { margin: 0; font-weight: 500; color: #e8f0d8; }
+.poster .track { position: absolute; left: 0; right: 0; bottom: 14px; height: 14px; background: repeating-linear-gradient(90deg, #6b4a2b 0 10px, transparent 10px 22px), linear-gradient(transparent 3px, var(--brass) 3px 5px, transparent 5px 9px, var(--brass) 9px 11px, transparent 11px); }
+
+.menu { display: flex; flex-direction: column; gap: 9px; width: min(330px, 90vw); }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+/* a ticket: cream card with a punched notch on each side */
+.ticket-btn { position: relative; display: flex; flex-direction: column; align-items: flex-start; padding: 10px 20px; text-align: left; background: var(--card); border-radius: 4px;
+  -webkit-mask: radial-gradient(circle at 0 50%, transparent 8px, #000 8.5px) left / 51% 100% no-repeat, radial-gradient(circle at 100% 50%, transparent 8px, #000 8.5px) right / 51% 100% no-repeat;
+  mask: radial-gradient(circle at 0 50%, transparent 8px, #000 8.5px) left / 51% 100% no-repeat, radial-gradient(circle at 100% 50%, transparent 8px, #000 8.5px) right / 51% 100% no-repeat;
+  box-shadow: inset 0 0 0 2px #d8c7a0; transition: transform 0.15s, filter 0.15s; }
+.ticket-btn::after { content: ''; position: absolute; right: 54px; top: 8px; bottom: 8px; border-left: 2px dashed #c9b88f; }
+.ticket-btn b { font: 400 24px/1.05 var(--display); }
+.ticket-btn small { font-weight: 500; color: #6b5d45; padding-right: 60px; }
+.ticket-btn.hot { background: var(--red); color: var(--cream); box-shadow: inset 0 0 0 2px #e7735f; }
+.ticket-btn.hot small { color: #fbd9cf; } .ticket-btn.hot::after { border-color: rgba(255, 255, 255, 0.4); }
+.ticket-btn.slim { align-items: center; text-align: center; padding: 8px 14px; }
+.ticket-btn.slim b { font-size: 19px; } .ticket-btn.slim::after { display: none; } .ticket-btn.slim small { padding: 0; }
+.ticket-btn.focus { transform: translateX(8px) rotate(-1deg); filter: drop-shadow(0 0 0 var(--brass)) drop-shadow(0 6px 12px rgba(0, 0, 0, 0.4)); background: #fffaf0; }
+.ticket-btn.hot.focus { background: #d64535; }
+.ticket-btn:active { transform: translateY(2px); }
+
+.card { width: min(440px, 94vw); max-height: 92vh; overflow: auto; display: flex; flex-direction: column; gap: 12px; padding: 22px; text-align: center; background: var(--card); color: var(--ink);
+  box-shadow: 0 0 0 4px var(--green), 0 0 0 7px var(--brass), 0 26px 50px rgba(0, 0, 0, 0.55); }
+.card.wide { width: min(640px, 95vw); }
+.card h2 { margin: 0; font: 400 clamp(32px, 6vw, 42px)/1 var(--display); color: var(--green); }
+.kicker { color: var(--red); letter-spacing: 0.18em; text-transform: uppercase; font-size: 12px; font-weight: 700; }
+.note { margin: 0; color: #6b5d45; }
+.stack { display: flex; flex-direction: column; gap: 8px; }
+
+.set-list { display: flex; flex-direction: column; gap: 4px; text-align: left; }
+.set-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 9px 12px; border-bottom: 2px dotted #d8c7a0; }
+.set-row small { display: block; font-size: 12px; font-weight: 500; color: #6b5d45; }
+.set-row .val { font-family: var(--display); color: var(--red); }
+.set-row.focus { background: #f2e2b8; }
+.pips { display: flex; gap: 3px; } .pips i { width: 9px; height: 16px; border: 2px solid var(--green); } .pips i.on { background: var(--green); }
+.switch { width: 44px; height: 22px; border: 2px solid var(--green); position: relative; }
+.switch::after { content: ''; position: absolute; left: 2px; top: 2px; width: 14px; height: 14px; background: var(--green); transition: left 0.15s; }
+.switch.on { background: #cfe3cf; } .switch.on::after { left: 24px; background: var(--red); }
+
+.how { margin: 0; padding-left: 22px; text-align: left; font-weight: 500; }
+.how li { margin-bottom: 5px; } .how b { color: var(--green); font-weight: 700; }
+.keys { width: 100%; border-collapse: collapse; font-size: 14px; text-align: left; }
+.keys td { padding: 4px 6px; border-bottom: 1px dotted #d8c7a0; }
+.keys td:first-child { font-family: var(--display); color: var(--red); white-space: nowrap; }
+.stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.stats div { padding: 8px; background: #f2e8cf; box-shadow: inset 0 0 0 2px #e0d0a8; }
+.stats b { display: block; font: 400 26px var(--display); color: var(--green); }
+.stats small { color: #6b5d45; }
+
+/* HUD: tickets clipped to the corners */
+#hud { position: fixed; inset: 0; pointer-events: none; transition: opacity 0.3s; z-index: 2; }
+#hud.off { opacity: 0; } #hud.off * { pointer-events: none !important; }
+.ticket { position: absolute; left: max(10px, env(safe-area-inset-left)); top: max(10px, env(safe-area-inset-top)); display: flex; flex-direction: column; min-width: 128px; padding: 6px 16px 7px; background: var(--card); transform: rotate(-2deg);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4), inset 0 0 0 2px var(--red); }
+.ticket small { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--red); font-weight: 700; }
+.ticket b { font: 400 30px/1 var(--display); color: var(--green); font-variant-numeric: tabular-nums; }
+.ticket span { font-size: 13px; color: #6b5d45; }
+.ticket.p2 { left: auto; right: max(64px, env(safe-area-inset-right)); transform: rotate(2deg); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4), inset 0 0 0 2px var(--cobalt); display: none; }
+.ticket.p2 small { color: var(--cobalt); }
+body.duel .ticket.p2 { display: flex; }
+.cargo { position: absolute; left: 50%; top: max(10px, env(safe-area-inset-top)); transform: translateX(-50%); display: none; gap: 6px; }
+body.delivery .cargo { display: flex; }
+.cargo span { display: flex; align-items: center; gap: 5px; padding: 4px 10px; background: var(--card); box-shadow: 0 3px 8px rgba(0, 0, 0, 0.35), inset 0 0 0 2px var(--c); font-weight: 700; color: var(--ink); }
+.cargo i { width: 12px; height: 12px; border-radius: 50%; background: var(--c); }
+.board { position: absolute; right: max(64px, env(safe-area-inset-right)); top: max(10px, env(safe-area-inset-top)); display: none; flex-direction: column; gap: 3px; padding: 6px 10px; background: rgba(251, 243, 223, 0.92); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35); font-size: 13px; }
+body.rivals .board { display: flex; }
+.board div { display: flex; justify-content: space-between; gap: 14px; }
+.board i { display: inline-block; width: 10px; height: 10px; margin-right: 6px; background: var(--c); }
+.board div.dead { opacity: 0.4; }
+#pause-btn { pointer-events: auto; position: absolute; right: max(10px, env(safe-area-inset-right)); top: max(10px, env(safe-area-inset-top)); width: 44px; height: 44px; background: var(--card); box-shadow: inset 0 0 0 2px var(--green), 0 4px 10px rgba(0, 0, 0, 0.35); font-size: 15px; color: var(--green); }
+.count { position: absolute; left: 50%; top: 42%; transform: translate(-50%, -50%); font: 400 clamp(60px, 16vw, 120px)/1 var(--display); color: var(--cream); text-shadow: 5px 5px 0 var(--red), 0 0 30px rgba(0, 0, 0, 0.5); }
+
+#toast { position: fixed; z-index: 4; left: 50%; bottom: 14%; transform: translate(-50%, 8px) rotate(-1deg); padding: 8px 18px; background: var(--card); color: var(--green); font: 400 22px var(--display);
+  box-shadow: inset 0 0 0 2px var(--red), 0 6px 14px rgba(0, 0, 0, 0.4); opacity: 0; transition: 0.25s; pointer-events: none; text-align: center; max-width: 90vw; }
+#toast.on { opacity: 1; transform: translate(-50%, 0) rotate(-1deg); }
+#fade { position: fixed; inset: 0; z-index: 5; background: #140c06; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+#fade.on { opacity: 1; }
+body.reduced *, body.reduced *::before, body.reduced *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }

@@ -1,0 +1,12 @@
+{
+  "title": "Orchard Sow",
+  "description": "The ancient sowing game on a carved board at an autumn picnic. Scoop the seeds from a bowl, sow them one by one, and capture your way to the bigger harvest. Two traditional rule sets, three computer opponents or a friend.",
+  "authors": ["Kush Honkalse"],
+  "thumbnail": "thumbnail.svg",
+  "tags": ["board", "strategy", "classic"],
+  "controls": ["mouse", "touch", "keyboard", "gamepad"],
+  "orientation": "any",
+  "players": "1-2",
+  "accent": "#c96a2a",
+  "added": "2026-11-20"
+}

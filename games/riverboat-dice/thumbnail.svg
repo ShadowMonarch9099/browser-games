@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <defs>
+    <radialGradient id="felt" cx="0.5" cy="0.5" r="0.7"><stop offset="0" stop-color="#2f7a4a"/><stop offset="1" stop-color="#174a2c"/></radialGradient>
+    <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b1a10"/><stop offset="1" stop-color="#1a0b06"/></linearGradient>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6a35c"/><stop offset="0.55" stop-color="#f7c27a"/><stop offset="0.56" stop-color="#5a3a4a"/><stop offset="1" stop-color="#2d2238"/></linearGradient>
+  </defs>
+  <rect width="400" height="300" fill="url(#wall)"/>
+  <circle cx="90" cy="52" r="34" fill="url(#sky)" stroke="#c99a3c" stroke-width="6"/>
+  <circle cx="310" cy="52" r="34" fill="url(#sky)" stroke="#c99a3c" stroke-width="6"/>
+  <path d="M30 300 L70 120 L330 120 L370 300z" fill="#c99a3c"/>
+  <path d="M42 300 L78 130 L322 130 L358 300z" fill="url(#felt)"/>
+  <!-- three dice -->
+  <g transform="translate(120 170) rotate(-12)"><rect x="-30" y="-30" width="60" height="60" rx="10" fill="#f6eedc"/><rect x="-30" y="22" width="60" height="12" rx="5" fill="#c9bfa8"/><circle r="9" fill="#a3182c"/></g>
+  <g transform="translate(205 200) rotate(8)"><rect x="-30" y="-30" width="60" height="60" rx="10" fill="#f6eedc"/><rect x="-30" y="22" width="60" height="12" rx="5" fill="#c9bfa8"/><g fill="#1d140d"><circle cx="-14" cy="-14" r="6"/><circle cx="14" cy="-14" r="6"/><circle cx="-14" cy="0" r="6"/><circle cx="14" cy="0" r="6"/><circle cx="-14" cy="14" r="6"/><circle cx="14" cy="14" r="6"/></g></g>
+  <g transform="translate(285 165) rotate(20)"><rect x="-30" y="-30" width="60" height="60" rx="10" fill="#f6eedc"/><rect x="-30" y="22" width="60" height="12" rx="5" fill="#c9bfa8"/><g fill="#1d140d"><circle cx="-14" cy="-14" r="6"/><circle cx="14" cy="-14" r="6"/><circle r="6"/><circle cx="-14" cy="14" r="6"/><circle cx="14" cy="14" r="6"/></g></g>
+  <text x="200" y="285" text-anchor="middle" font-family="Georgia, serif" font-weight="bold" font-size="34" fill="#ffe7a8" stroke="#5a1a12" stroke-width="6" paint-order="stroke">Riverboat Dice</text>
+</svg>

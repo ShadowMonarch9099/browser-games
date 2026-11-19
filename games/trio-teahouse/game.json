@@ -1,0 +1,12 @@
+{
+  "title": "Trio Teahouse",
+  "description": "A tile-matching puzzle on a teahouse table. Pick porcelain tiles off the stacks, put three alike on the serving tray, and clear the table before all seven saucers fill. Thirty tables and a new daily blend.",
+  "authors": ["Kush Honkalse"],
+  "thumbnail": "thumbnail.svg",
+  "tags": ["puzzle", "casual", "relaxing"],
+  "controls": ["mouse", "touch", "keyboard", "gamepad"],
+  "orientation": "any",
+  "players": "1",
+  "accent": "#2e3f6e",
+  "added": "2026-11-19"
+}

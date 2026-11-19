@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5fb8f0"/><stop offset="1" stop-color="#d9f0d0"/></linearGradient></defs>
+  <rect width="400" height="300" fill="url(#sky)"/>
+  <g fill="#fff" opacity="0.9"><circle cx="60" cy="40" r="18"/><circle cx="80" cy="34" r="16"/><circle cx="98" cy="42" r="15"/><circle cx="320" cy="60" r="14"/><circle cx="338" cy="54" r="16"/></g>
+  <path d="M0 160 Q200 110 400 160 V300 H0z" fill="#7cb36a"/>
+  <g>
+    <path d="M40 270 L80 170 L320 170 L360 270z" fill="#c9bfa8"/>
+    <g id="row">
+      <path d="M48 262 l12-30 h40 l-8 30z" fill="#d9734e"/><path d="M104 262 l8-30 h40 l-4 30z" fill="#5f8fb4"/><path d="M160 262 l4-30 h40 v30z" fill="#e3b04b"/><path d="M216 262 v-30 h40 l4 30z" fill="#7fb685"/><path d="M272 262 l-4-30 h40 l8 30z" fill="#c96f8f"/><path d="M328 262 l-8-30 h40 l12 30z" fill="#8d7bc1"/>
+    </g>
+    <g transform="translate(0 -34) scale(1 0.95)" opacity="0.92"><use href="#row"/></g>
+    <g transform="translate(0 -64) scale(1 0.9)" opacity="0.85"><use href="#row"/></g>
+  </g>
+  <path d="M110 240 C150 230 140 180 210 176" fill="none" stroke="#8c4a24" stroke-width="10" stroke-linecap="round"/>
+  <path d="M110 240 C150 230 140 180 210 176" fill="none" stroke="#d98a4e" stroke-width="4" stroke-linecap="round"/>
+  <path d="M260 250 C300 220 230 200 290 170" fill="none" stroke="#fff" stroke-width="5" stroke-dasharray="10 7" stroke-linecap="round"/>
+  <g transform="translate(250 70) rotate(-12)"><path d="M0 -38 L28 -4 L0 44 z" fill="#e63946"/><path d="M0 -38 L-28 -4 L0 44 z" fill="#ffd166"/><path d="M0 44 q14 20 -6 34 q-14 14 4 30" fill="none" stroke="#333" stroke-width="2"/></g>
+  <g transform="translate(150 100) rotate(10) scale(0.7)"><path d="M0 -38 L28 -4 L0 44 z" fill="#118ab2"/><path d="M0 -38 L-28 -4 L0 44 z" fill="#fff"/></g>
+  <text x="200" y="296" text-anchor="middle" font-family="Trebuchet MS, sans-serif" font-weight="bold" font-size="30" fill="#073b4c" stroke="#fff" stroke-width="5" paint-order="stroke">Updraft Avenue</text>
+</svg>

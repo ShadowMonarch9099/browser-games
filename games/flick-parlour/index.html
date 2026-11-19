@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#0a1416" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="description" content="A flick-and-pocket board game at a late-night café. Slide the striker, pull back, let go: sink your coins in the corner pockets, cover the queen, and clear your colour first. Play the regulars, a friend, or practise alone." />
+    <title>Flick Parlour</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Righteous&family=Work+Sans:wght@500;700&display=swap" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body data-device="mouse">
+    <canvas id="game" aria-label="Flick Parlour: the board"></canvas>
+
+    <div id="hud" class="off">
+      <div class="side s0" id="p0"><b id="n0">You</b><span class="dots w" id="d0"></span><i class="queen" id="q0" title="Queen covered"></i></div>
+      <div class="side s1" id="p1"><b id="n1">Marlowe</b><span class="dots b" id="d1"></span><i class="queen" id="q1" title="Queen covered"></i></div>
+      <div class="flicks" id="h-flicks"></div>
+      <button id="pause-btn" data-act="pause" aria-label="Pause"><i></i><i></i></button>
+      <div class="power" id="power"><i></i></div>
+      <p class="say" id="say"></p>
+    </div>
+
+    <section class="screen" id="s-title">
+      <div class="sign">
+        <small>Open till late</small>
+        <h1><span>Flick</span><span>Parlour</span></h1>
+        <p>Slide. Pull back. Let go. Sink your coins and cover the queen.</p>
+        <p class="rec" id="t-rec">Open till late</p>
+      </div>
+      <nav class="menu">
+        <button class="neon-btn hot" data-nav data-act="play"><b>Play a regular</b><small>Three computer opponents</small></button>
+        <button class="neon-btn" data-nav data-act="duo"><b>Two players</b><small>Take turns on one screen</small></button>
+        <button class="neon-btn" data-nav data-act="solo"><b>Practice table</b><small>Clear all nineteen in as few flicks as you can</small></button>
+        <div class="row2">
+          <button class="neon-btn slim" data-nav data-act="how"><b>How to flick</b></button>
+          <button class="neon-btn slim" data-nav data-act="settings"><b>Settings</b></button>
+        </div>
+      </nav>
+    </section>
+
+    <section class="screen dim" id="s-pick">
+      <div class="card">
+        <h2>Who's at the table?</h2>
+        <div class="stack" id="foes"></div>
+        <button class="neon-btn slim" data-nav data-act="back"><b>Back</b></button>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-settings">
+      <div class="card">
+        <h2>Settings</h2>
+        <div class="set-list" id="set-list"></div>
+        <button class="neon-btn hot slim" data-nav data-act="back"><b>Done</b></button>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-how">
+      <div class="card wide">
+        <h2>How to flick</h2>
+        <ol class="how">
+          <li><b>Slide the striker</b> along your baseline (the double line in front of you).</li>
+          <li><b>Pull back and let go</b> anywhere on the board: the striker flies the opposite way. The further you pull, the harder the flick.</li>
+          <li><b>You play white.</b> Sink a white coin (or the queen) and you flick again.</li>
+          <li><b>The red queen</b> must be covered: sink one of your coins on the same flick or the next, or she goes back to the middle.</li>
+          <li><b>Pocketing the striker</b> is a foul: one of your sunk coins comes back.</li>
+          <li><b>Win</b> by sinking all nine of your coins once the queen has been covered.</li>
+        </ol>
+        <p class="note">Keys: left and right slide the striker, A and D (or Z and X) turn the aim, up and down set the strength, Space flicks. Gamepad: d-pad slides, right stick aims, A flicks.</p>
+        <button class="neon-btn hot slim" data-nav data-act="back"><b>Got it</b></button>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-pause">
+      <div class="card">
+        <h2>Paused</h2>
+        <nav class="stack">
+          <button class="neon-btn hot slim" data-nav data-act="resume"><b>Back to the board</b></button>
+          <button class="neon-btn slim" data-nav data-act="restart"><b>Rack them up again</b></button>
+          <button class="neon-btn slim" data-nav data-act="how"><b>How to flick</b></button>
+          <button class="neon-btn slim" data-nav data-act="settings"><b>Settings</b></button>
+          <button class="neon-btn slim" data-nav data-act="quit"><b>Leave the table</b></button>
+        </nav>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-result">
+      <div class="card">
+        <small class="kicker" id="r-kicker">Against Marlowe</small>
+        <h2 id="r-title">You clear the board!</h2>
+        <p class="note centered" id="r-note"></p>
+        <nav class="stack">
+          <button class="neon-btn hot slim" data-nav data-act="restart"><b>Rack them up</b></button>
+          <button class="neon-btn slim" data-nav data-act="quit"><b>Back to the door</b></button>
+        </nav>
+      </div>
+    </section>
+
+    <div id="toast" role="status"></div>
+    <div id="fade"></div>
+    <noscript>Flick Parlour needs JavaScript enabled.</noscript>
+
+    <script src="js/rules.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/view.js"></script>
+    <script src="js/menus.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

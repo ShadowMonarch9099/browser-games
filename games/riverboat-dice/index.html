@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#2a120a" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="description" content="Four classic dice games in the saloon of a paddle steamer: Hot Dice, Yacht, Shut the Box and Bluff. Play computer opponents or pass the dice around with friends." />
+    <title>Riverboat Dice</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rye&family=Spectral:wght@500;700&display=swap" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body data-device="mouse">
+    <canvas id="game" aria-label="Riverboat Dice: the gaming table"></canvas>
+
+    <div id="hud" class="off">
+      <div class="chalk" id="chalk"></div>
+      <div class="plaque" id="h-game">Hot Dice</div>
+      <button id="pause-btn" data-act="pause" aria-label="Pause"><i></i><i></i></button>
+      <div id="bubbles"></div>
+      <div class="ycard" id="ycard"></div>
+      <div class="bar"><p id="say"></p><div class="acts" id="acts"></div></div>
+    </div>
+
+    <section class="screen" id="s-title">
+      <div class="marquee">
+        <div class="bulbs" aria-hidden="true"></div>
+        <small>The S.S. Evening Star presents</small>
+        <h1>Riverboat<br />Dice</h1>
+        <p id="t-wins">All aboard for a game of dice</p>
+      </div>
+      <nav class="menu">
+        <button class="plate hot" data-nav data-act="play"><b>Take a seat</b><small>Hot Dice · Yacht · Shut the Box · Bluff</small></button>
+        <div class="row2">
+          <button class="plate slim" data-nav data-act="how"><b>House rules</b></button>
+          <button class="plate slim" data-nav data-act="settings"><b>Settings</b></button>
+        </div>
+      </nav>
+    </section>
+
+    <section class="screen dim" id="s-pick">
+      <div class="card wide">
+        <h2>Choose a table</h2>
+        <div class="games" id="games"></div>
+        <button class="plate slim" data-nav data-act="back"><b>Back on deck</b></button>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-setup">
+      <div class="card">
+        <small class="kicker">Seating for</small>
+        <h2 id="setup-title">Hot Dice</h2>
+        <div class="seats" id="seats"></div>
+        <div id="setup-opt"></div>
+        <button class="plate hot slim" data-nav data-act="start"><b>Deal me in</b></button>
+        <button class="plate slim" data-nav data-act="back"><b>Another table</b></button>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-settings">
+      <div class="card">
+        <h2>Settings</h2>
+        <div class="set-list" id="set-list"></div>
+        <button class="plate hot slim" data-nav data-act="back"><b>Done</b></button>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-how">
+      <div class="card wide">
+        <h2>House rules</h2>
+        <div class="rules">
+          <section><h3>Hot Dice</h3><p>Roll six dice and keep at least one scoring die each roll: a one is 100, a five is 50, three alike are 100 times the number (three ones are 1,000), and each extra matching die doubles it. A straight or three pairs is 1,500. Roll the rest, or bank your turn. Roll nothing that scores and you bust and lose the turn. Score with all six and you roll all six again. The first past the target gives everyone one last turn.</p></section>
+          <section><h3>Yacht</h3><p>Roll five dice up to three times, holding any you like between rolls, then score them in one empty box on your card. Ones to Sixes count that number. Full house (three and two) and Choice score the total; four of a kind scores those four; a little straight (1 to 5) or big straight (2 to 6) is 30; five alike, a yacht, is 50. Twelve rounds; highest total wins.</p></section>
+          <section><h3>Shut the Box</h3><p>Roll two dice and flip down open tiles that add up to the roll. Keep going until you can't make the roll; the tiles still open are your score. Once the open tiles add up to six or less, you may roll one die. Shut every tile for a perfect zero. Lowest total wins.</p></section>
+          <section><h3>Bluff</h3><p>Everyone shakes their dice under a cup and looks only at their own. Take turns raising the bid: "at least this many dice, across every cup, show this face." Ones are wild. Raise the count, or keep it and pick a higher face. Instead of raising, call "Liar!" Every cup is lifted: if the bid was short, the bidder loses a die; if not, the caller does. Last cup standing wins.</p></section>
+        </div>
+        <p class="note">Tap dice to keep or hold them, tap tiles to flip them. Keys: 1 to 9 pick dice or tiles, arrows and Enter use the buttons, Esc pauses.</p>
+        <button class="plate hot slim" data-nav data-act="back"><b>Understood</b></button>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-pause">
+      <div class="card">
+        <h2>Hold the game</h2>
+        <nav class="stack">
+          <button class="plate hot slim" data-nav data-act="resume"><b>Back to the table</b></button>
+          <button class="plate slim" data-nav data-act="restart"><b>Deal again</b></button>
+          <button class="plate slim" data-nav data-act="how"><b>House rules</b></button>
+          <button class="plate slim" data-nav data-act="settings"><b>Settings</b></button>
+          <button class="plate slim" data-nav data-act="quit"><b>Leave the table</b></button>
+        </nav>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-result">
+      <div class="card tally">
+        <small class="kicker" id="r-kicker">Hot Dice</small>
+        <h2 id="r-title">You win the table!</h2>
+        <ol class="places" id="r-list"></ol>
+        <p class="note" id="r-note"></p>
+        <nav class="stack">
+          <button class="plate hot slim" data-nav data-act="restart"><b>Another game</b></button>
+          <button class="plate slim" data-nav data-act="quit"><b>Choose a table</b></button>
+        </nav>
+      </div>
+    </section>
+
+    <div id="toast" role="status"></div>
+    <div id="fade"></div>
+    <noscript>Riverboat Dice needs JavaScript enabled.</noscript>
+
+    <script src="js/rules.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/view.js"></script>
+    <script src="js/menus.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

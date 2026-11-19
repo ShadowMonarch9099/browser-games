@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <defs>
+    <linearGradient id="sand" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f3d9a4"/><stop offset="1" stop-color="#b8915c"/></linearGradient>
+    <linearGradient id="water" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5fd3d9"/><stop offset="1" stop-color="#2a9aa8"/></linearGradient>
+    <radialGradient id="pearl" cx="0.35" cy="0.3" r="0.7"><stop offset="0" stop-color="#fff"/><stop offset="0.5" stop-color="#f6e4ff"/><stop offset="1" stop-color="#9fd8e8"/></radialGradient>
+  </defs>
+  <rect width="400" height="300" fill="url(#sand)"/>
+  <ellipse cx="40" cy="40" rx="60" ry="40" fill="#6e6258"/><ellipse cx="370" cy="260" rx="70" ry="45" fill="#5e5249"/><ellipse cx="380" cy="30" rx="50" ry="34" fill="#7a6d62"/>
+  <rect x="62" y="44" width="276" height="220" rx="22" fill="#5d5047"/>
+  <rect x="72" y="52" width="256" height="204" rx="16" fill="url(#water)"/>
+  <g stroke="#e6fffa" stroke-opacity="0.35" stroke-width="3" fill="none">
+    <path d="M72 90 q32 -14 64 0 t64 0 t64 0 t64 0"/><path d="M72 160 q32 -14 64 0 t64 0 t64 0 t64 0"/><path d="M72 225 q32 -14 64 0 t64 0 t64 0 t64 0"/>
+  </g>
+  <!-- starfish -->
+  <path d="M120 70 l9 22 24 1 -19 15 7 23 -21 -13 -21 13 7 -23 -19 -15 24 -1z" fill="#ff8c2a" stroke="#c25410" stroke-width="5" stroke-linejoin="round"/>
+  <!-- crab -->
+  <g transform="translate(200 104)"><ellipse rx="30" ry="22" fill="#e63946"/><ellipse cx="-30" cy="-22" rx="13" ry="10" fill="#e63946"/><ellipse cx="30" cy="-22" rx="13" ry="10" fill="#e63946"/><circle cx="-10" cy="-26" r="6" fill="#fff"/><circle cx="10" cy="-26" r="6" fill="#fff"/><circle cx="-10" cy="-25" r="3" fill="#111"/><circle cx="10" cy="-25" r="3" fill="#111"/></g>
+  <!-- urchin -->
+  <g transform="translate(280 104)" stroke="#4d33b8" stroke-width="5" stroke-linecap="round"><path d="M0 -36V36M-36 0H36M-25 -25L25 25M25 -25L-25 25"/><circle r="22" fill="#8b6cff" stroke="none"/></g>
+  <!-- fish -->
+  <g transform="translate(120 190)"><path d="M18 0 L44 -20 L38 0 L44 20z" fill="#1565a8"/><ellipse rx="30" ry="22" fill="#3fa9f5"/><circle cx="-14" cy="-4" r="6" fill="#fff"/><circle cx="-15" cy="-4" r="3" fill="#10202a"/></g>
+  <!-- pearl in a bubble -->
+  <circle cx="200" cy="190" r="34" fill="#c8f6ff" fill-opacity="0.25" stroke="#e8ffff" stroke-width="3"/>
+  <circle cx="200" cy="190" r="22" fill="url(#pearl)"/>
+  <!-- shell -->
+  <g transform="translate(280 194)"><path d="M0 26 L-30 -4 A30 30 0 0 1 30 -4z" fill="#ff7eb6" stroke="#c23f7c" stroke-width="4"/><path d="M0 24 L-18 -20 M0 24 L0 -28 M0 24 L18 -20" stroke="#ffd6ea" stroke-width="3"/></g>
+  <!-- a wave streak -->
+  <path d="M80 150 q20 -8 40 0 t40 0 t40 0 t40 0 t40 0 t40 0" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" opacity="0.85"/>
+  <text x="200" y="290" text-anchor="middle" font-family="Trebuchet MS, sans-serif" font-weight="bold" font-size="28" fill="#0f5560">Tide Pool Pop</text>
+</svg>

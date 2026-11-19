@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#1a0e30" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="description" content="The classic race-home board game, sailed by paper boats with lamps on a festival river. Two to four players on one screen, any mix of people and computer captains." />
+    <title>Paper Boat Parade</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yatra+One&family=Hind:wght@500;600;700&display=swap" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body data-device="mouse">
+    <canvas id="game" aria-label="Paper Boat Parade: the river board"></canvas>
+
+    <div id="hud" class="off">
+      <div class="plate" id="pl-0" data-seat="0"><i class="chip"></i><span><b>Marigold</b><small>You</small></span><em class="homes"></em></div>
+      <div class="plate" id="pl-1" data-seat="1"><i class="chip"></i><span><b>Jade</b><small>Computer</small></span><em class="homes"></em></div>
+      <div class="plate" id="pl-2" data-seat="2"><i class="chip"></i><span><b>Rose</b><small>Computer</small></span><em class="homes"></em></div>
+      <div class="plate" id="pl-3" data-seat="3"><i class="chip"></i><span><b>Indigo</b><small>Computer</small></span><em class="homes"></em></div>
+      <div class="bar">
+        <button id="act" data-act="roll"><b id="act-label">Roll</b><small id="act-sub">Space or tap the die</small></button>
+      </div>
+      <button id="pause-btn" data-act="pause" aria-label="Pause">❚❚</button>
+    </div>
+
+    <section class="screen" id="s-title">
+      <div class="banner">
+        <div class="garland" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <small>A festival-night river race</small>
+        <h1>Paper Boat<br />Parade</h1>
+        <p>Four harbours. Sixteen paper boats. One die.</p>
+      </div>
+      <nav class="menu">
+        <button class="btn hot" data-nav data-act="setup"><b>Set sail</b><small id="t-record">Two to four captains</small></button>
+        <button class="btn" data-nav data-act="quick"><b>Quick race</b><small>You against three computer captains</small></button>
+        <div class="row2">
+          <button class="btn slim" data-nav data-act="how"><b>How to sail</b></button>
+          <button class="btn slim" data-nav data-act="settings"><b>Settings</b></button>
+        </div>
+      </nav>
+    </section>
+
+    <section class="screen dim" id="s-setup">
+      <div class="card wide">
+        <h2>Who is sailing?</h2>
+        <div class="seats" id="seats"></div>
+        <div class="set-list" id="rules-list"></div>
+        <p class="note" id="setup-note">Tap a harbour to change its captain.</p>
+        <div class="row2">
+          <button class="btn slim" data-nav data-act="back"><b>Back</b></button>
+          <button class="btn hot slim" data-nav data-act="start"><b>Launch the boats</b></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-settings">
+      <div class="card">
+        <h2>Settings</h2>
+        <div class="set-list" id="set-list"></div>
+        <button class="btn hot slim" data-nav data-act="back"><b>Done</b></button>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-how">
+      <div class="card wide">
+        <h2>How to sail</h2>
+        <ol class="how">
+          <li><b>Launch.</b> Roll a 6 to sail a boat out of its harbour onto the river.</li>
+          <li><b>Race round.</b> Boats travel once round the river, clockwise, then up their own coloured lantern channel to the ghat in the middle.</li>
+          <li><b>Sink a rival.</b> Stop exactly on a lone rival boat and it goes back to its harbour. You roll again.</li>
+          <li><b>Lamp buoys are safe.</b> Squares with a floating lamp, and every harbour mouth, can't be attacked.</li>
+          <li><b>Fast water.</b> Stop on the arrows at a bend and the current carries you three squares on.</li>
+          <li><b>Sixes.</b> A 6 rolls again, but three 6s in a row ends the turn. Get all four boats home first to win.</li>
+        </ol>
+        <table class="keys">
+          <tr><td>Space / Enter</td><td>Roll, then move the chosen boat</td></tr>
+          <tr><td>Arrows / Tab</td><td>Choose between boats</td></tr>
+          <tr><td>Mouse / touch</td><td>Tap the die, then tap a glowing boat</td></tr>
+          <tr><td>Gamepad</td><td>A rolls and moves, d-pad chooses</td></tr>
+        </table>
+        <button class="btn hot slim" data-nav data-act="back"><b>Got it</b></button>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-pause">
+      <div class="card">
+        <h2>Boats at anchor</h2>
+        <nav class="stack">
+          <button class="btn hot slim" data-nav data-act="resume"><b>Back to the race</b></button>
+          <button class="btn slim" data-nav data-act="restart"><b>Start the race over</b></button>
+          <button class="btn slim" data-nav data-act="settings"><b>Settings</b></button>
+          <button class="btn slim" data-nav data-act="quit"><b>Leave the river</b></button>
+        </nav>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-result">
+      <div class="card">
+        <small class="kicker">The parade is over</small>
+        <h2 id="r-title">Marigold wins!</h2>
+        <ol class="places" id="r-places"></ol>
+        <nav class="stack">
+          <button class="btn hot slim" data-nav data-act="restart"><b>Race again</b></button>
+          <button class="btn slim" data-nav data-act="setup"><b>Change captains</b></button>
+          <button class="btn slim" data-nav data-act="quit"><b>Back to the shore</b></button>
+        </nav>
+      </div>
+    </section>
+
+    <div id="toast" role="status"></div>
+    <div id="fade"></div>
+    <noscript>Paper Boat Parade needs JavaScript enabled.</noscript>
+
+    <script src="js/rules.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/view.js"></script>
+    <script src="js/menus.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

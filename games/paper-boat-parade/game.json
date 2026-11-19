@@ -1,0 +1,12 @@
+{
+  "title": "Paper Boat Parade",
+  "description": "The classic race-home board game, sailed by paper boats with lamps on a festival river. Two to four captains on one screen, people or computers. Sink rivals, ride the fast water, bring all four boats home.",
+  "authors": ["Kush Honkalse"],
+  "thumbnail": "thumbnail.svg",
+  "tags": ["board", "party", "strategy"],
+  "controls": ["mouse", "touch", "keyboard", "gamepad"],
+  "orientation": "any",
+  "players": "1-4",
+  "accent": "#f5a524",
+  "added": "2026-11-19"
+}

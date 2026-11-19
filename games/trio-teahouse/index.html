@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#3b2416" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="description" content="A tile-matching puzzle on a teahouse table. Pick up porcelain tiles from the stacks, put three alike on the serving tray, and clear the table before the tray fills. Thirty tables and a daily blend." />
+    <title>Trio Teahouse</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Antique&family=Zen+Kaku+Gothic+New:wght@500;700&display=swap" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body data-device="mouse">
+    <canvas id="game" aria-label="Trio Teahouse: the tea table"></canvas>
+
+    <div id="hud" class="off">
+      <div class="noren">
+        <div class="flap"><small>Seated at</small><b id="h-table">Table 1</b></div>
+        <div class="flap"><small>Tiles left</small><b id="h-left">0</b></div>
+        <div class="flap"><small>Time</small><b id="h-clock">0:00</b></div>
+      </div>
+      <button id="pause-btn" data-act="pause" aria-label="Pause"><i></i><i></i></button>
+      <div class="tray-label" id="h-tray">Serving tray · three alike are served</div>
+      <nav class="tools">
+        <button class="tool" id="t-undo" data-act="undo" aria-label="Undo"><span class="glyph">↶</span><b>Take back</b><i id="n-undo">3</i></button>
+        <button class="tool" id="t-aside" data-act="aside" aria-label="Set aside"><span class="glyph">⇡</span><b>Set aside</b><i id="n-aside">1</i></button>
+        <button class="tool" id="t-stir" data-act="stir" aria-label="Stir"><span class="glyph">↻</span><b>Stir</b><i id="n-stir">2</i></button>
+      </nav>
+    </div>
+
+    <section class="screen" id="s-title">
+      <div class="signboard">
+        <div class="hook"></div>
+        <h1>Trio<br />Teahouse</h1>
+        <p>Three alike, served together.</p>
+        <div class="menu-icons"><img data-icon="teapot" alt="" /><img data-icon="dumpling" alt="" /><img data-icon="blossom" alt="" /></div>
+      </div>
+      <nav class="menu">
+        <button class="slat hot" data-nav data-act="continue"><b>Take a seat</b><small id="b-continue">Your first table</small></button>
+        <button class="slat" data-nav data-act="daily"><b>Daily blend</b><small id="b-daily">A new table every day</small></button>
+        <button class="slat" data-nav data-act="tables"><b>All tables</b><small id="b-tables">0 stars</small></button>
+        <div class="row2">
+          <button class="slat slim" data-nav data-act="how"><b>House rules</b></button>
+          <button class="slat slim" data-nav data-act="settings"><b>Settings</b></button>
+        </div>
+      </nav>
+    </section>
+
+    <section class="screen dim" id="s-tables">
+      <div class="card wide">
+        <h2>The tables</h2>
+        <p class="note">Clear a table to be shown to the next. Clear one without helpers for three cups.</p>
+        <div id="tables"></div>
+        <button class="slat hot slim" data-nav data-act="back"><b>Back to the door</b></button>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-settings">
+      <div class="card">
+        <h2>Settings</h2>
+        <div class="set-list" id="set-list"></div>
+        <button class="slat hot slim" data-nav data-act="back"><b>Done</b></button>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-how">
+      <div class="card wide">
+        <h2>House rules</h2>
+        <ol class="how">
+          <li><b>Pick up a tile</b> whose face is bright. Dimmed tiles have another tile resting on them.</li>
+          <li><b>Picked tiles go on the serving tray</b>, next to any of their kind. Three alike are served and leave.</li>
+          <li><b>Seven saucers.</b> If the tray fills with no three alike, the table is lost.</li>
+          <li><b>Clear the whole table</b> to win. Every table can be cleared.</li>
+        </ol>
+        <div class="helpers">
+          <div><span class="glyph">↶</span><b>Take back</b><small>Return your last tile to the table.</small></div>
+          <div><span class="glyph">⇡</span><b>Set aside</b><small>Move three tray tiles to the counter, to pick again later.</small></div>
+          <div><span class="glyph">↻</span><b>Stir</b><small>Shuffle the pictures on the table.</small></div>
+        </div>
+        <p class="note">Keys: arrows choose a tile, Enter picks it up. Z take back, X set aside, C stir, H hint, Esc pause.</p>
+        <button class="slat hot slim" data-nav data-act="back"><b>Understood</b></button>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-pause">
+      <div class="card">
+        <h2>A short pause</h2>
+        <nav class="stack">
+          <button class="slat hot slim" data-nav data-act="resume"><b>Back to the table</b></button>
+          <button class="slat slim" data-nav data-act="restart"><b>Reset the table</b></button>
+          <button class="slat slim" data-nav data-act="settings"><b>Settings</b></button>
+          <button class="slat slim" data-nav data-act="quit"><b>Leave the table</b></button>
+        </nav>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-result">
+      <div class="card bill">
+        <small class="kicker" id="r-kicker">Table 1</small>
+        <h2 id="r-title">Table cleared!</h2>
+        <div class="cups" id="r-stars"></div>
+        <p class="note" id="r-note"></p>
+        <div class="stats" id="r-stats"></div>
+        <nav class="stack">
+          <button class="slat hot slim" id="r-rescue" data-nav data-act="rescue" hidden><b>Set three aside and carry on</b></button>
+          <button class="slat hot slim" id="r-next" data-nav data-act="next"><b>Next table</b></button>
+          <button class="slat slim" data-nav data-act="restart"><b>Play this table again</b></button>
+          <button class="slat slim" data-nav data-act="quit"><b>All tables</b></button>
+        </nav>
+      </div>
+    </section>
+
+    <div id="toast" role="status"></div>
+    <div id="fade"></div>
+    <noscript>Trio Teahouse needs JavaScript enabled.</noscript>
+
+    <script src="js/rules.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/view.js"></script>
+    <script src="js/menus.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

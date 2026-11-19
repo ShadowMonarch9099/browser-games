@@ -1,0 +1,12 @@
+{
+  "title": "Caboose Loop",
+  "description": "The snake game on a toy railway. Pick up passengers to add carriages, and don't hit the fence, the scenery or your own train. Classic, Delivery, a two-player Duel, and Rivals against computer trains.",
+  "authors": ["Kush Honkalse"],
+  "thumbnail": "thumbnail.svg",
+  "tags": ["arcade", "classic", "party"],
+  "controls": ["keyboard", "touch", "gamepad"],
+  "orientation": "any",
+  "players": "1-2",
+  "accent": "#c0392b",
+  "added": "2026-11-19"
+}

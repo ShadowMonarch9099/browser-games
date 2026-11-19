@@ -28,7 +28,9 @@ jobs:
           node games/borrowed-boots/tools/check-levels.js
           node games/bounce-tanks/tools/match-test.js
           node games/bullet-garden/tools/test-rules.js
+          node games/caboose-loop/tools/test-rules.js
           node games/courier-sprint/tools/test-rules.js
+          node games/flick-parlour/tools/test-rules.js
           node games/gate-stampede/tools/check-levels.js
           node games/jungle-getaway/tools/test-rules.js
           node games/kitbash-rally/tools/test-race.js
@@ -36,11 +38,17 @@ jobs:
           node games/last-lantern/tools/check-world.js
           node games/lot-jam/tools/check-levels.js
           node games/misfit-squad/tools/run-test.js
+          node games/orchard-sow/tools/test-rules.js
+          node games/paper-boat-parade/tools/test-rules.js
           node games/paper-trail/tools/check-levels.js
           node games/pin-pickle/tools/verify-levels.js
           node games/pocket-realm/tools/simulate.js 500
           node games/pour-party/tools/test-rules.js
+          node games/riverboat-dice/tools/test-rules.js
           node games/puck-scuffle/tools/test-rules.js
           node games/sky-stack/tools/test-rules.js
           node games/snap-grid/tools/test-rules.js
           node games/tick-talk/tools/check-manual.js
+          node games/updraft-avenue/tools/test-rules.js
+          node games/tide-pool-pop/tools/test-rules.js
+          node games/trio-teahouse/tools/test-rules.js

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#120a2e"/><stop offset="1" stop-color="#3d1a3a"/></linearGradient>
+    <radialGradient id="glow"><stop offset="0" stop-color="#ffd27a" stop-opacity="0.9"/><stop offset="1" stop-color="#ffb04a" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="640" height="360" fill="url(#sky)"/>
+  <g fill="#ffe9c4" opacity="0.7"><circle cx="60" cy="40" r="1.6"/><circle cx="170" cy="70" r="1.4"/><circle cx="420" cy="30" r="1.6"/><circle cx="560" cy="80" r="1.4"/><circle cx="300" cy="55" r="1.2"/></g>
+  <polygon points="140,330 500,330 560,250 80,250" fill="#7a4424"/>
+  <polygon points="160,322 480,322 530,258 110,258" fill="#e9d3a8"/>
+  <rect x="265" y="258" width="110" height="64" fill="#3b8fb0"/>
+  <rect x="110" y="282" width="420" height="20" fill="#3b8fb0"/>
+  <polygon points="320,280 300,290 340,290" fill="#f5a524"/>
+  <rect x="120" y="262" width="80" height="18" fill="#f5a524"/><rect x="440" y="262" width="80" height="18" fill="#2bb673"/>
+  <rect x="140" y="304" width="80" height="16" fill="#5c6cff"/><rect x="420" y="304" width="80" height="16" fill="#ef476f"/>
+  <g transform="translate(250 200)"><circle cx="-10" cy="-8" r="34" fill="url(#glow)"/><polygon points="-46,0 46,0 32,22 -32,22" fill="#b86e05"/><polygon points="-46,0 46,0 34,10 -34,10" fill="#f5a524"/><polygon points="-20,0 0,-46 20,0" fill="#ffd27a"/></g>
+  <g transform="translate(400 215) scale(0.8)"><circle cx="-10" cy="-8" r="34" fill="url(#glow)"/><polygon points="-46,0 46,0 32,22 -32,22" fill="#a5193f"/><polygon points="-46,0 46,0 34,10 -34,10" fill="#ef476f"/><polygon points="-20,0 0,-46 20,0" fill="#ffa6bd"/></g>
+  <g transform="translate(470 150) rotate(-18)"><rect x="-26" y="-26" width="52" height="52" rx="8" fill="#fbefd9" stroke="#7a4424" stroke-width="3"/><circle cx="-12" cy="-12" r="5" fill="#2a1a10"/><circle cx="12" cy="12" r="5" fill="#2a1a10"/><circle cx="0" cy="0" r="5" fill="#2a1a10"/></g>
+  <text x="320" y="92" text-anchor="middle" font-family="Georgia, serif" font-size="46" fill="#fff4dc">Paper Boat Parade</text>
+</svg>

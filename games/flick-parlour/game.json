@@ -1,0 +1,12 @@
+{
+  "title": "Flick Parlour",
+  "description": "A flick-and-pocket board game at a late-night café. Slide the striker, pull back and let go: sink your coins in the corner pockets, cover the queen, and clear your colour first. Play three regulars, a friend, or the practice table.",
+  "authors": ["Kush Honkalse"],
+  "thumbnail": "thumbnail.svg",
+  "tags": ["board", "physics", "classic"],
+  "controls": ["mouse", "touch", "keyboard", "gamepad"],
+  "orientation": "any",
+  "players": "1-2",
+  "accent": "#ff8fa3",
+  "added": "2026-11-20"
+}

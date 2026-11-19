@@ -1,0 +1,98 @@
+/* Orchard Sow: an autumn picnic. Buttons are cut like leaves from kraft
+   paper, cards are recipe cards pinned with a twig, and the scores sit in
+   little fruit crates. */
+:root {
+  --leaf: #c96a2a; --leaf-2: #e8a33c; --moss: #4f7a2e; --bark: #5a3a24; --kraft: #f2e3c6; --cream: #fffaf0; --ink: #3a2414; --apple: #c0392b;
+  --display: 'Caveat Brush', 'Comic Sans MS', cursive;
+  --body: 'Karla', 'Segoe UI', system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; overflow: hidden; background: #7a9a4a; overscroll-behavior: none; touch-action: none; }
+body { font: 500 15px/1.45 var(--body); color: var(--ink); -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }
+#game { position: fixed; inset: 0; width: 100vw; height: 100vh; height: 100dvh; display: block; }
+button { font: inherit; color: inherit; border: 0; background: none; padding: 0; cursor: pointer; }
+button:focus { outline: none; }
+[hidden] { display: none !important; }
+
+.screen { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; gap: clamp(16px, 4vw, 56px); flex-wrap: wrap; overflow: auto; z-index: 3;
+  padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom)); visibility: hidden; opacity: 0; pointer-events: none; transition: opacity 0.35s, visibility 0s 0.35s; }
+.screen.on { visibility: visible; opacity: 1; pointer-events: auto; transition: opacity 0.35s; }
+#s-title { background: radial-gradient(ellipse at 50% 45%, rgba(40, 30, 10, 0.15), rgba(40, 30, 10, 0.5)); }
+.screen.dim { background: rgba(50, 35, 15, 0.55); }
+.screen.on .card, .screen.on .menu { animation: drift 0.6s cubic-bezier(0.2, 1.2, 0.35, 1) both; }
+.screen.on .sign { animation: swing 1s cubic-bezier(0.3, 1.5, 0.4, 1) both; transform-origin: 50% 0; }
+@keyframes drift { from { transform: translateY(-30px) rotate(-3deg); opacity: 0; } }
+@keyframes swing { from { transform: rotate(8deg); opacity: 0; } }
+
+/* title: a painted board hanging from a branch */
+.sign { position: relative; width: min(340px, 86vw); padding: 30px 24px 22px; text-align: center; background: linear-gradient(#6b4426, var(--bark)); color: var(--kraft); border-radius: 10px 14px 12px 16px;
+  box-shadow: inset 0 0 0 3px rgba(255, 220, 160, 0.2), 0 22px 40px rgba(30, 20, 5, 0.5); }
+.twig { position: absolute; left: -20px; right: -20px; top: -14px; height: 14px; border-radius: 7px; background: #4a2e1a; box-shadow: 0 -6px 0 -2px #6b8e3a; }
+.sign h1 { margin: 0 0 8px; font: 400 clamp(56px, 13vw, 82px)/0.85 var(--display); color: var(--leaf-2); text-shadow: 3px 3px 0 #3a2414; }
+.sign p { margin: 0 0 10px; color: #f2dcb6; }
+.sign small { color: #c9e09a; font-weight: 700; letter-spacing: 0.06em; }
+
+.menu { display: flex; flex-direction: column; gap: 10px; width: min(330px, 90vw); }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+/* a leaf of kraft paper: one pointed corner, one rounded */
+.leaf { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 16px; text-align: center; background: var(--kraft); color: var(--ink);
+  border-radius: 4px 26px 4px 26px; box-shadow: 0 4px 0 #b8986a, 0 8px 14px rgba(40, 25, 5, 0.3); transition: transform 0.15s, box-shadow 0.15s; }
+.leaf::after { content: ''; position: absolute; left: 14px; right: 14px; top: 50%; border-top: 1px dashed rgba(90, 58, 36, 0.2); pointer-events: none; }
+.leaf b { position: relative; z-index: 1; font: 400 24px/1.05 var(--display); }
+.leaf small { position: relative; z-index: 1; font-size: 12px; color: #7a5a3a; }
+.leaf.hot { background: var(--leaf); color: #fff8ec; box-shadow: 0 4px 0 #8a4418, 0 8px 14px rgba(40, 25, 5, 0.3); } .leaf.hot small { color: #ffe2c2; } .leaf.hot::after { border-color: rgba(255, 255, 255, 0.25); }
+.leaf.big b { font-size: 32px; }
+.leaf.on { background: var(--moss); color: #fff; box-shadow: 0 4px 0 #2f4f1a, 0 8px 14px rgba(40, 25, 5, 0.3); } .leaf.on small { color: #d8ecc0; }
+.leaf.focus { transform: rotate(-2deg) scale(1.03); box-shadow: 0 0 0 3px #fff, 0 6px 0 #b8986a, 0 10px 18px rgba(40, 25, 5, 0.35); }
+.leaf:active { transform: translateY(3px); }
+
+.card { position: relative; width: min(440px, 94vw); max-height: 92vh; overflow: auto; display: flex; flex-direction: column; gap: 12px; padding: 24px 22px; text-align: center;
+  background: repeating-linear-gradient(transparent 0 27px, rgba(120, 160, 200, 0.22) 27px 28px), var(--cream); border-radius: 6px; box-shadow: 0 20px 40px rgba(30, 20, 5, 0.45); }
+.card::before { content: ''; position: absolute; left: 50%; top: 8px; width: 70px; height: 10px; border-radius: 5px; background: #6b4426; transform: translateX(-50%) rotate(-4deg); }
+.card.wide { width: min(660px, 95vw); }
+.card h2 { margin: 6px 0 0; font: 400 clamp(36px, 7vw, 48px)/1 var(--display); color: var(--leaf); }
+.card h3 { margin: 4px 0 0; font: 400 22px var(--display); color: var(--moss); text-align: left; }
+.kicker { color: var(--moss); letter-spacing: 0.14em; text-transform: uppercase; font-size: 12px; font-weight: 700; }
+.note { margin: 0; color: #6a5038; text-align: left; } .note.centered { text-align: center; }
+.stack { display: flex; flex-direction: column; gap: 10px; }
+.choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; }
+.choices .leaf { min-height: 64px; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; text-align: left; }
+.two section { padding: 8px 12px; background: rgba(242, 227, 198, 0.6); border-radius: 6px; }
+.two ul { margin: 0; padding-left: 18px; font-size: 14px; } .two li { margin-bottom: 4px; } .two b { color: var(--leaf); }
+@media (max-width: 600px) { .two { grid-template-columns: 1fr; } }
+
+.set-list { display: flex; flex-direction: column; gap: 4px; text-align: left; }
+.set-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 9px 12px; border-radius: 8px; }
+.set-row small { display: block; font-size: 12px; color: #8a6a4a; }
+.set-row .val { font-family: var(--display); font-size: 20px; color: var(--leaf); }
+.set-row.focus { background: var(--kraft); }
+.pips { display: flex; gap: 3px; } .pips i { width: 9px; height: 13px; border-radius: 50%; background: #e6d3ad; } .pips i.on { background: var(--apple); }
+.switch { width: 44px; height: 24px; border-radius: 12px; background: #e6d3ad; position: relative; }
+.switch::after { content: ''; position: absolute; left: 3px; top: 3px; width: 18px; height: 18px; border-radius: 50%; background: #fff; transition: left 0.15s; }
+.switch.on { background: var(--moss); } .switch.on::after { left: 23px; }
+.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.stats div { padding: 10px; border-radius: 6px; background: var(--kraft); }
+.stats b { display: block; font: 400 42px/1 var(--display); color: var(--leaf); } .stats small { color: #7a5a3a; font-weight: 700; }
+
+/* HUD: two fruit crates at the board's ends */
+#hud { position: fixed; inset: 0; pointer-events: none; transition: opacity 0.3s; z-index: 2; }
+#hud.off { opacity: 0; } #hud.off * { pointer-events: none !important; }
+.crate { position: absolute; top: max(12px, env(safe-area-inset-top)); display: flex; flex-direction: column; align-items: center; min-width: 120px; padding: 6px 14px 8px; color: var(--kraft);
+  background: repeating-linear-gradient(0deg, #8a5a2a 0 14px, #6b4426 14px 16px); border-radius: 4px; box-shadow: 0 6px 12px rgba(30, 20, 5, 0.4); transition: transform 0.25s; }
+.crate.foe { left: max(12px, env(safe-area-inset-left)); } .crate.you { right: max(66px, env(safe-area-inset-right)); }
+.crate small { font: 700 13px var(--body); } .crate b { font: 400 38px/1 var(--display); color: #fff; } .crate span { font-size: 11px; color: #e8d2a8; }
+.crate.cur { transform: translateY(4px) rotate(-2deg); box-shadow: 0 0 0 3px var(--leaf-2), 0 8px 16px rgba(30, 20, 5, 0.45); }
+.rules-tag { position: absolute; left: 50%; top: max(14px, env(safe-area-inset-top)); transform: translateX(-50%) rotate(-1deg); padding: 3px 14px; font: 400 20px var(--display); background: var(--cream); color: var(--moss); border-radius: 4px 14px 4px 14px; box-shadow: 0 4px 10px rgba(30, 20, 5, 0.3); }
+#pause-btn { pointer-events: auto; position: absolute; right: max(10px, env(safe-area-inset-right)); top: max(12px, env(safe-area-inset-top)); width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center; gap: 5px;
+  background: var(--kraft); box-shadow: 0 4px 0 #b8986a, 0 6px 12px rgba(30, 20, 5, 0.35); }
+#pause-btn i { width: 5px; height: 16px; border-radius: 2px; background: var(--bark); }
+.say { position: absolute; left: 50%; bottom: max(14px, env(safe-area-inset-bottom)); transform: translateX(-50%); margin: 0; padding: 6px 18px; border-radius: 4px 18px 4px 18px; background: rgba(255, 250, 240, 0.94); font-weight: 700; white-space: nowrap; box-shadow: 0 4px 10px rgba(30, 20, 5, 0.3); }
+@media (max-width: 560px) { .rules-tag { top: auto; bottom: calc(max(14px, env(safe-area-inset-bottom)) + 44px); } .crate { min-width: 96px; } }
+
+#toast { position: fixed; z-index: 4; left: 50%; top: 22%; transform: translate(-50%, -10px) rotate(-2deg); padding: 6px 20px; border-radius: 4px 20px 4px 20px; background: var(--leaf-2); color: var(--ink); font: 400 28px var(--display);
+  box-shadow: 0 6px 14px rgba(30, 20, 5, 0.4); opacity: 0; transition: 0.3s cubic-bezier(0.2, 1.4, 0.4, 1); pointer-events: none; text-align: center; max-width: 90vw; }
+#toast.on { opacity: 1; transform: translate(-50%, 0) rotate(-2deg); }
+#fade { position: fixed; inset: 0; z-index: 5; background: #3a2414; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+#fade.on { opacity: 1; }
+body.reduced *, body.reduced *::before, body.reduced *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }

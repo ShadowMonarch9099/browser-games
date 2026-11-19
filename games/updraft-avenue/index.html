@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#5fb8f0" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="description" content="A rooftop race to the clocktower on kite-festival day. Roll, fly your kite over the hundred roofs, ride the updrafts and dodge the drainpipes. Two to four players, with computer kites or friends." />
+    <title>Updraft Avenue</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Grandstander:wght@600;800&family=Mulish:wght@600;800&display=swap" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body data-device="mouse">
+    <canvas id="game" aria-label="Updraft Avenue: the town's rooftops"></canvas>
+
+    <div id="hud" class="off">
+      <div class="tags" id="tags"></div>
+      <div class="board-name" id="h-board">Old Town</div>
+      <button id="pause-btn" data-act="pause" aria-label="Pause"><i></i><i></i></button>
+      <div class="bar"><p id="say"></p><div class="acts" id="acts"></div></div>
+    </div>
+
+    <section class="screen" id="s-title">
+      <div class="poster">
+        <div class="bunting" aria-hidden="true"></div>
+        <small>The hill town's kite festival</small>
+        <h1><span>Updraft</span><span>Avenue</span></h1>
+        <p>Ride the warm air up. Mind the drainpipes down. First kite to the clocktower wins.</p>
+        <p class="wins" id="t-wins">First to the clocktower wins</p>
+      </div>
+      <nav class="menu">
+        <button class="btn hot big" data-nav data-act="play"><b>Fly a kite</b><small>Two to four players</small></button>
+        <div class="row2">
+          <button class="btn" data-nav data-act="how"><b>How to fly</b></button>
+          <button class="btn" data-nav data-act="settings"><b>Settings</b></button>
+        </div>
+      </nav>
+    </section>
+
+    <section class="screen dim" id="s-setup">
+      <div class="card wide">
+        <h2>Line up the kites</h2>
+        <div class="kites" id="kites"></div>
+        <h3>The town</h3>
+        <div class="chips" id="boards"></div>
+        <h3>House rules</h3>
+        <div class="chips" id="house"></div>
+        <div class="row2">
+          <button class="btn" data-nav data-act="how"><b>How to fly</b></button>
+          <button class="btn hot" data-nav data-act="start"><b>Let them fly!</b></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-settings">
+      <div class="card">
+        <h2>Settings</h2>
+        <div class="set-list" id="set-list"></div>
+        <button class="btn hot" data-nav data-act="back"><b>Done</b></button>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-how">
+      <div class="card wide">
+        <h2>How to fly</h2>
+        <ol class="how">
+          <li><b>Roll and fly</b> your kite that many roofs along the numbered path, from 1 up to 100.</li>
+          <li><b>Updrafts</b> (swirls of warm air) lift you from their start to their end, further up the hill.</li>
+          <li><b>Drainpipes</b> (copper pipes with a funnel) slide you from the funnel down to the spout.</li>
+          <li><b>Land on another kite</b> and it's blown back three roofs.</li>
+          <li><b>Reach 100 exactly.</b> Roll too high and you bounce back off the clocktower.</li>
+        </ol>
+        <p class="note"><b>House rules:</b> Pick a die: roll two and fly either. Sixes again: a six rolls once more (not a fourth time). Ribbons: the first kite to land on a ribbon roof keeps it, and can spend it to roll again.</p>
+        <p class="note">Keys: R or Enter to roll, arrows and Enter to pick a die, Esc to pause. Touch: tap the dice to roll, or tap a glowing roof to fly there.</p>
+        <button class="btn hot" data-nav data-act="back"><b>Ready</b></button>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-pause">
+      <div class="card">
+        <h2>Paused</h2>
+        <nav class="stack">
+          <button class="btn hot" data-nav data-act="resume"><b>Back in the air</b></button>
+          <button class="btn" data-nav data-act="restart"><b>Start the race again</b></button>
+          <button class="btn" data-nav data-act="how"><b>How to fly</b></button>
+          <button class="btn" data-nav data-act="settings"><b>Settings</b></button>
+          <button class="btn" data-nav data-act="quit"><b>New race</b></button>
+        </nav>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-result">
+      <div class="card prize">
+        <small class="kicker" id="r-kicker">Old Town</small>
+        <h2 id="r-title">You reached the clocktower!</h2>
+        <ol class="podium" id="r-list"></ol>
+        <nav class="stack">
+          <button class="btn hot" data-nav data-act="restart"><b>Race again</b></button>
+          <button class="btn" data-nav data-act="quit"><b>Change kites or town</b></button>
+        </nav>
+      </div>
+    </section>
+
+    <div id="toast" role="status"></div>
+    <div id="fade"></div>
+    <noscript>Updraft Avenue needs JavaScript enabled.</noscript>
+
+    <script src="js/rules.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/view.js"></script>
+    <script src="js/menus.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

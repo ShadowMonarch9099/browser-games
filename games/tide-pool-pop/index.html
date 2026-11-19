@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#36acb9" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="description" content="A swap-and-match puzzle in a rock pool. Line up starfish, scallops, urchins, crabs, clams and fish, make waves, bubbles and pearls, and clear forty pools along the shore." />
+    <title>Tide Pool Pop</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Varela+Round&display=swap" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body data-device="mouse">
+    <canvas id="game" aria-label="Tide Pool Pop: the rock pool"></canvas>
+
+    <div id="hud" class="off">
+      <div class="gauge" id="h-gauge" aria-label="Moves left">
+        <div class="tide" id="h-tide"><i></i></div>
+        <b id="h-moves">20</b><small>moves</small>
+      </div>
+      <div class="goals" id="h-goals"></div>
+      <div class="dollar" aria-label="Score"><small>score</small><b id="h-score">0</b></div>
+      <button id="pause-btn" data-act="pause" aria-label="Pause"><i></i><i></i></button>
+      <div class="lvl" id="h-level">Pool 1</div>
+      <div class="banner" id="banner"><b id="banner-n">Pool 1</b><span id="banner-goal"></span></div>
+    </div>
+
+    <section class="screen" id="s-title">
+      <div class="logo">
+        <span class="bub b1"></span><span class="bub b2"></span><span class="bub b3"></span><span class="bub b4"></span>
+        <h1><span>Tide</span> <span>Pool</span> <span class="pop">Pop!</span></h1>
+        <p>Swap the creatures. Make the matches. Clear the pools before the tide comes in.</p>
+        <div class="crew"><img data-icon="star" alt="" /><img data-icon="shell" alt="" /><img data-icon="urchin" alt="" /><img data-icon="crab" alt="" /><img data-icon="clam" alt="" /><img data-icon="fish" alt="" /></div>
+      </div>
+      <nav class="menu">
+        <button class="pebble hot" data-nav data-act="continue"><b>Paddle in</b><small id="b-continue">Start at the shallows</small></button>
+        <button class="pebble" data-nav data-act="map"><b>Shoreline</b><small>Stars collected: <span id="t-stars">0</span></small></button>
+        <div class="row2">
+          <button class="pebble slim" data-nav data-act="how"><b>How to play</b></button>
+          <button class="pebble slim" data-nav data-act="settings"><b>Settings</b></button>
+        </div>
+      </nav>
+    </section>
+
+    <section class="screen dim" id="s-map">
+      <div class="card wide map-card">
+        <h2>The shoreline</h2>
+        <p class="note">Every pool you clear opens the next. Clear one with moves to spare for more stars.</p>
+        <div id="map"></div>
+        <button class="pebble hot slim" data-nav data-act="back"><b>Back to the beach</b></button>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-settings">
+      <div class="card">
+        <h2>Settings</h2>
+        <div class="set-list" id="set-list"></div>
+        <button class="pebble hot slim" data-nav data-act="back"><b>Done</b></button>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-how">
+      <div class="card wide">
+        <h2>How to play</h2>
+        <ol class="how">
+          <li><b>Swap</b> two creatures side by side to line up three or more of a kind. Drag, tap one then its neighbour, or use the keys.</li>
+          <li><b>Every pool has a goal</b> and a number of moves, shown at the top: pop certain creatures, wash away sand, crack barnacle stones or reach a score.</li>
+          <li><b>Sand</b> washes away when a match is made on top of it. Dark sand needs two washes. <b>Stones</b> crack when something pops beside them, and sink as things fall.</li>
+          <li><b>Moves to spare</b> turn into waves for a tide bonus, and earn more stars.</li>
+        </ol>
+        <div class="specials">
+          <div><span class="sp wave"></span><b>Wave</b><small>4 in a line. Sweeps its row or column.</small></div>
+          <div><span class="sp bubble"></span><b>Bubble</b><small>An L or T shape. Bursts everything around it.</small></div>
+          <div><span class="sp pearl"><img data-icon="pearl" alt="" /></span><b>Pearl</b><small>5 in a line. Swap with a creature to pop every one of its kind.</small></div>
+        </div>
+        <p class="note">Swap two specials together for a bigger splash. Keys: arrows move, Enter picks up, then an arrow swaps. H for a hint, Esc to pause.</p>
+        <button class="pebble hot slim" data-nav data-act="back"><b>Got it</b></button>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-pause">
+      <div class="card">
+        <h2>Paused</h2>
+        <nav class="stack">
+          <button class="pebble hot slim" data-nav data-act="resume"><b>Back in the pool</b></button>
+          <button class="pebble slim" data-nav data-act="restart"><b>Start the pool again</b></button>
+          <button class="pebble slim" data-nav data-act="settings"><b>Settings</b></button>
+          <button class="pebble slim" data-nav data-act="quit"><b>Shoreline</b></button>
+        </nav>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-result">
+      <div class="card">
+        <small class="kicker" id="r-kicker">Pool 1</small>
+        <h2 id="r-title">Pool cleared!</h2>
+        <div class="stars" id="r-stars"></div>
+        <p class="note" id="r-note"></p>
+        <div class="stats" id="r-stats"></div>
+        <nav class="stack">
+          <button class="pebble hot slim" id="r-next" data-nav data-act="next"><b>Next pool</b></button>
+          <button class="pebble slim" id="r-retry" data-nav data-act="restart"><b>Play again</b></button>
+          <button class="pebble slim" data-nav data-act="quit"><b>Shoreline</b></button>
+        </nav>
+      </div>
+    </section>
+
+    <div id="toast" role="status"></div>
+    <div id="fade"></div>
+    <noscript>Tide Pool Pop needs JavaScript enabled.</noscript>
+
+    <script src="js/rules.js"></script>
+    <script src="js/levels.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/view.js"></script>
+    <script src="js/menus.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

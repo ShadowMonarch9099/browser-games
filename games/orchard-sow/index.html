@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#7a9a4a" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="description" content="The ancient sowing game on a carved wooden board at an autumn picnic. Scoop seeds, sow them bowl by bowl, and capture your way to the bigger harvest. Two rule sets, three computer opponents or a friend." />
+    <title>Orchard Sow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat+Brush&family=Karla:wght@500;700&display=swap" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body data-device="mouse">
+    <canvas id="game" aria-label="Orchard Sow: the sowing board"></canvas>
+
+    <div id="hud" class="off">
+      <div class="crate foe" id="p-foe"><small id="n-foe">Hazel</small><b id="s-foe">0</b><span>in the store</span></div>
+      <div class="crate you" id="p-you"><small id="n-you">You</small><b id="s-you">0</b><span>in the store</span></div>
+      <div class="rules-tag" id="h-rules">Orchard rules</div>
+      <button id="pause-btn" data-act="pause" aria-label="Pause"><i></i><i></i></button>
+      <p class="say" id="say"></p>
+    </div>
+
+    <section class="screen" id="s-title">
+      <div class="sign">
+        <div class="twig" aria-hidden="true"></div>
+        <h1>Orchard<br />Sow</h1>
+        <p>Scoop the seeds, sow them bowl by bowl, and bring in the bigger harvest.</p>
+        <small id="t-rec">A game of seeds and bowls</small>
+      </div>
+      <nav class="menu">
+        <button class="leaf hot big" data-nav data-act="play"><b>Lay out the board</b><small>Against the orchard folk or a friend</small></button>
+        <div class="row2">
+          <button class="leaf" data-nav data-act="how"><b>How to sow</b></button>
+          <button class="leaf" data-nav data-act="settings"><b>Settings</b></button>
+        </div>
+      </nav>
+    </section>
+
+    <section class="screen dim" id="s-setup">
+      <div class="card wide">
+        <h2>The picnic</h2>
+        <h3>Who's playing</h3>
+        <div class="choices" id="foes"></div>
+        <h3>Which rules</h3>
+        <div class="choices" id="variants"></div>
+        <div class="choices" id="extras"></div>
+        <div class="row2">
+          <button class="leaf" data-nav data-act="how"><b>How to sow</b></button>
+          <button class="leaf hot" data-nav data-act="start"><b>Start sowing</b></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-settings">
+      <div class="card">
+        <h2>Settings</h2>
+        <div class="set-list" id="set-list"></div>
+        <button class="leaf hot" data-nav data-act="back"><b>Done</b></button>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-how">
+      <div class="card wide">
+        <h2>How to sow</h2>
+        <p class="note">The near row of six bowls is yours, and so is the long store on your right. Pick up every seed in one of your bowls and drop them one at a time into the following bowls: right along your row, up past your store, then left along the far row.</p>
+        <div class="two">
+          <section><h3>Orchard rules</h3><ul>
+            <li>Seeds also drop into <b>your</b> store (never theirs).</li>
+            <li>Drop your last seed in your store and <b>sow again</b>.</li>
+            <li>Drop your last seed in one of your <b>empty</b> bowls and you take it and everything in the bowl opposite.</li>
+            <li>When either row runs out, each side keeps what is left on its own row. Most seeds in store wins.</li>
+          </ul></section>
+          <section><h3>Harvest rules</h3><ul>
+            <li>Stores hold only captured seeds. A lap of 12 or more skips the bowl you started from.</li>
+            <li>Drop your last seed in <b>their</b> bowl, making it 2 or 3, and you take it, plus the bowls before it that also hold 2 or 3.</li>
+            <li>A capture that would take every seed they have does not count, and if their row is empty you must sow seeds to them if you can.</li>
+            <li>First to more than half the seeds wins.</li>
+          </ul></section>
+        </div>
+        <p class="note">Tap a glowing bowl, or use the arrows and Enter (keys 1 to 6 pick a bowl). Esc pauses.</p>
+        <button class="leaf hot" data-nav data-act="back"><b>Let's sow</b></button>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-pause">
+      <div class="card">
+        <h2>Resting in the shade</h2>
+        <nav class="stack">
+          <button class="leaf hot" data-nav data-act="resume"><b>Back to the board</b></button>
+          <button class="leaf" data-nav data-act="restart"><b>Start again</b></button>
+          <button class="leaf" data-nav data-act="how"><b>How to sow</b></button>
+          <button class="leaf" data-nav data-act="settings"><b>Settings</b></button>
+          <button class="leaf" data-nav data-act="quit"><b>Pack up the picnic</b></button>
+        </nav>
+      </div>
+    </section>
+
+    <section class="screen dim" id="s-result">
+      <div class="card">
+        <small class="kicker" id="r-kicker">Orchard rules</small>
+        <h2 id="r-title">A fine harvest!</h2>
+        <div class="stats" id="r-stats"></div>
+        <p class="note centered" id="r-note"></p>
+        <nav class="stack">
+          <button class="leaf hot" data-nav data-act="restart"><b>Another game</b></button>
+          <button class="leaf" data-nav data-act="quit"><b>Change the picnic</b></button>
+        </nav>
+      </div>
+    </section>
+
+    <div id="toast" role="status"></div>
+    <div id="fade"></div>
+    <noscript>Orchard Sow needs JavaScript enabled.</noscript>
+
+    <script src="js/rules.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/view.js"></script>
+    <script src="js/menus.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>
