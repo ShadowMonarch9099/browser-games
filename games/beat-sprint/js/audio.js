@@ -165,9 +165,25 @@
       this.padBus = c.createGain(); this.padBus.connect(this.songOut);
       if (this.song) this.delay.delayTime.value = this.song.beat * 0.75;
     },
+    // A licensed track is a recording: play the decoded buffer so that its
+    // first sample lands at song time song.lead, on the same clock as the chart.
+    bufSrc: null,
+    _startBuffer() {
+      const s = this.song;
+      if (!s || !s.buffer || !this.songOut || this.held || !this.running()) return;
+      const c = this.ctx;
+      const T = Math.max(c.currentTime + 0.015, this.toCtx(this.songStart + s.lead));
+      const offset = T + this.clock.off - this.songStart - s.lead;
+      if (offset >= s.buffer.duration) return;
+      const src = c.createBufferSource();
+      src.buffer = s.buffer; src.connect(this.songOut);
+      src.start(T, Math.max(0, offset));
+      this.bufSrc = src;
+    },
     _kill(fade) {
-      const out = this.songOut, send = this.songSend, pad = this.padBus;
-      this.songOut = this.songSend = this.padBus = null;
+      const out = this.songOut, send = this.songSend, pad = this.padBus, buf = this.bufSrc;
+      this.songOut = this.songSend = this.padBus = this.bufSrc = null;
+      if (buf) { try { buf.stop(this.ctx.currentTime + Math.max(0.03, fade || 0) + 0.05); } catch (e) { /* already stopped */ } }
       if (!out) return;
       try {
         const t = this.ctx.currentTime;
@@ -183,7 +199,7 @@
       this.songStart = this.now() + delay - from;
       this.cursor = 0;
       while (this.cursor < song.events.length && song.events[this.cursor].t < from) this.cursor++;
-      if (this.ctx) { this._nodes(); this.filter.frequency.cancelScheduledValues(0); this.filter.frequency.value = 20000; }
+      if (this.ctx) { this._nodes(); this.filter.frequency.cancelScheduledValues(0); this.filter.frequency.value = 20000; this._startBuffer(); }
     },
     songTime() { return this.held ? this.heldAt : this.now() - this.songStart; },
     holdSong() {
@@ -206,6 +222,7 @@
       if (this.song && !this.held) {
         const ev = this.song.events, until = now + ahead, live = this.clock.src === 'a';
         if (live && !this.songOut) this._nodes();
+        if (live && this.song.buffer && !this.bufSrc) this._startBuffer();
         while (this.cursor < ev.length && this.songStart + ev[this.cursor].t < until) {
           const e = ev[this.cursor++], at = this.songStart + e.t;
           if (live && at > now - 0.03) this._play(e, Math.max(this.ctx.currentTime, this.toCtx(at)));

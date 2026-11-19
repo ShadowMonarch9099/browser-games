@@ -13,7 +13,8 @@
   const SECTION_NAMES = { intro: 'INTRO', verse: 'VERSE', build: 'BUILD-UP', chorus: 'THE DROP', break: 'BREAKDOWN', verse2: 'VERSE II', chorus2: 'OVERDRIVE', outro: 'OUTRO' };
   const SPEEDS = [0.75, 0.9, 1, 1.15, 1.3, 1.5];
   const BASE_V = 13;          // highway speed in road units per second at 1x
-  const MENU_STATES = new Set(['title', 'setlist', 'settings', 'howto', 'calibrate', 'paused', 'results']);
+  const MENU_STATES = new Set(['title', 'setlist', 'library', 'loading', 'credits', 'settings', 'howto', 'calibrate', 'paused', 'results']);
+  const PAGE = 5;             // tracks per page in the library
 
   const pad2 = (n) => String(n).padStart(2, '0');
   const fmt = (n) => Math.round(n).toLocaleString('en-US');
@@ -23,7 +24,7 @@
     state: 'title', stateT: 0, focus: 0, back: null, backStack: [], fade: 1, time: 0,
     buttons: [], toastMsg: null, confirmReset: false,
     save: null, s: null,
-    mode: 'free', seed: 0, song: null, run: null, phase: null, phaseT: 0, sec: null, heldAt: 0,
+    mode: 'free', seed: 0, track: null, lib: { kind: 'classics', page: 0 }, song: null, run: null, phase: null, phaseT: 0, sec: null, heldAt: 0,
     result: null, cal: null,
     demo: { notes: [], next: 0, pal: 0, palBar: -1 },
     vt: 0, look: null,
@@ -66,12 +67,16 @@
     // ---------- starting a track ----------
     dailySeed() { return BS.dailySeed(); },
     newSeed() { return BS.hash(String(Math.random()) + Date.now()) >>> 0; },
-    start(mode, seed) {
+    start(mode, seed) { this.startTrack(mode, { kind: 'seed', seed: seed >>> 0 }); },
+    // track: { kind: 'seed', seed } | { kind: 'classic', id } | { kind: 'original', id }
+    startTrack(mode, track) {
       A.unlock();
-      this.mode = mode; this.seed = seed >>> 0;
-      this.song = Song.compose(this.seed, this.s.level);
+      if (track.kind === 'licensed' && !BS.Licensed.get(track.id)) return this.loadLicensed(mode, track);
+      this.mode = mode; this.track = track;
+      this.song = track.kind === 'licensed' ? BS.Licensed.song(BS.Licensed.byId(track.id), BS.Licensed.get(track.id), this.s.level) : Song.make(track, this.s.level);
+      this.seed = this.song.seed >>> 0;
       this.run = new BS.Run(this.song);
-      this.save.last = { seed: this.seed, mode };
+      this.save.last = { seed: this.seed, mode, track };
       this.save.plays++;
       BS.Save.store();
       A.stopMenu();
@@ -84,7 +89,34 @@
       this.clearStack();
       this.setState('play', true);
     },
-    restart() { this.start(this.mode, this.seed); },
+    // A recording has to be downloaded, decoded and listened to before it can be played.
+    loadLicensed(mode, track) {
+      const t = BS.Licensed.byId(track.id);
+      if (!A.ctx) { this.toast('This browser has no Web Audio'); return; }
+      const job = (this.loadInfo = { title: t.title, by: t.by, p: 0, track, mode });
+      this.backStack = []; this.back = null;
+      this.setState('loading', true);
+      BS.Licensed.load(t, A.ctx, (p) => { job.p = p; })
+        .then(() => { if (this.state === 'loading' && this.loadInfo === job) this.startTrack(mode, track); })
+        .catch((e) => { if (this.loadInfo === job) { this.toast(e.message || 'Could not load the track'); this.setState('library', true); } });
+    },
+    restart() { this.startTrack(this.mode, this.track || { kind: 'seed', seed: this.seed }); },
+    // where a track's best score is kept, and how it is named
+    bestKey(track, lv) { return track.kind === 'classic' ? `classic:${track.id}:${lv}` : track.kind === 'original' ? `orig:${track.id}:${lv}` : track.kind === 'licensed' ? `lic:${track.id}:${lv}` : 'random:' + lv; },
+    trackInfo(track) {
+      if (track.kind === 'classic') { const c = BS.Classics.byId(track.id); return { title: c.title, tag: `${c.by.toUpperCase()}  ·  ${c.year}`, bpm: c.bpm }; }
+      if (track.kind === 'licensed') { const l = BS.Licensed.byId(track.id), an = BS.Licensed.get(track.id); return { title: l.title, tag: `${l.by.toUpperCase()}  ·  ${l.license}`, bpm: an ? Math.round(an.analysis.bpm) : '—', genre: l.genre }; }
+      if (track.kind === 'original') { const o = Song.originalList().find((x) => x.id === track.id); return { title: o.title, tag: o.style.name.toUpperCase() + '  ·  ORIGINAL', bpm: o.style.bpm }; }
+      const st = Song.STYLES[track.seed % Song.STYLES.length];
+      return { title: st.name, tag: 'TRACK ' + trackCode(track.seed), bpm: st.bpm };
+    },
+    trackTag() { return this.track ? this.trackInfo(this.track).tag : trackCode(this.seed); },
+    openLibrary(kind) { this.lib = { kind, page: 0 }; this.backStack = []; this.back = null; A.sfx('ok'); this.setState('library', true); this.focus = 0; },
+    libraryTracks() {
+      if (this.lib.kind === 'classics') return BS.Classics.LIST.map((c) => ({ kind: 'classic', id: c.id }));
+      if (this.lib.kind === 'licensed') return BS.Licensed.LIST.map((l) => ({ kind: 'licensed', id: l.id }));
+      return Song.originalList().map((o) => ({ kind: 'original', id: o.id }));
+    },
 
     pause() {
       if (this.state !== 'play' || this.phase === 'fail' || this.phase === 'end') return;
@@ -136,16 +168,42 @@
               adjust: (d) => { s.level = (s.level + d + L.length) % L.length; this.persist(); A.sfx('tick', s.level * 3); },
             },
             { label: 'DAILY TRACK', card: true, sub: `${BS.today()}  ·  ${dailySong.style.name}  ·  ${dailySong.style.bpm} BPM`, best: today ? fmt(today) : '—', action: () => { A.sfx('go'); this.start('daily', this.dailySeed()); } },
+            { label: 'CLASSICS', card: true, sub: `${BS.Classics.LIST.length} public-domain songs: Beethoven, Grieg, Joplin, folk tunes`, best: '♪', action: () => this.openLibrary('classics') },
+            { label: 'ORIGINALS', card: true, sub: `${Song.originalList().length} named tracks across ${Song.STYLES.length} styles`, best: '♪', action: () => this.openLibrary('originals') },
+            { label: 'LICENSED', card: true, sub: `${BS.Licensed.LIST.length} real recordings: Kevin MacLeod, chiptune and synthwave`, best: '♪', action: () => this.openLibrary('licensed') },
             { label: 'NEW TRACK', card: true, sub: 'A fresh seed: new song, new chart', best: bestNew ? fmt(bestNew.score) + '  ' + bestNew.grade : '—', action: () => { A.sfx('go'); this.start('free', this.newSeed()); } },
           ];
           const last = this.save.last;
           if (last && last.mode !== 'daily') {
-            const st = Song.STYLES[last.seed % Song.STYLES.length];
-            items.push({ label: 'REPLAY LAST', card: true, sub: `Track ${trackCode(last.seed)}  ·  ${st.name}  ·  ${st.bpm} BPM`, action: () => { A.sfx('go'); this.start('free', last.seed); } });
+            const tr = last.track || { kind: 'seed', seed: last.seed }, info = this.trackInfo(tr);
+            items.push({ label: 'REPLAY LAST', card: true, sub: `${info.title}  ·  ${info.bpm} BPM`, action: () => { A.sfx('go'); this.startTrack('free', tr); } });
           }
           items.push({ label: 'BACK', action: () => { A.sfx('back'); this.setState('title', true); this.focus = 0; } });
           return { items, back: () => { A.sfx('back'); this.setState('title', true); } };
         }
+        case 'library': {
+          const all = this.libraryTracks(), pages = Math.ceil(all.length / PAGE), lv = s.level;
+          const page = (this.lib.page = BS.clamp(this.lib.page, 0, pages - 1));
+          const back = () => { A.sfx('back'); this.setState('setlist', true); this.focus = { classics: 2, originals: 3, licensed: 4 }[this.lib.kind]; };
+          const items = all.slice(page * PAGE, page * PAGE + PAGE).map((tr) => {
+            const info = this.trackInfo(tr), rec = this.save.best[this.bestKey(tr, lv)];
+            const c = tr.kind === 'classic' ? BS.Classics.byId(tr.id) : tr.kind === 'licensed' ? BS.Licensed.byId(tr.id) : null;
+            const stars = c ? '  ·  ' + ['EASY', 'MEDIUM', 'HARD'][c.diff] : '';
+            const speed = tr.kind === 'licensed' ? info.genre.toUpperCase() : info.bpm + ' BPM';
+            return { label: info.title.toUpperCase(), card: true, sub: `${info.tag}  ·  ${speed}${stars}`, best: rec ? fmt(rec.score) + '  ' + rec.grade : '—', action: () => { A.sfx('go'); this.startTrack('free', tr); } };
+          });
+          items.push({
+            label: 'PAGE', choice: () => `${page + 1} / ${pages}`,
+            adjust: (d) => { this.lib.page = (page + d + pages) % pages; this.focus = Math.min(this.focus, PAGE); A.sfx('tick', this.lib.page); },
+          });
+          items.push({ label: 'BACK', action: back });
+          return { items, back };
+        }
+        case 'loading': {
+          const cancel = () => { A.sfx('back'); this.loadInfo = null; this.setState('library', true); };
+          return { items: [{ label: 'CANCEL', action: cancel }], back: cancel };
+        }
+        case 'credits': return { items: [{ label: 'BACK', action: () => this.closeSub() }], back: () => this.closeSub() };
         case 'settings': {
           const P = BS.Platform;
           const items = [
@@ -160,6 +218,7 @@
               adjust: (d) => { s.offset = BS.clamp(s.offset + d * 5, -200, 300); this.persist(); A.sfx('tick', s.offset / 20); },
             },
             { label: 'CALIBRATE TIMING', action: () => this.openCalibrate() },
+            { label: 'MUSIC CREDITS', action: () => this.openSub('credits') },
             toggle('hints', 'LANE KEY HINTS'),
             toggle('symbols', 'LANE SYMBOLS', () => s.symbols !== false),
             toggle('shake', 'SCREEN SHAKE'),
@@ -399,13 +458,13 @@
         newBest = run.score > best;
         if (newBest) this.save.daily[key] = run.score;
       } else {
-        const key = 'random:' + lv, rec = this.save.best[key];
+        const key = this.bestKey(this.track || { kind: 'seed' }, lv), rec = this.save.best[key];
         best = rec ? rec.score : 0;
         newBest = run.score > best;
         if (newBest) this.save.best[key] = { score: run.score, grade, pct };
       }
       BS.Save.store();
-      this.result = { cleared, grade, pct, score: run.score, best: Math.max(best, run.score), newBest: newBest && run.score > 0, perfect: run.perfect, good: run.good, miss: run.miss, combo: run.best, total: run.notes.length, level: lv, style: this.song.style.name, bpm: this.song.style.bpm, mode: this.mode, code: trackCode(this.seed) };
+      this.result = { cleared, grade, pct, score: run.score, best: Math.max(best, run.score), newBest: newBest && run.score > 0, perfect: run.perfect, good: run.good, miss: run.miss, combo: run.best, total: run.notes.length, level: lv, style: this.song.style.name, bpm: this.song.style.bpm, mode: this.mode, code: trackCode(this.seed), tag: this.trackTag() };
       A.stopSong(0.2);
       this.song = null;
       S.power = 1;
