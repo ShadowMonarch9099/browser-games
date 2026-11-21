@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#07020f">
+<title>Color Gate Runner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css?v=10">
+</head>
+<body>
+<canvas id="game"></canvas>
+<div id="ui">
+  <section id="title" class="screen wide"><div class="title-grid">
+    <div>
+      <h1 class="logo"><span>COLOR</span> <span>GATE</span><br><span>RUNNER</span></h1>
+      <div class="rules">
+        <div><b>3 colors</b>Each gate takes one color. Match it before you arrive.</div>
+        <div><b>1 s cooldown</b>No switching inside a gate or a no-switch zone.</div>
+        <div><b>3 lives</b>A wrong color costs one. They never come back.</div>
+      </div>
+      <button id="play" class="btn">▶ &nbsp;Start run</button>
+      <button id="show-board" class="btn ghost">Leaderboard</button>
+      <div class="keys">
+        <div><kbd>←</kbd><kbd>→</kbd> move</div>
+        <div><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> emerald · fiery · ice</div>
+        <div><kbd>Q</kbd> headstart · <kbd>E</kbd> shield · <kbd>P</kbd> pause · <kbd>M</kbd> mute</div>
+      </div>
+      <p id="best" class="muted"></p>
+      <button class="btn ghost small mute">🔊 Sound on</button>
+    </div>
+    <div class="sheet"><video src="assets/sheets/mascot_sheet9_run.mp4" poster="assets/sheets/mascot_sheet9.jpg" autoplay muted loop playsinline></video></div>
+  </div></section>
+  <section id="pause" class="screen">
+    <h2>PAUSED</h2>
+    <p class="muted">Speed clock is stopped.</p>
+    <button id="resume" class="btn">▶ &nbsp;RESUME</button>
+    <button id="pause-quit" class="btn ghost">Quit to title</button>
+    <div class="row"><button class="btn ghost small mute">🔊 Sound on</button></div>
+  </section>
+  <section id="over" class="screen">
+    <h2>RUN OVER</h2>
+    <div id="over-score" class="big">000000</div>
+    <p id="over-meta" class="muted"></p>
+    <div id="entry"><p class="muted">New top-10 score! Enter your name:</p><input id="name" maxlength="12" placeholder="NAME" autocomplete="off"> <button id="save" class="btn small">Save</button></div>
+    <div id="over-lb"></div>
+    <button id="retry" class="btn">↻ &nbsp;RUN AGAIN</button>
+    <button id="over-home" class="btn ghost">Title</button>
+  </section>
+  <section id="board" class="screen">
+    <h2>🏆 LEADERBOARD</h2>
+    <p class="muted">Stored in this browser only.</p>
+    <div id="board-list"></div>
+    <div class="row">
+      <button id="board-back" class="btn">Back</button>
+      <button id="reset" class="btn danger">Reset leaderboard</button>
+      <span id="confirm" style="display:none"><span class="muted">Delete all scores? </span><button id="reset-yes" class="btn danger small">Yes, reset</button><button id="reset-no" class="btn ghost small">Cancel</button></span>
+    </div>
+  </section>
+</div>
+
+<script src="js/util.js?v=10"></script>
+<script src="js/config.js?v=10"></script>
+<script src="js/audio.js?v=10"></script>
+<script src="js/worlds.js?v=10"></script>
+<script src="js/fx.js?v=10"></script>
+<script src="js/leaderboard.js?v=10"></script>
+<script src="js/ui.js?v=10"></script>
+<script src="js/game.js?v=10"></script>
+<script>UI.bind(); Game.init();</script>
+</body>
+</html>

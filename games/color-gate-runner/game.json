@@ -1,0 +1,12 @@
+{
+  "title": "Color Gate Runner",
+  "description": "Become a color and run. Match green, blue or orange to every gate ahead, but switching has a cooldown, so plan early as the speed climbs through jungle, frost and fire worlds.",
+  "authors": ["BrowserMania"],
+  "thumbnail": "thumbnail.jpg",
+  "tags": ["runner", "arcade"],
+  "controls": ["keyboard", "touch", "gamepad"],
+  "orientation": "any",
+  "players": "1",
+  "accent": "#3aa8ff",
+  "added": "2026-11-21"
+}
